@@ -5,7 +5,6 @@
     <string name="app_description">Simple app for geo locating people</string>
     <string name="gps_enabled">GPS enabled</string>
     <string name="need_gps">This app needs GPS, but it\'s disabled; do you want to activate it?</string>
-    <string name="btn_map">Map</string>
     <string name="your_position">Your position</string>
     <string name="wrong_version">Your app is not up to date, please download the new version.</string>
     <string name="show_position_menu">Show position</string>
@@ -27,8 +26,6 @@
     <string name="internet_unavailable">Internet not available</string>
     <string name="verifying_credentials">Checking credentials&#8230;</string>
     <string name="sending_position">I\'m sending your position to: %s</string>
-    <string name="delete_route">Delete</string>
-    <string name="route_properties">Properties&#8230;</string>
     <string name="sample">sample</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
@@ -68,12 +65,12 @@
     <string name="deleted_messages_on_server_s">Deleted messages on server: %s</string>
     <string name="search_again">Search again</string>
     <string name="cannot_get_address">Cannot get address</string>
-    <string name="request_user_position">Request user position</string>
-    <string name="force_get_user_position">Force to obtain user position</string>
+    <string name="request_user_position">Request position</string>
+    <string name="force_get_user_position">Force to obtain position</string>
     <string name="wrong_password_specified_for_user_s">Wrong password specified for user %s</string>
     <string name="title_activity_book">Users Book</string>
     <string name="add_">Add&#8230;</string>
-    <string name="set_user_password">Set user password</string>
+    <string name="set_user_password">Insert password for %s</string>
     <string name="users_book">Users book</string>
     <string name="user_already_in_book">User already in book</string>
     <string name="sending_request_">Sending request&#8230;</string>
@@ -82,7 +79,6 @@
     <string name="are_you_sure_to_remove_user_s_">Are you sure to remove user %s?</string>
     <string name="remove_all">Remove all</string>
     <string name="tap_an_user_to_request_its_position_long_tap_for_more_options">Tap the user name to request her/his position, tap the dropdown button for more options.</string>
-    <string name="auto">Auto</string>
     <string name="user_name">User name</string>
     <string name="accept_automatically_position_requests_from_this_user">Always accept requests</string>
     <string name="warning_auto_accept">%s can now request your position without asking if you agree.</string>

@@ -202,7 +202,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 				| InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.set_user_password).setView(input)
+		builder.setTitle(getString(R.string.set_user_password, selectedUser)).setView(input)
 				.setPositiveButton(android.R.string.ok, null)
 				.setNegativeButton(android.R.string.cancel, null);
 		final AlertDialog dialogPwd = builder.create();
