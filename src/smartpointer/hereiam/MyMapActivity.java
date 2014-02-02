@@ -19,9 +19,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -33,7 +37,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
-public class MyMapActivity extends MapActivity {
+public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -54,6 +58,14 @@ public class MyMapActivity extends MapActivity {
 	private PositionsDownloader mPositionsDownloader;
 	private GoogleCloudMessaging gcm;
 	private String regid;
+
+	private GenericEventHandler mConnectorServiceChangedHandler = new GenericEventHandler() {
+
+		@Override
+		public void onEvent(Object sender, EventArgs args) {
+			showTrackingButton(isLiveTracking());
+		}
+	};
 
 	private boolean checkPlayServices() {
 		int resultCode = GooglePlayServicesUtil
@@ -134,13 +146,25 @@ public class MyMapActivity extends MapActivity {
 		});
 	}
 
+	private void showTrackingButton(Boolean show) {
+		Button btn = (Button) findViewById(R.id.buttonLiveTracking);
+		if (show) {
+			btn.setAnimation(mAnimation);
+			mAnimation.start();
+		} else {
+			btn.setAnimation(null);
+			mAnimation.cancel();
+		}
+
+	}
+
 	/** Called when the activity is first created. */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mymap);
-
+		findViewById(R.id.buttonLiveTracking).setOnClickListener(this);
 		mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		enableGPS();
@@ -215,7 +239,8 @@ public class MyMapActivity extends MapActivity {
 		}
 
 		mController.setZoom(zoomLevel);
-
+		MyApplication.getInstance().ConnectorServiceChanged
+				.addHandler(mConnectorServiceChangedHandler);
 		mAnimation = new AlphaAnimation(1, 0.5f);
 		// from
 		// fully
@@ -271,7 +296,8 @@ public class MyMapActivity extends MapActivity {
 
 	@Override
 	protected void onDestroy() {
-
+		MyApplication.getInstance().ConnectorServiceChanged
+				.removeHandler(mConnectorServiceChangedHandler);
 		super.onDestroy();
 	}
 
@@ -309,7 +335,8 @@ public class MyMapActivity extends MapActivity {
 			} else
 				finish();
 
-		} else if (requestCode == Const.SEARCH_ACTIVITY_RESULT || requestCode == Const.BOOK_RESULT) {
+		} else if (requestCode == Const.SEARCH_ACTIVITY_RESULT
+				|| requestCode == Const.BOOK_RESULT) {
 			if (resultCode == RESULT_OK) {
 				if (!data.hasExtra(Const.USER)) {
 					// success but no user? means 'search again'
@@ -325,7 +352,7 @@ public class MyMapActivity extends MapActivity {
 	}
 
 	private void contactUser(final User user, final String pwd) {
-		
+
 		final ProgressDialog progressBar = new ProgressDialog(this);
 		progressBar.setCancelable(true);
 		progressBar.setMessage(getString(R.string.sending_request_));
@@ -353,7 +380,8 @@ public class MyMapActivity extends MapActivity {
 														user));
 										mUsersOverlay.pinTo(user);
 										ConnectorService.activate(
-												MyMapActivity.this, user, true, false);
+												MyMapActivity.this, user, true,
+												false);
 
 									} else {
 										Helper.showMessage(MyMapActivity.this,
@@ -367,6 +395,7 @@ public class MyMapActivity extends MapActivity {
 
 				return null;
 			}
+
 			protected void onPostExecute(Void result) {
 				progressBar.dismiss();
 			};
@@ -377,19 +406,20 @@ public class MyMapActivity extends MapActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.mymap_menu, menu);
-		//mMenuItemTrackGpsPosition = menu.findItem(R.id.itemTrackGpsPosition);
-		//mMenuItemTrackGpsPosition
-		//		.setTitleCondensed(getString(mTrackGPSPosition ? R.string.hide_position_menu
-		//				: R.string.show_position_menu));
+		// mMenuItemTrackGpsPosition = menu.findItem(R.id.itemTrackGpsPosition);
+		// mMenuItemTrackGpsPosition
+		// .setTitleCondensed(getString(mTrackGPSPosition ?
+		// R.string.hide_position_menu
+		// : R.string.show_position_menu));
 
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		//case R.id.itemTrackGpsPosition:
-		//	setTrackGPSPosition(!mTrackGPSPosition);
-		//	break;
+		// case R.id.itemTrackGpsPosition:
+		// setTrackGPSPosition(!mTrackGPSPosition);
+		// break;
 		case R.id.itemAccount: {
 			Intent intent = new Intent(this, UserActivity.class);
 			intent.putExtra(UserActivity.REGISTER_USER, false);
@@ -468,14 +498,44 @@ public class MyMapActivity extends MapActivity {
 		if (mTrackGPSPosition)
 			myLocationOverlay.enableMyLocation();
 		// myLocationOverlay.enableCompass();
-
+		showTrackingButton(isLiveTracking());
 		mPositionsDownloader.start();
+	}
+
+	public boolean isLiveTracking() {
+		ConnectorService connectorService = MyApplication.getInstance()
+				.getConnectorService();
+		return connectorService != null && connectorService.isLiveTracking();
 	}
 
 	@Override
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.buttonLiveTracking) {
+			if (isLiveTracking()) {
+				Helper.dialogMessage(this,
+						R.string.do_you_want_to_stop_tracking_all_users,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								startService(new Intent(MyMapActivity.this,
+										ConnectorService.class));
+							}
+						}, null);
+
+			} else {
+				Intent intent = new Intent(this, BookActivity.class);
+				startActivityForResult(intent, Const.BOOK_RESULT);
+			}
+		}
+
 	}
 
 }

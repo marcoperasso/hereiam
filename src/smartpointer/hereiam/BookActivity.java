@@ -2,7 +2,6 @@ package smartpointer.hereiam;
 
 import java.util.ArrayList;
 
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.SearchManager;
@@ -121,13 +120,13 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		switch (item.getItemId()) {
 		case R.id.itemAutoAllow:
 
-			
 			selectedUser.alwaysAcceptToSendPosition = !selectedUser.alwaysAcceptToSendPosition;
 			setUsersChanged();
 
 			refreshRow();
 			if (selectedUser.alwaysAcceptToSendPosition) {
-				Helper.hideableMessage(this, R.string.warning_auto_accept, selectedUser);
+				Helper.hideableMessage(this, R.string.warning_auto_accept,
+						selectedUser);
 			}
 			break;
 		case R.id.itemRequestUserPosition:
@@ -223,6 +222,12 @@ public class BookActivity extends ListActivity implements OnClickListener {
 				contactUser(selectedUser, input.getText().toString());
 			}
 		});
+	}
+
+	@Override
+	public boolean onSearchRequested() {
+
+		return super.onSearchRequested();
 	}
 
 	@Override

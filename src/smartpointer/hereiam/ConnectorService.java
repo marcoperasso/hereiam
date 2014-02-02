@@ -294,6 +294,10 @@ public class ConnectorService extends Service implements LocationListener {
 		context.startService(intent1);
 		
 	}
+
+	public boolean isLiveTracking() {
+		return users.size() > 0;
+	}
 	
 	
 

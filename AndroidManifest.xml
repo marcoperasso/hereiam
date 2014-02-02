@@ -113,7 +113,9 @@
         </activity>
         <activity
             android:name="smartpointer.hereiam.BookActivity"
-            android:label="@string/title_activity_book" >
+            android:label="@string/title_activity_book" 
+            android:launchMode="singleTop"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

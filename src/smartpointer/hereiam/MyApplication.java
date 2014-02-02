@@ -22,7 +22,7 @@ public class MyApplication extends Application {
 
 	private LinkedList<GeoAddress> points = new LinkedList<GeoAddress>();
 	private ConnectorService connectorService;
-	public Event ConnectorServiceChanged = new Event();
+	Event ConnectorServiceChanged = new Event();
 	private ArrayList<User> users;
 	private Object userTicket = new Object();
 
