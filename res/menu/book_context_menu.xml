@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/itemRequestUserPosition"
+        android:title="@string/request_user_position">
+    </item>
+    <item
+        android:id="@+id/itemAutoAllow"
+        android:checkable="true"
+        android:title="@string/accept_automatically_position_requests_from_this_user">
+    </item>
+    <item
+        android:id="@+id/itemForceGetUserPosition"
+        android:title="@string/force_get_user_position">
+    </item>
+    <item
+        android:id="@+id/itemRemoveUser"
+        android:title="@string/remove_user">
+    </item>
+
+</menu>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/itemAccount"
+        android:title="@string/user_credentials"
+        android:titleCondensed="@string/user_credentials">
+    </item>
+    <item
+        android:id="@+id/itemNewAccount"
+        android:title="@string/new_user_credentials"
+        android:titleCondensed="@string/new_user_credentials">
+    </item>
+    <item
+        android:id="@+id/itemLogin"
+        android:title="@string/login"
+        android:titleCondensed="@string/login">
+    </item>
+    <item
+        android:id="@+id/itemFind"
+        android:title="@string/find_user"
+        android:titleCondensed="@string/find_user">
+    </item>
+    <item
+        android:id="@+id/itemBook"
+        android:title="@string/users_book"
+        android:titleCondensed="@string/users_book">
+    </item>
+
+</menu>

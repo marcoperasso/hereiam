@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="appstyle" parent="@android:style/Theme.Light">
+        <item name="android:buttonStyle">@style/buttonStyle</item>
+        <item name="android:windowBackground">@drawable/gradient_background</item>
+    </style>
+
+    <style name="buttonStyle">
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+</resources>
