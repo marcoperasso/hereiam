@@ -50,7 +50,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					int msgtype = Integer.parseInt(extras.getString("msgtype"));
 					Integer touserid = Integer.parseInt(extras
 							.getString("touserid"));
-					Credentials c = MySettings.CurrentCredentials;
+					Credentials c = MySettings.readCredentials(MyApplication.getInstance());
 					// if i registered the phone for multiple users, the message
 					// could arrive
 					// even if it's not for me!

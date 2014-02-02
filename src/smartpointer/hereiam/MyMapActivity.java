@@ -21,7 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -241,6 +240,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		mController.setZoom(zoomLevel);
 		MyApplication.getInstance().ConnectorServiceChanged
 				.addHandler(mConnectorServiceChangedHandler);
+		
+		
 		mAnimation = new AlphaAnimation(1, 0.5f);
 		// from
 		// fully
@@ -260,6 +261,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 		mPositionsDownloader = new PositionsDownloader(mUsersOverlay, this);
 
+		showTrackingButton(isLiveTracking());
 	}
 
 	private void registerForGCM() {
@@ -328,9 +330,9 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 					.show();
 		} else if (requestCode == Const.LOGIN_RESULT) {
 			if (resultCode == RESULT_OK) {
-				Helper.showMessage(MyMapActivity.this, String.format(
+				Helper.showMessage(this, String.format(
 						getString(R.string.welcome_s),
-						MySettings.CurrentCredentials));
+						MySettings.readCredentials(this)));
 				registerForGCM();
 			} else
 				finish();
@@ -498,14 +500,13 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		if (mTrackGPSPosition)
 			myLocationOverlay.enableMyLocation();
 		// myLocationOverlay.enableCompass();
-		showTrackingButton(isLiveTracking());
 		mPositionsDownloader.start();
 	}
 
 	public boolean isLiveTracking() {
 		ConnectorService connectorService = MyApplication.getInstance()
 				.getConnectorService();
-		return connectorService != null && connectorService.isLiveTracking();
+		return connectorService != null;
 	}
 
 	@Override

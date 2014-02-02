@@ -23,7 +23,7 @@ public class MySettings {
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 	private static final String PROPERTY_REG_ID_USER = "registration_user_id";
 
-	public static Credentials CurrentCredentials;
+	private static Credentials credentials;
 
 	public static boolean getTrackGPSPosition(Context context) {
 		SharedPreferences settings = context
@@ -40,17 +40,19 @@ public class MySettings {
 	}
 
 	public static Credentials readCredentials(Context context) {
-		SharedPreferences settings = context
-				.getSharedPreferences(PREFS_NAME, 0);
+		if (credentials == null) {
+			SharedPreferences settings = context.getSharedPreferences(
+					PREFS_NAME, 0);
 
-		String pwd = settings.getString(PASSWORD, "");
-		CurrentCredentials = new Credentials(settings.getString(USERID, ""),
-				Helper.isNullOrEmpty(pwd) ? "" : Helper.decrypt(pwd));
-		CurrentCredentials.setId(settings.getInt(ID, 0));
-		CurrentCredentials.setEmail(settings.getString(EMAIL, ""));
-		CurrentCredentials.setName(settings.getString(NAME, ""));
-		CurrentCredentials.setSurname(settings.getString(SURNAME, ""));
-		return CurrentCredentials;
+			String pwd = settings.getString(PASSWORD, "");
+			credentials = new Credentials(settings.getString(USERID, ""),
+					Helper.isNullOrEmpty(pwd) ? "" : Helper.decrypt(pwd));
+			credentials.setId(settings.getInt(ID, 0));
+			credentials.setEmail(settings.getString(EMAIL, ""));
+			credentials.setName(settings.getString(NAME, ""));
+			credentials.setSurname(settings.getString(SURNAME, ""));
+		}
+		return credentials;
 	}
 
 	public static void setCredentials(Context context, Credentials c) {
@@ -64,7 +66,7 @@ public class MySettings {
 		editor.putString(NAME, c.getName());
 		editor.putString(SURNAME, c.getSurname());
 		editor.commit();
-		CurrentCredentials = c;
+		credentials = c;
 	}
 
 	static Hashtable<String, Boolean> hiddenRoutes = new Hashtable<String, Boolean>();
@@ -138,7 +140,7 @@ public class MySettings {
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(PROPERTY_REG_ID, regId);
 		editor.putInt(PROPERTY_APP_VERSION, appVersion);
-		editor.putInt(PROPERTY_REG_ID_USER, CurrentCredentials.getId());
+		editor.putInt(PROPERTY_REG_ID_USER, credentials.getId());
 		editor.commit();
 	}
 
@@ -173,8 +175,8 @@ public class MySettings {
 		// Check if the user is changed
 		int registeredUser = settings.getInt(PROPERTY_REG_ID_USER,
 				Integer.MIN_VALUE);
-		
-		if (registeredUser != CurrentCredentials.getId()) {
+
+		if (registeredUser != credentials.getId()) {
 			Log.i(Const.LOG_TAG, "User changed.");
 			return "";
 		}

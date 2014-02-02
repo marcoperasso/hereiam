@@ -234,7 +234,7 @@ public class ConnectorService extends Service implements LocationListener {
 			ids[i] = user.id;
 		}
 
-		Credentials currentCredentials = MySettings.CurrentCredentials;
+		Credentials currentCredentials = MySettings.readCredentials(this);
 		final MyPosition loc = new MyPosition(currentCredentials == null ? 0
 				: currentCredentials.getId(), ids,
 				(int) (mLocation.getLatitude() * 1E6),
@@ -294,9 +294,4 @@ public class ConnectorService extends Service implements LocationListener {
 		context.startService(intent1);
 
 	}
-
-	public boolean isLiveTracking() {
-		return users.size() > 0;
-	}
-
 }
