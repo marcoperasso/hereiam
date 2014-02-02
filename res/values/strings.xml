@@ -30,8 +30,8 @@
     <string name="delete_route">Delete</string>
     <string name="route_properties">Properties&#8230;</string>
     <string name="sample">sample</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
     <string name="login">Login</string>
     <string name="warning_to_user">This app can track your position and send it to other people; each time this happens, you\'ll be notified; you\'ll be able to disable this behaviour al all times.</string>
     <string name="no_show_again">Do not show again</string>
@@ -85,5 +85,10 @@
     <string name="user_name">User name</string>
     <string name="accept_automatically_position_requests_from_this_user">Always accept requests</string>
     <string name="warning_auto_accept">%s can now request your position without asking if you agree.</string>
+    <string name="send_message">Send message</string>
+    <string name="write_your_message">Write your message</string>
+    <string name="you_are_not_logged">You are not logged</string>
+    <string name="no_registered_user_to_whom_send_your_message">No registered user to whom send your message</string>
+    <string name="_s_says">"%1$s says: \'%2$s\'"</string>
 
 </resources>

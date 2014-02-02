@@ -36,8 +36,8 @@ public class HttpManager {
 
 	static String decodeMessage(int id) {
 		switch (id) {
-		case RES_USER_NOT_LOGGED: return "You are not logged";
-		case RES_NO_RECEIVER_IDS: return "No registered user to whom send your message";
+		case RES_USER_NOT_LOGGED: return MyApplication.getInstance().getString(R.string.you_are_not_logged);
+		case RES_NO_RECEIVER_IDS: return MyApplication.getInstance().getString(R.string.no_registered_user_to_whom_send_your_message);
 		default:
 			return "";
 		}
@@ -66,6 +66,8 @@ public class HttpManager {
 			+ "mitu/disconnect_user/";
 	public static final String respond_to_user_request = host
 			+ "mitu/respond_to_user/";
+	public static final String message_to_user_request = host
+			+ "mitu/message_to_user/";
 
 	private static String encodeURIComponent(String input) {
 		if (Helper.isNullOrEmpty(input)) {
@@ -389,6 +391,25 @@ public class HttpManager {
 		try {
 			JSONObject obj = sendRequestForObject(disconnect_user_request
 					+ Integer.toString(usrId));
+
+			int res = obj.getInt("result");
+			result.message = decodeMessage(res);
+
+			result.result = res == RES_SUCCESS;
+		} catch (Exception e) {
+			result.message = e.toString();
+			result.result = false;
+		}
+		return result;
+	}
+	
+	public static WebRequestResult messageToUser(int usrId, String message) {
+		WebRequestResult result = new WebRequestResult();
+		try {
+			List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+			postParameters.add(new BasicNameValuePair("userid", Integer.toString(usrId)));
+			postParameters.add(new BasicNameValuePair("message", message));
+			JSONObject obj = new JSONObject(postRequest(message_to_user_request, postParameters));
 
 			int res = obj.getInt("result");
 			result.message = decodeMessage(res);

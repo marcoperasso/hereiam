@@ -5,6 +5,10 @@
         android:id="@+id/itemRequestUserPosition"
         android:title="@string/request_user_position">
     </item>
+     <item
+        android:id="@+id/itemSendMessage"
+        android:title="@string/send_message">
+    </item>
     <item
         android:id="@+id/itemAutoAllow"
         android:checkable="true"

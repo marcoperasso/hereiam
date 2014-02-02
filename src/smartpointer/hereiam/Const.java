@@ -7,6 +7,7 @@ public class Const {
 	static final int MSG_REJECT_CONTACT = 2; 
 	static final int MSG_REMOVE_CONTACT = 3; 
 	static final int MSG_WRONG_PASSWORD = 4; 
+	static final int MSG_MESSAGE = 5; 
 	
 	static final String LOG_TAG = "MAY_I_TRACE_U";
 	static final Integer PROTOCOL_VERSION = 1;

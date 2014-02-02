@@ -2,7 +2,6 @@ package smartpointer.hereiam;
 
 import java.util.ArrayList;
 
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -61,7 +60,7 @@ public class ConnectorService extends Service implements LocationListener {
 			stopSelf();
 			return super.onStartCommand(intent, flags, startId);
 		}
-		
+
 		if (mWorkerThread == null) {
 			mWorkerThread = new Thread(new Runnable() {
 				public void run() {
@@ -78,8 +77,9 @@ public class ConnectorService extends Service implements LocationListener {
 					mlocManager.removeUpdates(ConnectorService.this);
 					mNotificationManager.cancel(Const.TRACKING_NOTIFICATION_ID);
 					for (User user : users)
-						MyApplication.getInstance().notifyUserDisconnection(user);
-					
+						MyApplication.getInstance().notifyUserDisconnection(
+								user);
+
 					if (MyApplication.LogEnabled)
 						Log.i(Const.LOG_TAG,
 								"Finished connector service worker thread");
@@ -108,7 +108,7 @@ public class ConnectorService extends Service implements LocationListener {
 
 	private void addUser(final User user, boolean silent) {
 		if (users.isEmpty()) {
-			
+
 			mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 					6000, 5, ConnectorService.this);
 			mlocManager.requestLocationUpdates(
@@ -131,11 +131,8 @@ public class ConnectorService extends Service implements LocationListener {
 				break;
 			}
 		if (users.isEmpty()) {
-			mlocManager.removeUpdates(ConnectorService.this);
 			stopSelf();
-		}
-		else
-		{
+		} else {
 			setGPSOnNotification(false);
 		}
 
@@ -175,10 +172,12 @@ public class ConnectorService extends Service implements LocationListener {
 		case LocationProvider.AVAILABLE:
 			break;
 		case LocationProvider.OUT_OF_SERVICE:
-			mLocation = mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			mLocation = mlocManager
+					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 			break;
 		case LocationProvider.TEMPORARILY_UNAVAILABLE:
-			mLocation = mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			mLocation = mlocManager
+					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 			break;
 		}
 	}
@@ -194,14 +193,16 @@ public class ConnectorService extends Service implements LocationListener {
 		String message = getString(R.string.sending_position, getUsersList());
 		Intent intent = new Intent(this, TrackedUsersActivity.class);
 		intent.putExtra(Const.USERS, users);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, // add
-																				// this
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				intent, // add
+						// this
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				this).setSmallIcon(R.drawable.ic_livetracking)
+				this)
+				.setSmallIcon(R.drawable.ic_livetracking)
 				.setContentTitle(getString(R.string.app_name))
-				.setStyle(new NotificationCompat.BigTextStyle()
-        .bigText(message))
+				.setStyle(
+						new NotificationCompat.BigTextStyle().bigText(message))
 				.setContentText(message).setContentIntent(contentIntent);
 
 		Notification notification = mBuilder.build();
@@ -232,15 +233,14 @@ public class ConnectorService extends Service implements LocationListener {
 			User user = users.get(i);
 			ids[i] = user.id;
 		}
-		
+
 		Credentials currentCredentials = MySettings.CurrentCredentials;
 		final MyPosition loc = new MyPosition(currentCredentials == null ? 0
 				: currentCredentials.getId(), ids,
 				(int) (mLocation.getLatitude() * 1E6),
 				(int) (mLocation.getLongitude() * 1E6),
 				(long) (System.currentTimeMillis() / 1E3),
-				LocationManager.GPS_PROVIDER.equals(mLocation.getProvider())
-				);
+				LocationManager.GPS_PROVIDER.equals(mLocation.getProvider()));
 		new Thread() {
 			@Override
 			public void run() {
@@ -286,19 +286,17 @@ public class ConnectorService extends Service implements LocationListener {
 		return null;
 	}
 
-	public static void activate(Context context, User user, boolean activate, boolean silent) {
-		Intent intent1 = new Intent(context,
-				ConnectorService.class);
-		intent1.putExtra(Const.COMMAND,
-				new ConnectorServiceCommand(user, activate, silent));
+	public static void activate(Context context, User user, boolean activate,
+			boolean silent) {
+		Intent intent1 = new Intent(context, ConnectorService.class);
+		intent1.putExtra(Const.COMMAND, new ConnectorServiceCommand(user,
+				activate, silent));
 		context.startService(intent1);
-		
+
 	}
 
 	public boolean isLiveTracking() {
 		return users.size() > 0;
 	}
-	
-	
 
 }

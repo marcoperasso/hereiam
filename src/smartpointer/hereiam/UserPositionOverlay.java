@@ -83,10 +83,9 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> {
 					.getTimeFormat(mContext);
 			Date df = new java.util.Date(up.getPosition().time * 1000);
 			String title = up.getUser().toString();
-			
 			String text = mContext.getString(R.string.balloon_text, timeFormat.format(df),
 					up.getAddress(),
-					mContext.getString(up.isGps() ? android.R.string.yes : android.R.string.no));
+					mContext.getString(up.isGps() ? R.string.yes : R.string.no));
 			OverlayItem overlayitem = new OverlayItem(point,
 					title, text);
 			mOverlays.add(overlayitem);

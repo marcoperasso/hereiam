@@ -8,6 +8,7 @@ import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
@@ -138,6 +139,10 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 			break;
 
+		case R.id.itemSendMessage:
+			sendMessageToUser();
+
+			break;
 		case R.id.itemRemoveUser:
 			Helper.dialogMessage(this, BookActivity.this.getString(
 					R.string.are_you_sure_to_remove_user_s_, selectedUser),
@@ -224,11 +229,55 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		});
 	}
 
-	@Override
-	public boolean onSearchRequested() {
+	private void sendMessageToUser() {
 
-		return super.onSearchRequested();
+		// Set an EditText view to get user input
+		final EditText input = new EditText(this);
+		input.setInputType(InputType.TYPE_CLASS_TEXT
+				| InputType.TYPE_TEXT_VARIATION_NORMAL);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.app_name)
+				.setMessage(R.string.write_your_message).setView(input)
+				.setPositiveButton(android.R.string.ok, null)
+				.setNegativeButton(android.R.string.cancel, null);
+		final AlertDialog dialog = builder.create();
+		dialog.show();
+
+		Button cancelButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+		cancelButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				dialog.dismiss();
+
+			}
+		});
+
+		Button okButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+		okButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+				sendMessage(selectedUser, input.getText().toString());
+			}
+
+			
+		});
 	}
+	private void sendMessage(final User selectedUser, final String message) {
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				HttpManager.messageToUser(selectedUser.id, message);
+				return null;
+			}
+		}.execute(null, null, null);
+		
+		
+	}
+	
 
 	@Override
 	public void onClick(View v) {

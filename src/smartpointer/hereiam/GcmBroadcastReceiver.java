@@ -127,6 +127,12 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 								fromUser), null, fromUser.id);
 						break;
 					}
+					case Const.MSG_MESSAGE: {
+						sendNotification(context, context.getString(
+								R.string._s_says,
+								fromUser, extras.getString("message")), null, fromUser.id);
+						break;
+					}
 					}
 				}
 			}
