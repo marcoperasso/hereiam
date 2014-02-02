@@ -201,7 +201,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 		List<Overlay> mapOverlays = mMap.getOverlays();
 		Drawable drawable = this.getResources().getDrawable(
-				R.drawable.ic_routemarker);
+				R.drawable.marker);
 		mUsersOverlay = new UserPositionOverlay(drawable, this, mMap);
 		mapOverlays.add(mUsersOverlay);
 
