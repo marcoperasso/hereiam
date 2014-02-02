@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -201,8 +202,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 				| InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.app_name)
-				.setMessage(R.string.set_user_password).setView(input)
+		builder.setTitle(R.string.set_user_password).setView(input)
 				.setPositiveButton(android.R.string.ok, null)
 				.setNegativeButton(android.R.string.cancel, null);
 		final AlertDialog dialogPwd = builder.create();
@@ -237,8 +237,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 				| InputType.TYPE_TEXT_VARIATION_NORMAL);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.app_name)
-				.setMessage(R.string.write_your_message).setView(input)
+		builder.setTitle(R.string.write_your_message).setView(input)
 				.setPositiveButton(android.R.string.ok, null)
 				.setNegativeButton(android.R.string.cancel, null);
 		final AlertDialog dialog = builder.create();
@@ -262,22 +261,62 @@ public class BookActivity extends ListActivity implements OnClickListener {
 				sendMessage(selectedUser, input.getText().toString());
 			}
 
-			
 		});
 	}
+
 	private void sendMessage(final User selectedUser, final String message) {
+		final ProgressDialog progressBar = new ProgressDialog(this);
+		progressBar.setCancelable(true);
+		progressBar.setMessage(getString(R.string.sending_message_));
+		progressBar.setIndeterminate(true);
+		progressBar.show();
 		new AsyncTask<Void, Void, Void>() {
+			protected void onPostExecute(Void result) {
+				progressBar.dismiss();
+			};
 
 			@Override
 			protected Void doInBackground(Void... params) {
-				HttpManager.messageToUser(selectedUser.id, message);
+
+				Credentials.testCredentials(BookActivity.this,
+						new OnAsyncResponse() {
+
+							@Override
+							public void response(boolean success, String message) {
+								if (success) {
+									WebRequestResult result = HttpManager
+											.messageToUser(selectedUser.id,
+													message);
+
+									if (result.result)
+										Helper.showMessage(
+												BookActivity.this,
+												getString(R.string.message_successfully_delivered));
+									else
+										Helper.showMessage(
+												BookActivity.this,
+												getString(
+														R.string.message_not_delivered_s,
+														result.message));
+								}
+								else
+								{
+									Helper.showMessage(
+											BookActivity.this,
+											getString(
+													R.string.message_not_delivered_s,
+													message));
+								}
+
+							}
+						});
+
 				return null;
 			}
+
 		}.execute(null, null, null);
-		
-		
+
 	}
-	
 
 	@Override
 	public void onClick(View v) {

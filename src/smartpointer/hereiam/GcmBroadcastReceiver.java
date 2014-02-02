@@ -153,7 +153,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				context).setSmallIcon(R.drawable.ic_launcher)
+				context).setSmallIcon(R.drawable.envelope)
 				.setContentTitle(context.getString(R.string.app_name))
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
 				.setContentText(msg).setContentIntent(contentIntent);

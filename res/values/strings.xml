@@ -38,7 +38,7 @@
     <string name="title_activity_search">Find User</string>
     <string name="search_hint">User name or userid</string>
     <string name="find_user">Find User</string>
-    <string name="found_user">Found %d users</string>
+    <string name="found_user">%d users found; tap the chosen user.</string>
     <string name="no_user">No user found</string>
     <string name="balloon_text">Recording time: %1$s\nAddress: %2$s\nUsing GPS: %3$s</string>
     <string name="refine_query">%1$d Users of %2$d shown; if you do not find the person you are looking for, try refining your search criteria.</string>
@@ -62,8 +62,8 @@
     <string name="s_stopped_sending_her_its_position">%s has stopped sending you her/its position.</string>
     <string name="title_activity_tracked_users">Tracked users</string>
     <string name="you_are_sending_your_position_to_the_following_users">You are sending your position to the listed users; tap an user to remove her/him</string>
-    <string name="do_you_want_to_stop_tracking_this_user">Stop sending your position to %s? She/he will automatically stop sending her/his to you, too.</string>
-    <string name="do_you_want_to_stop_tracking_all_users">Stop sending your position to everyone? They will automatically stop sending theirs to you, too.</string>
+    <string name="do_you_want_to_stop_tracking_this_user">Stop sending your position to %s?</string>
+    <string name="do_you_want_to_stop_tracking_all_users">Stop sending your position?</string>
     <string name="send_error">"Send error: %s"</string>
     <string name="deleted_messages_on_server_s">Deleted messages on server: %s</string>
     <string name="search_again">Search again</string>
@@ -77,6 +77,7 @@
     <string name="users_book">Users book</string>
     <string name="user_already_in_book">User already in book</string>
     <string name="sending_request_">Sending request&#8230;</string>
+    <string name="sending_message_">Sending message&#8230;</string>
     <string name="remove_user">Remove user</string>
     <string name="are_you_sure_to_remove_user_s_">Are you sure to remove user %s?</string>
     <string name="remove_all">Remove all</string>
@@ -90,5 +91,7 @@
     <string name="you_are_not_logged">You are not logged</string>
     <string name="no_registered_user_to_whom_send_your_message">No registered user to whom send your message</string>
     <string name="_s_says">"%1$s says: \'%2$s\'"</string>
+    <string name="message_successfully_delivered">Message successfully delivered</string>
+    <string name="message_not_delivered_s">Message not delivered: %s</string>
 
 </resources>
