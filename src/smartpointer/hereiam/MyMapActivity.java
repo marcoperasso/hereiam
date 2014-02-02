@@ -113,7 +113,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 				} catch (IOException ex) {
 
-					Helper.showMessage(MyMapActivity.this, ex.getMessage());
+					Helper.showMessage(MyMapActivity.this, 	getString(R.string.error_registering_to_google_play_services_s, ex.getMessage()));
 				}
 				return null;
 			}
@@ -273,7 +273,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				registerInBackground();
 			}
 		} else {
-			Log.i(Const.LOG_TAG, "No valid Google Play Services APK found.");
+			Helper.showMessage(this, getString(R.string.no_valid_google_play_services_apk_found));
 		}
 	}
 
