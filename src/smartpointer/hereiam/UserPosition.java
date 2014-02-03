@@ -13,12 +13,10 @@ Serializable {
 	private static final long serialVersionUID = 6187571661244030130L;
 	private User user;
 	private GpsPoint position;
-	private boolean gps;
 	private String address;
-	public UserPosition(User user, GpsPoint position, boolean gps) {
+	public UserPosition(User user, GpsPoint position) {
 		this.user = user;
 		this.position = position;
-		this.gps = gps;
 	}
 	public User getUser() {
 		return user;
@@ -28,10 +26,10 @@ Serializable {
 	}
 	
 	public static UserPosition parseJSON(JSONObject jsonObject) throws JSONException {
-		return new UserPosition(User.parseJSON(jsonObject), GpsPoint.parseJSON(jsonObject), jsonObject.getBoolean("gps"));
+		return new UserPosition(User.parseJSON(jsonObject), GpsPoint.parseJSON(jsonObject));
 	}
 	public boolean isGps() {
-		return gps;
+		return position.gps;
 	}
 	public void calculateAddress() {
 		address = MyApplication.getInstance().reverseGeocode(position.lat, position.lon);	

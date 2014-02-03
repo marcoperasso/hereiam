@@ -15,11 +15,13 @@ public class GpsPoint implements Serializable {
 	int lat;
 	int lon;
 	long time;
+	boolean gps;
 
-	GpsPoint(int lat, int lon, long time) {
+	GpsPoint(int lat, int lon, long time, boolean gps) {
 		this.lat = lat;
 		this.lon = lon;
 		this.time = time;
+		this.gps = gps;
 	}
 
 	public GpsPoint() {
@@ -47,7 +49,7 @@ public class GpsPoint implements Serializable {
 	}
 
 	public static GpsPoint parseJSON(JSONObject jsonObject) throws JSONException {
-		return new GpsPoint(jsonObject.getInt("lat"), jsonObject.getInt("lon"), jsonObject.getInt("time"));
+		return new GpsPoint(jsonObject.getInt("lat"), jsonObject.getInt("lon"), jsonObject.getInt("time"), jsonObject.getBoolean("gps"));
 	}
 
 }
@@ -59,11 +61,9 @@ class MyPosition extends GpsPoint implements IJsonSerializable{
 	private static final long serialVersionUID = 3865710892328782713L;
 	int id;
 	Integer[] connectedUsers;
-	private boolean gpsProvider;
-	MyPosition(int id, Integer[] connectedUsers, int lat, int lon, long time, boolean gpsProvider) {
-		super(lat, lon, time);
+	MyPosition(int id, Integer[] connectedUsers, int lat, int lon, long time, boolean gps) {
+		super(lat, lon, time, gps);
 		this.id = id;
-		this.gpsProvider = gpsProvider;
 		this.connectedUsers = connectedUsers;
 	}
 
@@ -74,7 +74,7 @@ class MyPosition extends GpsPoint implements IJsonSerializable{
 		object.put("lat", lat);
 		object.put("lon", lon);
 		object.put("time", time);
-		object.put("gps", gpsProvider);
+		object.put("gps", gps);
 		JSONArray jsonArray = new JSONArray();
 		for (Integer id : connectedUsers)
 			jsonArray.put(id);
