@@ -1,5 +1,7 @@
 package smartpointer.hereiam;
 
+import org.json.JSONObject;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -131,6 +133,11 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 						sendNotification(context, context.getString(
 								R.string._s_says,
 								fromUser, extras.getString("message")), null, fromUser.id);
+						break;
+					}
+					case Const.MSG_POSITION: {
+						JSONObject jsonObject = new JSONObject(extras.getString("position"));
+						UserPosition pos = new UserPosition(fromUser, GpsPoint.parseJSON(jsonObject), jsonObject.getBoolean("gps")) ;
 						break;
 					}
 					}

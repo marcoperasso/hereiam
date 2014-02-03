@@ -70,7 +70,9 @@ public class ConnectorService extends Service implements LocationListener {
 					mHandler = new Handler();
 					mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 					execute(command);
-
+					if (mLocation == null)
+						mLocation = mlocManager
+								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 					sendLatestPositionProcedure();
 					Looper.loop();
 
