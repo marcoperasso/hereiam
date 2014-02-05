@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import android.app.Application;
 import android.location.Address;
 import android.location.Geocoder;
@@ -25,6 +24,11 @@ public class MyApplication extends Application {
 	Event ConnectorServiceChanged = new Event();
 	private ArrayList<User> users;
 	private Object userTicket = new Object();
+	private PositionsDownloader mPositionsDownloader = new PositionsDownloader(
+			this);
+	private PositionsReceivedEvent positionReceived = new PositionsReceivedEvent();
+	private PositionsDownloadedEvent positionsDownloaded = new PositionsDownloadedEvent();
+	private Event positionsPurge = new Event();
 
 	@Override
 	public void onCreate() {
@@ -161,6 +165,45 @@ public class MyApplication extends Application {
 		} catch (IOException e) {
 			Log.e(Const.LOG_TAG, e.getMessage());
 		}
+	}
+
+	public void unregisterForPositions(
+			PositionsDownloadedEventHandler downloadHandler,
+			PositionReceivedEventHandler receiveHandler,
+			GenericEventHandler mPurgePositionsHandler) {
+		mPositionsDownloader.stop();
+
+		positionsDownloaded.removeHandler(downloadHandler);
+
+		positionReceived.addHandler(receiveHandler);
+
+		positionsPurge.addHandler(mPurgePositionsHandler);
+	}
+
+	public void registerForPositions(
+			PositionsDownloadedEventHandler downloadHandler,
+			PositionReceivedEventHandler receiveHandler,
+			GenericEventHandler mPurgePositionsHandler) {
+		mPositionsDownloader.start();
+		positionsDownloaded.addHandler(downloadHandler);
+		positionReceived.addHandler(receiveHandler);
+
+		positionsPurge.addHandler(mPurgePositionsHandler);
+	}
+
+	public void receivedPosition(UserPosition pos) {
+		positionReceived.fire(this, pos);
+		mPositionsDownloader.restart();// fa ripartire il timer per downloadare
+										// le posizioni
+	}
+
+	public void purgePositions() {
+		positionsPurge.fire(this, EventArgs.Empty);
+	}
+
+	public void downloadedPositions(ArrayList<UserPosition> positions) {
+		positionsDownloaded.fire(this, positions);
+
 	}
 }
 

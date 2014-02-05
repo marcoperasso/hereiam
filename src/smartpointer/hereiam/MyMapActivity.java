@@ -54,7 +54,6 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	private Animation mAnimation;
 
-	private PositionsDownloader mPositionsDownloader;
 	private GoogleCloudMessaging gcm;
 	private String regid;
 
@@ -66,6 +65,47 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		}
 	};
 
+	PositionsDownloadedEventHandler mPositionAvailableHandler = new PositionsDownloadedEventHandler() {
+
+		@Override
+		public void onEvent(Object sender, ArrayList<UserPosition> positions) {
+			mUsersOverlay.setPositions(positions);
+
+		}
+	};
+
+	PositionReceivedEventHandler mPositionReceivedHandler = new PositionReceivedEventHandler() {
+
+		@Override
+		public void onEvent(Object sender, UserPosition position) {
+
+			ArrayList<UserPosition> positions = mUsersOverlay.getPositions();
+			for (int i = positions.size() - 1; i >= 0; i--) {
+				UserPosition userPosition = positions.get(i);
+				//tolgo le posizioni più vecchie di 15 minuti e quella che sto per aggiungere
+				if (userPosition.getUser().id == position.getUser().id
+						|| (long) (System.currentTimeMillis() / 1E3) - userPosition.getPosition().time > 900)
+					positions.remove(i);
+			}
+			mUsersOverlay.setPositions(positions);
+		}
+	};
+
+	GenericEventHandler mPurgePositionsHandler = new GenericEventHandler() {
+
+		@Override
+		public void onEvent(Object sender, EventArgs args) {
+			ArrayList<UserPosition> positions = mUsersOverlay.getPositions();
+			
+			for (int i = positions.size() - 1; i >= 0; i--) {
+				UserPosition userPosition = positions.get(i);
+				//tolgo le posizioni più vecchie di 15 minuti e quella che sto per aggiungere
+				if ((long) (System.currentTimeMillis() / 1E3) - userPosition.getPosition().time > 900)
+					positions.remove(i);
+			}
+			mUsersOverlay.setPositions(positions);
+		}
+	};
 	private boolean checkPlayServices() {
 		int resultCode = GooglePlayServicesUtil
 				.isGooglePlayServicesAvailable(this);
@@ -113,7 +153,11 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 				} catch (IOException ex) {
 
-					Helper.showMessage(MyMapActivity.this, 	getString(R.string.error_registering_to_google_play_services_s, ex.getMessage()));
+					Helper.showMessage(
+							MyMapActivity.this,
+							getString(
+									R.string.error_registering_to_google_play_services_s,
+									ex.getMessage()));
 				}
 				return null;
 			}
@@ -199,8 +243,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		int zoomLevel = 15;
 
 		List<Overlay> mapOverlays = mMap.getOverlays();
-		Drawable drawable = this.getResources().getDrawable(
-				R.drawable.marker);
+		Drawable drawable = this.getResources().getDrawable(R.drawable.marker);
 		mUsersOverlay = new UserPositionOverlay(drawable, this, mMap);
 		mapOverlays.add(mUsersOverlay);
 
@@ -240,8 +283,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		mController.setZoom(zoomLevel);
 		MyApplication.getInstance().ConnectorServiceChanged
 				.addHandler(mConnectorServiceChangedHandler);
-		
-		
+
 		mAnimation = new AlphaAnimation(1, 0.5f);
 		// from
 		// fully
@@ -259,8 +301,6 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 														// will
 														// fade back in
 
-		mPositionsDownloader = new PositionsDownloader(mUsersOverlay, this);
-
 		showTrackingButton(isLiveTracking());
 	}
 
@@ -273,7 +313,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				registerInBackground();
 			}
 		} else {
-			Helper.showMessage(this, getString(R.string.no_valid_google_play_services_apk_found));
+			Helper.showMessage(this,
+					getString(R.string.no_valid_google_play_services_apk_found));
 		}
 	}
 
@@ -330,9 +371,10 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 					.show();
 		} else if (requestCode == Const.LOGIN_RESULT) {
 			if (resultCode == RESULT_OK) {
-				Helper.showMessage(this, String.format(
-						getString(R.string.welcome_s),
-						MySettings.readCredentials(this)));
+				Helper.showMessage(
+						this,
+						String.format(getString(R.string.welcome_s),
+								MySettings.readCredentials(this)));
 				registerForGCM();
 			} else
 				finish();
@@ -488,8 +530,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		super.onPause();
 		myLocationOverlay.disableMyLocation();
 		// myLocationOverlay.disableCompass();
-
-		mPositionsDownloader.stop();
+		MyApplication.getInstance().unregisterForPositions(
+				mPositionAvailableHandler, mPositionReceivedHandler, mPurgePositionsHandler);
 
 	}
 
@@ -500,7 +542,9 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		if (mTrackGPSPosition)
 			myLocationOverlay.enableMyLocation();
 		// myLocationOverlay.enableCompass();
-		mPositionsDownloader.start();
+		MyApplication.getInstance().registerForPositions(
+				mPositionAvailableHandler, mPositionReceivedHandler, mPurgePositionsHandler);
+
 	}
 
 	public boolean isLiveTracking() {

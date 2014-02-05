@@ -23,7 +23,8 @@ public class PositionsDownloader implements Runnable{
 		@Override
 		protected void onPostExecute(
 				ArrayList<UserPosition> positions) {
-			mRoutesOverlay.setPositions(positions);
+			context.downloadedPositions(positions);
+			
 			downloadPositionsTask = null;
 			if (mHandler != null) {
 				mHandler.postDelayed(PositionsDownloader.this, downloadPositionsInterval);
@@ -31,21 +32,18 @@ public class PositionsDownloader implements Runnable{
 			super.onPostExecute(positions);
 		}
 	}
-
 	private static final int downloadPositionsInterval = 10000;
 
 	private Handler mHandler;
 
 	private AsyncTask<Void, Void, ArrayList<UserPosition>> downloadPositionsTask;
 
-	private UserPositionOverlay mRoutesOverlay;
-
-	private MyMapActivity activity;
-
-	public PositionsDownloader(UserPositionOverlay overlay,
-			MyMapActivity activity) {
-		this.mRoutesOverlay = overlay;
-		this.activity = activity;
+	private MyApplication context;
+		
+	
+	
+	public PositionsDownloader(MyApplication context) {
+		this.context = context;
 	}
 
 	public void start() {
@@ -59,8 +57,16 @@ public class PositionsDownloader implements Runnable{
 		mHandler.removeCallbacks(this);
 		mHandler = null;
 	}
+	public void restart()
+	{
+		if (mHandler != null) {
+			mHandler.removeCallbacks(this);
+			mHandler.postDelayed(this, downloadPositionsInterval);
+		}
+	}
 	private void downloadPositions() {
-		if (Helper.isOnline(activity)) {
+		if (Helper.isOnline(context) && context.getConnectorService() != null ) {
+			//per scaricare le posizioni devo essere online e il connector deve essere attivo (se non le mando, non devo neanche riceverle)
 			downloadPositionsTask = new DownloadPositionsAsyncTask().execute(null, null, null);
 		}
 		else
@@ -68,6 +74,7 @@ public class PositionsDownloader implements Runnable{
 			if (mHandler != null) {
 				mHandler.postDelayed(PositionsDownloader.this, downloadPositionsInterval);
 			}
+			context.purgePositions();
 		}
 
 	}

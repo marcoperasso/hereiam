@@ -137,7 +137,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					}
 					case Const.MSG_POSITION: {
 						JSONObject jsonObject = new JSONObject(extras.getString("position"));
-						UserPosition pos = new UserPosition(fromUser, GpsPoint.parseJSON(jsonObject)) ;
+						UserPosition pos = new UserPosition(fromUser, GpsPoint.parseJSON(jsonObject));
+						MyApplication.getInstance().receivedPosition(pos);
 						break;
 					}
 					}

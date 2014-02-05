@@ -1,5 +1,6 @@
 package smartpointer.hereiam;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,34 +52,26 @@ abstract class TEventItem<TSender, TArgs> {
 abstract class GenericEventHandler extends TEventItem<Object, EventArgs> {
 }
 
-abstract class LiveTrackingEventHandler extends TEventItem<Object, LiveTrackingEventArgs> {
-}
-
-
 class EventArgs {
 	public static EventArgs Empty = new EventArgs();
 }
 
-class LiveTrackingEventArgs {
-	private boolean active;
-
-	public LiveTrackingEventArgs(boolean liveTracking) {
-		this.active = liveTracking;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-}
-
-
 class Event extends TEvent<Object, EventArgs> {
 
 }
-class LiveTrackingEvent extends TEvent<Object, LiveTrackingEventArgs> {
+
+class PositionsDownloadedEvent extends TEvent<Object, ArrayList<UserPosition>> {
 
 }
+abstract class PositionsDownloadedEventHandler extends TEventItem<Object, ArrayList<UserPosition>> {
+	
+}
+
+class PositionsReceivedEvent extends TEvent<Object, UserPosition> {
+
+}
+abstract class PositionReceivedEventHandler extends TEventItem<Object, UserPosition> {
+	
+}
+
+

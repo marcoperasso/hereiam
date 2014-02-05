@@ -21,7 +21,7 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> {
 	GeoPoint trackRectOrigin;
 	int currentZoomLevel = -1;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
-	private ArrayList<UserPosition> mPositions;
+	private ArrayList<UserPosition> mPositions = new ArrayList<UserPosition>();
 	private User pinnedUser;
 	private MyMapActivity mContext;
 
@@ -71,7 +71,6 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> {
 		super.draw(canvas, mapView, shadow);
 	}
 
-
 	public void setPositions(ArrayList<UserPosition> positions) {
 		mPositions = positions;
 		mOverlays.clear();
@@ -117,5 +116,6 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> {
 	User getPinnedUser() {
 		return pinnedUser;
 	}
+
 
 }
