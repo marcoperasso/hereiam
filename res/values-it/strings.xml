@@ -59,7 +59,7 @@
     <string name="s_stopped_sending_her_its_position">%s ha interrotto l\'invio della sua posizione.</string>
     <string name="title_activity_tracked_users">Utenti tracciati</string>
     <string name="you_are_sending_your_position_to_the_following_users">Stai inviando la tua posizione agli utenti elencati; tocca un utente per rimuoverlo</string>
-    <string name="do_you_want_to_stop_tracking_this_user">Non vuoi inviare la tua posizione a %s?</string>
+    <string name="do_you_want_to_stop_tracking_this_user">Non vuoi più inviare la tua posizione a %s?</string>
     <string name="do_you_want_to_stop_tracking_all_users">Non vuoi più inviare la tua posizione?</string>
     <string name="send_error">"Errore di invio: %s"</string>
     <string name="deleted_messages_on_server_s">Messaggi cancellati sul server %s</string>
@@ -73,7 +73,7 @@
     <string name="set_user_password">Inserisci la password di %s</string>
     <string name="users_book">Rubrica utenti</string>
     <string name="user_already_in_book">Utente già in rubrica</string>
-    <string name="sending_request_">Invio richieta&#8230;</string>
+    <string name="sending_request_">Invio richiesta&#8230;</string>
     <string name="sending_message_">Invio messaggio&#8230;</string>
     <string name="remove_user">Rimuovi utente</string>
     <string name="are_you_sure_to_remove_user_s_">Sicuro di rimuovere l\'utente %s?</string>

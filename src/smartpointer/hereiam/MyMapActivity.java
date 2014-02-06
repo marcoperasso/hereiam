@@ -82,9 +82,11 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			ArrayList<UserPosition> positions = mUsersOverlay.getPositions();
 			for (int i = positions.size() - 1; i >= 0; i--) {
 				UserPosition userPosition = positions.get(i);
-				//tolgo le posizioni più vecchie di 15 minuti e quella che sto per aggiungere
+				// tolgo le posizioni più vecchie di 15 minuti e quella che sto
+				// per aggiungere
 				if (userPosition.getUser().id == position.getUser().id
-						|| (long) (System.currentTimeMillis() / 1E3) - userPosition.getPosition().time > 900)
+						|| (long) (System.currentTimeMillis() / 1E3)
+								- userPosition.getPosition().time > 900)
 					positions.remove(i);
 			}
 			mUsersOverlay.setPositions(positions);
@@ -96,16 +98,19 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		@Override
 		public void onEvent(Object sender, EventArgs args) {
 			ArrayList<UserPosition> positions = mUsersOverlay.getPositions();
-			
+
 			for (int i = positions.size() - 1; i >= 0; i--) {
 				UserPosition userPosition = positions.get(i);
-				//tolgo le posizioni più vecchie di 15 minuti e quella che sto per aggiungere
-				if ((long) (System.currentTimeMillis() / 1E3) - userPosition.getPosition().time > 900)
+				// tolgo le posizioni più vecchie di 15 minuti e quella che sto
+				// per aggiungere
+				if ((long) (System.currentTimeMillis() / 1E3)
+						- userPosition.getPosition().time > 900)
 					positions.remove(i);
 			}
 			mUsersOverlay.setPositions(positions);
 		}
 	};
+
 	private boolean checkPlayServices() {
 		int resultCode = GooglePlayServicesUtil
 				.isGooglePlayServicesAvailable(this);
@@ -396,7 +401,12 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	}
 
 	private void contactUser(final User user, final String pwd) {
-
+		ConnectorService connectorService = MyApplication.getInstance()
+				.getConnectorService();
+		if (connectorService != null && connectorService.existUser(user)) {
+			Helper.showMessage(this, getString(R.string._s_has_already_been_contacted, user));
+			return;
+		}
 		final ProgressDialog progressBar = new ProgressDialog(this);
 		progressBar.setCancelable(true);
 		progressBar.setMessage(getString(R.string.sending_request_));
@@ -531,7 +541,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		myLocationOverlay.disableMyLocation();
 		// myLocationOverlay.disableCompass();
 		MyApplication.getInstance().unregisterForPositions(
-				mPositionAvailableHandler, mPositionReceivedHandler, mPositionPurgeNeededHandler);
+				mPositionAvailableHandler, mPositionReceivedHandler,
+				mPositionPurgeNeededHandler);
 
 	}
 
@@ -543,7 +554,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			myLocationOverlay.enableMyLocation();
 		// myLocationOverlay.enableCompass();
 		MyApplication.getInstance().registerForPositions(
-				mPositionAvailableHandler, mPositionReceivedHandler, mPositionPurgeNeededHandler);
+				mPositionAvailableHandler, mPositionReceivedHandler,
+				mPositionPurgeNeededHandler);
 
 	}
 

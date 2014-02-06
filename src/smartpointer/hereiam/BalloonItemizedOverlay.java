@@ -19,13 +19,13 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-public abstract class BalloonItemizedOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item> {
+public abstract class BalloonItemizedOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item> implements OnClickListener {
 
 	private static final long BALLOON_INFLATION_TIME = 300;
 	private static Handler handler = new Handler();
 	
 	private MapView mapView;
-	private BalloonOverlayView balloonView;
+	protected BalloonOverlayView balloonView;
 	private View clickRegion;
 	private View closeRegion;
 	private int viewOffset;
@@ -194,6 +194,10 @@ public abstract class BalloonItemizedOverlay<Item extends OverlayItem> extends I
 			clickRegion = (View) balloonView.findViewById(R.id.balloon_inner_layout);
 			clickRegion.setOnTouchListener(createBalloonTouchListener());
 			closeRegion = (View) balloonView.findViewById(R.id.balloon_close);
+			
+			View disconnect = (View) balloonView.findViewById(R.id.balloon_disconnect);
+			disconnect.setOnClickListener(this);
+			
 			if (closeRegion != null) {
 			if (!showClose) {
 					closeRegion.setVisibility(View.GONE);

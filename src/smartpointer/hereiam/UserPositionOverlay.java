@@ -3,20 +3,23 @@ package smartpointer.hereiam;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.format.DateFormat;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
-public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> {
+public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> implements OnClickListener {
 
 	
 	// private ImageView mImageView;
-	private Paint pnt = new Paint();
+	
 	// Bitmap trackBitmap;
 	GeoPoint trackRectOrigin;
 	int currentZoomLevel = -1;
@@ -31,10 +34,7 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> {
 		super.setSnapToCenter(true);
 		mContext = context;
 		// mImageView = new ImageView(mContext);
-		pnt.setStyle(Paint.Style.FILL);
-		pnt.setStrokeWidth(4);
-		pnt.setAntiAlias(true);
-
+		
 
 		setLastFocusedIndex(-1);
 
@@ -115,6 +115,24 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> {
 
 	User getPinnedUser() {
 		return pinnedUser;
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.balloon_disconnect)
+		{
+			Helper.dialogMessage(mContext, mContext.getString(R.string.do_you_want_to_stop_tracking_this_user, pinnedUser),
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							TrackedUsersActivity.disconnectUser(pinnedUser);
+							hideBalloon();
+						}					
+					}, null);
+
+		}
+		
 	}
 
 

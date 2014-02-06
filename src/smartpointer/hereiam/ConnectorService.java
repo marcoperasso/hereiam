@@ -126,6 +126,14 @@ public class ConnectorService extends Service implements LocationListener {
 
 	}
 
+	boolean existUser(final User user) {
+		for (int i = 0; i < users.size(); i++)
+			if (users.get(i).id == user.id) {
+				return true;
+			}
+		return false;
+
+	}
 	private void removeUser(final User user) {
 		for (int i = 0; i < users.size(); i++)
 			if (users.get(i).id == user.id) {

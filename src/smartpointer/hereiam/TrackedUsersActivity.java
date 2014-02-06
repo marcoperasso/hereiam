@@ -50,8 +50,8 @@ public class TrackedUsersActivity extends ListActivity implements OnClickListene
 	}
 	
 	
-	private void disconnectUser(final User user) {
-		ConnectorService.activate(TrackedUsersActivity.this, user, false, false);
+	static void disconnectUser(final User user) {
+		ConnectorService.activate(MyApplication.getInstance(), user, false, false);
 		MyApplication.getInstance().notifyUserDisconnection(user);
 	}
 
