@@ -28,7 +28,7 @@ public class MyApplication extends Application {
 			this);
 	private PositionsReceivedEvent positionReceived = new PositionsReceivedEvent();
 	private PositionsDownloadedEvent positionsDownloaded = new PositionsDownloadedEvent();
-	private Event positionsPurge = new Event();
+	private Event positionsPurgeNeeded = new Event();
 
 	@Override
 	public void onCreate() {
@@ -170,25 +170,24 @@ public class MyApplication extends Application {
 	public void unregisterForPositions(
 			PositionsDownloadedEventHandler downloadHandler,
 			PositionReceivedEventHandler receiveHandler,
-			GenericEventHandler mPurgePositionsHandler) {
+			GenericEventHandler positionPurgeNeededHandler) {
 		mPositionsDownloader.stop();
 
 		positionsDownloaded.removeHandler(downloadHandler);
 
 		positionReceived.addHandler(receiveHandler);
 
-		positionsPurge.addHandler(mPurgePositionsHandler);
+		positionsPurgeNeeded.addHandler(positionPurgeNeededHandler);
 	}
 
 	public void registerForPositions(
 			PositionsDownloadedEventHandler downloadHandler,
 			PositionReceivedEventHandler receiveHandler,
-			GenericEventHandler mPurgePositionsHandler) {
+			GenericEventHandler positionPurgeNeededHandler) {
 		mPositionsDownloader.start();
 		positionsDownloaded.addHandler(downloadHandler);
 		positionReceived.addHandler(receiveHandler);
-
-		positionsPurge.addHandler(mPurgePositionsHandler);
+		positionsPurgeNeeded.addHandler(positionPurgeNeededHandler);
 	}
 
 	public void receivedPosition(UserPosition pos) {
@@ -198,7 +197,7 @@ public class MyApplication extends Application {
 	}
 
 	public void purgePositions() {
-		positionsPurge.fire(this, EventArgs.Empty);
+		positionsPurgeNeeded.fire(this, EventArgs.Empty);
 	}
 
 	public void downloadedPositions(ArrayList<UserPosition> positions) {

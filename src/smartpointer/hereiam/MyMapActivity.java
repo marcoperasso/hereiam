@@ -91,7 +91,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		}
 	};
 
-	GenericEventHandler mPurgePositionsHandler = new GenericEventHandler() {
+	GenericEventHandler mPositionPurgeNeededHandler = new GenericEventHandler() {
 
 		@Override
 		public void onEvent(Object sender, EventArgs args) {
@@ -531,7 +531,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		myLocationOverlay.disableMyLocation();
 		// myLocationOverlay.disableCompass();
 		MyApplication.getInstance().unregisterForPositions(
-				mPositionAvailableHandler, mPositionReceivedHandler, mPurgePositionsHandler);
+				mPositionAvailableHandler, mPositionReceivedHandler, mPositionPurgeNeededHandler);
 
 	}
 
@@ -543,7 +543,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			myLocationOverlay.enableMyLocation();
 		// myLocationOverlay.enableCompass();
 		MyApplication.getInstance().registerForPositions(
-				mPositionAvailableHandler, mPositionReceivedHandler, mPurgePositionsHandler);
+				mPositionAvailableHandler, mPositionReceivedHandler, mPositionPurgeNeededHandler);
 
 	}
 
