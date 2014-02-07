@@ -5,7 +5,6 @@ import java.util.Date;
 
 import android.content.DialogInterface;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.format.DateFormat;
 import android.view.View;

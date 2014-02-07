@@ -32,7 +32,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	private MyUserAdapter adapter;
 	private ArrayList<User> users;
 	private User selectedUser;
-	private boolean usersChanged;
+	private ArrayList<User> usersChanged = new ArrayList<User>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +87,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 									data);
 							return;
 						}
-					users.add(user);
-					MyApplication.getInstance().saveUsers();
+					MyApplication.getInstance().addUser(user);
 					adapter.notifyDataSetChanged();
 				}
 			}
@@ -123,7 +122,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		case R.id.itemAutoAllow:
 
 			selectedUser.alwaysAcceptToSendPosition = !selectedUser.alwaysAcceptToSendPosition;
-			setUsersChanged();
+			setUserChanged(selectedUser);
 
 			refreshRow();
 			if (selectedUser.alwaysAcceptToSendPosition) {
@@ -173,15 +172,9 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	}
 
 	private void removeUser() {
-		for (int i = 0; i < users.size(); i++) {
-			User u = users.get(i);
-			if (u.id == selectedUser.id) {
-				users.remove(i);
-				MyApplication.getInstance().saveUsers();
-				adapter.notifyDataSetChanged();
-				return;
-			}
-		}
+		MyApplication.getInstance().removeUser(selectedUser);
+		adapter.notifyDataSetChanged();
+		
 
 	}
 
@@ -331,16 +324,19 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 	}
 
-	public void setUsersChanged() {
-		this.usersChanged = true;
+	public void setUserChanged(User user) {
+		for (User u : usersChanged)
+			if (u.id == user.id)
+				return;
+		this.usersChanged.add(user);
 
 	}
 
 	@Override
 	protected void onPause() {
-		if (usersChanged) {
-			usersChanged = false;
-			MyApplication.getInstance().saveUsers();
+		if (usersChanged.size() > 0) {
+			MyApplication.getInstance().updateUsers(usersChanged);
+			usersChanged.clear();
 		}
 		super.onPause();
 	}

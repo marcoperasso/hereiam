@@ -37,7 +37,6 @@ public class Const {
 	static final String USERS = "UU";
 	static final String PASSWORD = "PWD";
 	static final String NULL_TOKEN = "null";
-	static final String USER_BOOK_FILE = "users";
 	
 
 }

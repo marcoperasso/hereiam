@@ -1,15 +1,14 @@
 package smartpointer.hereiam;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Application;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class MyApplication extends Application {
 
@@ -146,27 +145,71 @@ public class MyApplication extends Application {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public ArrayList<User> getUsers() {
 		synchronized (userTicket) {
-			if (users == null)
-				users = (ArrayList<User>) Helper.readObject(this,
-						Const.USER_BOOK_FILE);
-			if (users == null)
+			if (users == null) {
 				users = new ArrayList<User>();
+				UserDbAdapter dbHelper = new UserDbAdapter(this);
+				dbHelper.open();
+				Cursor cursor = dbHelper.fetchAllUsers();
+				
+				while (cursor.moveToNext()) {
+					User user = new User(cursor.getInt(cursor
+							.getColumnIndex(UserDbAdapter.KEY_ID)),
+							cursor.getString(cursor
+									.getColumnIndex(UserDbAdapter.KEY_USERID)),
+							cursor.getString(cursor
+									.getColumnIndex(UserDbAdapter.KEY_NAME)),
+							cursor.getString(cursor
+									.getColumnIndex(UserDbAdapter.KEY_SURNAME)));
+					user.alwaysAcceptToSendPosition = cursor.getInt(cursor
+							.getColumnIndex(UserDbAdapter.KEY_AUTOACCEPT)) == 1;
+					users.add(user);
+				}
+				cursor.close();
+				dbHelper.close();
+
+			}
+
 			return users;
 		}
 
 	}
-
-	public void saveUsers() {
-		try {
-			Helper.saveObject(this, Const.USER_BOOK_FILE, getUsers());
-		} catch (IOException e) {
-			Log.e(Const.LOG_TAG, e.getMessage());
+	public void removeUser(User selectedUser) {
+		for (int i = 0; i < users.size(); i++) {
+			User u = users.get(i);
+			if (u.id == selectedUser.id) {
+				users.remove(i);
+				UserDbAdapter dbHelper = new UserDbAdapter(this);
+				dbHelper.open();
+				dbHelper.deleteUser(u.id);
+				dbHelper.close();
+				return;
+			}
 		}
+		
+	}
+	public void addUser(User user) {
+		users.add(user);
+		UserDbAdapter dbHelper = new UserDbAdapter(this);
+		dbHelper.open();
+		dbHelper.createUser(user);
+		dbHelper.close();
+		
+	}
+	
+
+	public void updateUsers(ArrayList<User> usersChanged) {
+		UserDbAdapter dbHelper = new UserDbAdapter(this);
+		dbHelper.open();
+		for (User user : usersChanged)
+			dbHelper.updateUser(user);
+		dbHelper.close();
+		
 	}
 
+
+	
 	public void unregisterForPositions(
 			PositionsDownloadedEventHandler downloadHandler,
 			PositionReceivedEventHandler receiveHandler,
@@ -204,6 +247,10 @@ public class MyApplication extends Application {
 		positionsDownloaded.fire(this, positions);
 
 	}
+
+	
+
+	
 }
 
 class GeoAddress {
