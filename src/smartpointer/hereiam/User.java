@@ -16,6 +16,7 @@ public class User implements IJsonSerializable, Serializable {
 	String name;
 	String surname;
 	boolean alwaysAcceptToSendPosition = false;
+	transient boolean changed = false;
 	
 	private static final long serialVersionUID = -5703092633640293472L;
 

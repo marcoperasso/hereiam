@@ -32,8 +32,8 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	private MyUserAdapter adapter;
 	private ArrayList<User> users;
 	private User selectedUser;
-	private ArrayList<User> usersChanged = new ArrayList<User>();
-
+	private boolean usersChanged;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,7 +87,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 									data);
 							return;
 						}
-					MyApplication.getInstance().addUser(user);
+					MyApplication.getInstance().getUsers().addUser(user);
 					adapter.notifyDataSetChanged();
 				}
 			}
@@ -122,7 +122,8 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		case R.id.itemAutoAllow:
 
 			selectedUser.alwaysAcceptToSendPosition = !selectedUser.alwaysAcceptToSendPosition;
-			setUserChanged(selectedUser);
+			selectedUser.changed = true;
+			usersChanged = true;
 
 			refreshRow();
 			if (selectedUser.alwaysAcceptToSendPosition) {
@@ -172,7 +173,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	}
 
 	private void removeUser() {
-		MyApplication.getInstance().removeUser(selectedUser);
+		MyApplication.getInstance().getUsers().removeUser(selectedUser);
 		adapter.notifyDataSetChanged();
 		
 
@@ -324,19 +325,14 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 	}
 
-	public void setUserChanged(User user) {
-		for (User u : usersChanged)
-			if (u.id == user.id)
-				return;
-		this.usersChanged.add(user);
-
-	}
+	
 
 	@Override
 	protected void onPause() {
-		if (usersChanged.size() > 0) {
-			MyApplication.getInstance().updateUsers(usersChanged);
-			usersChanged.clear();
+		
+		if (usersChanged) {
+			MyApplication.getInstance().getUsers().updateUsers();
+			usersChanged = false;
 		}
 		super.onPause();
 	}

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Application;
-import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -21,7 +20,7 @@ public class MyApplication extends Application {
 	private LinkedList<GeoAddress> points = new LinkedList<GeoAddress>();
 	private ConnectorService connectorService;
 	Event ConnectorServiceChanged = new Event();
-	private ArrayList<User> users;
+	private Users users;
 	private Object userTicket = new Object();
 	private PositionsDownloader mPositionsDownloader = new PositionsDownloader(
 			this);
@@ -145,70 +144,15 @@ public class MyApplication extends Application {
 		}
 	}
 
-	public ArrayList<User> getUsers() {
+	public Users getUsers() {
 		synchronized (userTicket) {
 			if (users == null) {
-				users = new ArrayList<User>();
-				UserDbAdapter dbHelper = new UserDbAdapter(this);
-				dbHelper.open();
-				Cursor cursor = dbHelper.fetchAllUsers();
-				
-				while (cursor.moveToNext()) {
-					User user = new User(cursor.getInt(cursor
-							.getColumnIndex(UserDbAdapter.KEY_ID)),
-							cursor.getString(cursor
-									.getColumnIndex(UserDbAdapter.KEY_USERID)),
-							cursor.getString(cursor
-									.getColumnIndex(UserDbAdapter.KEY_NAME)),
-							cursor.getString(cursor
-									.getColumnIndex(UserDbAdapter.KEY_SURNAME)));
-					user.alwaysAcceptToSendPosition = cursor.getInt(cursor
-							.getColumnIndex(UserDbAdapter.KEY_AUTOACCEPT)) == 1;
-					users.add(user);
-				}
-				cursor.close();
-				dbHelper.close();
-
+				users = new Users(this);
 			}
-
 			return users;
 		}
-
-	}
-	public void removeUser(User selectedUser) {
-		for (int i = 0; i < users.size(); i++) {
-			User u = users.get(i);
-			if (u.id == selectedUser.id) {
-				users.remove(i);
-				UserDbAdapter dbHelper = new UserDbAdapter(this);
-				dbHelper.open();
-				dbHelper.deleteUser(u.id);
-				dbHelper.close();
-				return;
-			}
-		}
-		
-	}
-	public void addUser(User user) {
-		users.add(user);
-		UserDbAdapter dbHelper = new UserDbAdapter(this);
-		dbHelper.open();
-		dbHelper.createUser(user);
-		dbHelper.close();
-		
 	}
 	
-
-	public void updateUsers(ArrayList<User> usersChanged) {
-		UserDbAdapter dbHelper = new UserDbAdapter(this);
-		dbHelper.open();
-		for (User user : usersChanged)
-			dbHelper.updateUser(user);
-		dbHelper.close();
-		
-	}
-
-
 	
 	public void unregisterForPositions(
 			PositionsDownloadedEventHandler downloadHandler,
