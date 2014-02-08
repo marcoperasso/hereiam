@@ -89,7 +89,7 @@ public class Credentials {
 		if (!Helper.isOnline(context)) {
 			onResponse.response(true, "");
 		}
-		LoginAsyncTask loginAsyncTask = new LoginAsyncTask(context, onResponse);
+		LoginAsyncTask loginAsyncTask = new LoginAsyncTask(onResponse);
 		if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
 			loginAsyncTask.execute(this);
 		}
@@ -133,7 +133,7 @@ class TestIfLoggedAsyncTask extends
 			testResponse.response(true, "");
 			return;
 		}
-		Credentials credential = MySettings.readCredentials(context);
+		Credentials credential = MySettings.readCredentials();
 		if (credential.isEmpty()) {
 			testResponse.response(false, "");
 			return;
@@ -145,11 +145,9 @@ class TestIfLoggedAsyncTask extends
 
 class LoginAsyncTask extends
 		AsyncTask<Credentials, Void, WebRequestResult> {
-	private final Context context;
 	private final OnAsyncResponse onResponse;
 
-	LoginAsyncTask(Context context, OnAsyncResponse onResponse) {
-		this.context = context;
+	LoginAsyncTask(OnAsyncResponse onResponse) {
 		this.onResponse = onResponse;
 	}
 
@@ -161,7 +159,7 @@ class LoginAsyncTask extends
 			int id = c.getId();
 			HttpManager.fillCredentialsData(c);
 			if (id != c.getId())
-				MySettings.setCredentials(context, c);
+				MySettings.setCredentials(c);
 		}
 		return res;
 	}

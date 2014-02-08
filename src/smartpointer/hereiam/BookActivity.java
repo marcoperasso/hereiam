@@ -283,9 +283,16 @@ public class BookActivity extends ListActivity implements OnClickListener {
 													message);
 
 									if (result.result)
+									{
 										Helper.showMessage(
 												BookActivity.this,
 												getString(R.string.message_successfully_delivered));
+										
+										Credentials c = MySettings.readCredentials();
+										Message msg = new Message((long) (System.currentTimeMillis() / 1e3), c.getId(), selectedUser.id, message);
+										msg.saveToDB(BookActivity.this);
+										
+									}
 									else
 										Helper.showMessage(
 												BookActivity.this,

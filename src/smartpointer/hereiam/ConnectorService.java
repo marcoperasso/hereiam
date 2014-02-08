@@ -244,7 +244,7 @@ public class ConnectorService extends Service implements LocationListener {
 			ids[i] = user.id;
 		}
 
-		Credentials currentCredentials = MySettings.readCredentials(this);
+		Credentials currentCredentials = MySettings.readCredentials();
 		final MyPosition loc = new MyPosition(currentCredentials == null ? 0
 				: currentCredentials.getId(), ids,
 				(int) (mLocation.getLatitude() * 1E6),

@@ -35,28 +35,26 @@ public class UserDbAdapter {
 		dbHelper.close();
 	}
 
-	private ContentValues createContentValues(Integer id, String name,
-			String surname, String userid, Boolean autoaccept) {
+	private ContentValues createContentValues(User user) {
 		ContentValues values = new ContentValues();
-		values.put(KEY_NAME, name);
-		values.put(KEY_SURNAME, surname);
-		values.put(KEY_USERID, userid);
-		values.put(KEY_AUTOACCEPT, autoaccept);
+		values.put(KEY_ID, user.id);
+		values.put(KEY_NAME, user.name);
+		values.put(KEY_SURNAME, user.surname);
+		values.put(KEY_USERID, user.userId);
+		values.put(KEY_AUTOACCEPT, user.alwaysAcceptToSendPosition);
 
 		return values;
 	}
 
 	// create a user
 	public long createUser(User user) {
-		ContentValues initialValues = createContentValues(user.id, user.name, user.surname,
-				user.userId, user.alwaysAcceptToSendPosition);
+		ContentValues initialValues = createContentValues(user);
 		return database.insertOrThrow(DATABASE_TABLE, null, initialValues);
 	}
 
 	// update a user
 	public boolean updateUser(User user) {
-		ContentValues updateValues = createContentValues(user.id, user.name, user.surname,
-				user.userId, user.alwaysAcceptToSendPosition);
+		ContentValues updateValues = createContentValues(user);
 		return database.update(DATABASE_TABLE, updateValues, KEY_ID + "=" + user.id,
 				null) > 0;
 	}

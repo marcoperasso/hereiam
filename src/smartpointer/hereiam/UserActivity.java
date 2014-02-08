@@ -31,7 +31,7 @@ public class UserActivity extends Activity implements OnClickListener {
 		newUser = getIntent().getBooleanExtra(REGISTER_USER, true);
 		if (!newUser)
 		{
-			Credentials c = MySettings.readCredentials(this);
+			Credentials c = MySettings.readCredentials();
 			mPassword = (EditText) findViewById(R.id.editTextPassword);
 			mPassword.setText(c.getPassword());
 	
@@ -118,7 +118,7 @@ public class UserActivity extends Activity implements OnClickListener {
 				WebRequestResult res = HttpManager.saveCredentials(credentials,
 						newUser);
 				if (res.result) {
-					MySettings.setCredentials(UserActivity.this, credentials);
+					MySettings.setCredentials(credentials);
 				}
 				return res;
 			}

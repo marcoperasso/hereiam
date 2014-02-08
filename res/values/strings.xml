@@ -92,5 +92,7 @@
     <string name="error_registering_to_google_play_services_s">Error registering to Google Play Services: \'%s\'. You won\'t be able to receive notifications from other users.</string>
     <string name="no_valid_google_play_services_apk_found">No valid Google Play Services APK found. You won\'t be able to receive notifications from other users.</string>
     <string name="_s_has_already_been_contacted">%s has already been contacted</string>
+    <string name="delete_this_message_">Delete this message?</string>
+    <string name="messages">Messages</string>
 
 </resources>

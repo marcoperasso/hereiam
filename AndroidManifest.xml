@@ -83,6 +83,10 @@
             android:label="@string/title_activity_credentials" >
         </activity>
         <activity
+            android:name="smartpointer.hereiam.MessagesActivity"
+            android:label="@string/messages" >
+        </activity>
+        <activity
             android:name="smartpointer.hereiam.SearchActivity"
             android:label="@string/title_activity_search"
             android:launchMode="singleTop" >

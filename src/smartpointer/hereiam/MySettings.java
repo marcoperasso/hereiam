@@ -39,9 +39,9 @@ public class MySettings {
 		editor.commit();
 	}
 
-	public static Credentials readCredentials(Context context) {
+	public static Credentials readCredentials() {
 		if (credentials == null) {
-			SharedPreferences settings = context.getSharedPreferences(
+			SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(
 					PREFS_NAME, 0);
 
 			String pwd = settings.getString(PASSWORD, "");
@@ -55,8 +55,8 @@ public class MySettings {
 		return credentials;
 	}
 
-	public static void setCredentials(Context context, Credentials c) {
-		SharedPreferences settings = context
+	public static void setCredentials(Credentials c) {
+		SharedPreferences settings = MyApplication.getInstance()
 				.getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt(ID, c.getId());

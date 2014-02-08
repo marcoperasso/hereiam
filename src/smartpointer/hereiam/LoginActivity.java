@@ -27,7 +27,7 @@ public class LoginActivity extends Activity implements OnEditorActionListener,
 		mPassword = (EditText) findViewById(R.id.editTextPassword);
 		mUserid = (EditText) findViewById(R.id.editTextUserId);
 
-		Credentials c = MySettings.readCredentials(this);
+		Credentials c = MySettings.readCredentials();
 		mUserid.setText(c.getUserId());
 		mPassword.setText(c.getPassword());
 		mPassword.setOnEditorActionListener(this);
@@ -93,7 +93,7 @@ public class LoginActivity extends Activity implements OnEditorActionListener,
 
 			public void response(boolean success, String message) {
 				if (success) {
-					MySettings.setCredentials(LoginActivity.this, credentials);
+					MySettings.setCredentials(credentials);
 					onLogged();
 				} else {
 					Helper.showMessage(LoginActivity.this, message);

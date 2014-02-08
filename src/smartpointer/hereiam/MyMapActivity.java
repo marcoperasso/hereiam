@@ -218,7 +218,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		enableGPS();
 
 		// testo le credenziali
-		Credentials credential = MySettings.readCredentials(this);
+		Credentials credential = MySettings.readCredentials();
 		if (credential.isEmpty()) {
 			// non ho le credenziali: le chiedo e contestualmente le valido (se
 			// sono online
@@ -379,7 +379,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				Helper.showMessage(
 						this,
 						String.format(getString(R.string.welcome_s),
-								MySettings.readCredentials(this)));
+								MySettings.readCredentials()));
 				registerForGCM();
 			} else
 				finish();
@@ -404,7 +404,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		ConnectorService connectorService = MyApplication.getInstance()
 				.getConnectorService();
 		if (connectorService != null && connectorService.existUser(user)) {
-			Helper.showMessage(this, getString(R.string._s_has_already_been_contacted, user));
+			Helper.showMessage(this,
+					getString(R.string._s_has_already_been_contacted, user));
 			return;
 		}
 		final ProgressDialog progressBar = new ProgressDialog(this);
@@ -498,6 +499,11 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		case R.id.itemBook: {
 			Intent intent = new Intent(this, BookActivity.class);
 			startActivityForResult(intent, Const.BOOK_RESULT);
+			return true;
+		}
+		case R.id.itemMessages: {
+			Intent intent = new Intent(this, MessagesActivity.class);
+			startActivity(intent);
 			return true;
 		}
 		}

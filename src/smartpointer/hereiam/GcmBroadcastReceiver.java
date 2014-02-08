@@ -52,7 +52,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					int msgtype = Integer.parseInt(extras.getString("msgtype"));
 					Integer touserid = Integer.parseInt(extras
 							.getString("touserid"));
-					Credentials c = MySettings.readCredentials(MyApplication.getInstance());
+					Credentials c = MySettings.readCredentials();
 					// if i registered the phone for multiple users, the message
 					// could arrive
 					// even if it's not for me!
@@ -130,6 +130,10 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 						break;
 					}
 					case Const.MSG_MESSAGE: {
+						Intent intent2 = new Intent(context,
+								MessagesActivity.class);
+						intent2.putExtra(Const.USER, fromUser);
+						
 						sendNotification(context, context.getString(
 								R.string._s_says,
 								fromUser, extras.getString("message")), null, fromUser.id);
