@@ -86,7 +86,7 @@
     <string name="write_your_message">Scrivi il tuo messaggio</string>
     <string name="you_are_not_logged">Non sei autenticato</string>
     <string name="no_registered_user_to_whom_send_your_message">Nessun utente registrato a cui mandare il messaggio</string>
-    <string name="_s_says">"%1$s dice: \'%2$s\'"</string>
+    <string name="_s_says">Messaggio da %1$s: \'%2$s\'</string>
     <string name="message_successfully_delivered">Messaggio inoltrato con successo</string>
     <string name="message_not_delivered_s">Messaggio non inviato: %s</string>
     <string name="error_registering_to_google_play_services_s">Errore di registrazione a Google Play Services: \'%s\'. Non potrai ricevere notifiche da parte di altri utenti.</string>

@@ -130,13 +130,18 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 						break;
 					}
 					case Const.MSG_MESSAGE: {
+						String msg = extras.getString("message");
+						long time = Long.parseLong(extras.getString("time"));
+						Message message = new Message(time, fromUser.id, c.getId(), msg);
+						message.saveToDB(MyApplication.getInstance());
 						Intent intent2 = new Intent(context,
 								MessagesActivity.class);
 						intent2.putExtra(Const.USER, fromUser);
 						
 						sendNotification(context, context.getString(
 								R.string._s_says,
-								fromUser, extras.getString("message")), null, fromUser.id);
+								fromUser, msg), intent2, fromUser.id);
+						
 						break;
 					}
 					case Const.MSG_POSITION: {

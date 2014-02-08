@@ -27,7 +27,7 @@ public class MessagesActivity extends ListActivity implements OnClickListener {
 		messages = Message.getMessages(this, user, count, start);
 
 		adapter = new ArrayAdapter<Message>(this,
-				android.R.layout.simple_list_item_1, messages);
+				R.xml.mylist, messages);
 		setListAdapter(adapter);
 
 		findViewById(R.id.buttonCancel).setOnClickListener(this);

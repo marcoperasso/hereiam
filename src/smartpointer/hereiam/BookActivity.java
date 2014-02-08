@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -228,7 +229,8 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		// Set an EditText view to get user input
 		final EditText input = new EditText(this);
 		input.setInputType(InputType.TYPE_CLASS_TEXT
-				| InputType.TYPE_TEXT_VARIATION_NORMAL);
+				| InputType.TYPE_TEXT_VARIATION_NORMAL 
+				| InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.write_your_message).setView(input)
@@ -251,8 +253,11 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 			@Override
 			public void onClick(View v) {
+				Editable text = input.getText();
+				if (text.length() == 0)
+					return;
 				dialog.dismiss();
-				sendMessage(selectedUser, input.getText().toString());
+				sendMessage(selectedUser, text.toString());
 			}
 
 		});
@@ -276,11 +281,12 @@ public class BookActivity extends ListActivity implements OnClickListener {
 						new OnAsyncResponse() {
 
 							@Override
-							public void response(boolean success, String message) {
+							public void response(boolean success, String loginMessage) {
 								if (success) {
+									Credentials c = MySettings.readCredentials();
+									Message msg = new Message((long) (System.currentTimeMillis() / 1e3), c.getId(), selectedUser.id, message);
 									WebRequestResult result = HttpManager
-											.messageToUser(selectedUser.id,
-													message);
+											.messageToUser(msg);
 
 									if (result.result)
 									{
@@ -288,8 +294,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 												BookActivity.this,
 												getString(R.string.message_successfully_delivered));
 										
-										Credentials c = MySettings.readCredentials();
-										Message msg = new Message((long) (System.currentTimeMillis() / 1e3), c.getId(), selectedUser.id, message);
+										
 										msg.saveToDB(BookActivity.this);
 										
 									}
@@ -306,7 +311,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 											BookActivity.this,
 											getString(
 													R.string.message_not_delivered_s,
-													message));
+													loginMessage));
 								}
 
 							}

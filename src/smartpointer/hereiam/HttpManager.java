@@ -403,12 +403,13 @@ public class HttpManager {
 		return result;
 	}
 	
-	public static WebRequestResult messageToUser(int usrId, String message) {
+	public static WebRequestResult messageToUser(Message msg) {
 		WebRequestResult result = new WebRequestResult();
 		try {
 			List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-			postParameters.add(new BasicNameValuePair("userid", Integer.toString(usrId)));
-			postParameters.add(new BasicNameValuePair("message", message));
+			postParameters.add(new BasicNameValuePair("userid", Integer.toString(msg.getIdTo())));
+			postParameters.add(new BasicNameValuePair("message", msg.getMessage()));
+			postParameters.add(new BasicNameValuePair("time", Long.toString(msg.getTime())));
 			JSONObject obj = new JSONObject(postRequest(message_to_user_request, postParameters));
 
 			int res = obj.getInt("result");
