@@ -9,7 +9,7 @@
     android:paddingBottom="25dip"
     android:paddingLeft="10dip"
     android:paddingRight="0dip"
-    android:paddingTop="0dip" >
+    android:paddingTop="0dip" android:baselineAligned="false">
 
     <LinearLayout
         android:id="@+id/balloon_inner_layout"
