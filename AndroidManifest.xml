@@ -83,7 +83,7 @@
             android:label="@string/title_activity_credentials" >
         </activity>
         <activity
-            android:name="smartpointer.hereiam.MessagesActivity"
+            android:name="smartpointer.hereiam.UserMessagesActivity"
             android:label="@string/messages" >
         </activity>
         <activity

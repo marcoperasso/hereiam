@@ -1,7 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -12,27 +13,23 @@
         android:id="@+id/textViewLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:text="@string/you_are_sending_your_position_to_the_following_users"
         android:textStyle="bold" />
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewLabel"
-        android:layout_centerHorizontal="true"
+        android:layout_height="0dip"
         android:layout_marginBottom="10dip"
         android:layout_marginTop="10dip"
+        android:layout_weight="1"
         android:background="@android:color/transparent" >
     </ListView>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@android:id/list"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dip"
         android:orientation="horizontal" >
 
@@ -40,7 +37,7 @@
             android:id="@+id/buttonCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@android:string/cancel" />
+            android:text="@string/close" />
 
         <Button
             android:id="@+id/buttonRemoveAll"
@@ -49,4 +46,4 @@
             android:text="@string/remove_all" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

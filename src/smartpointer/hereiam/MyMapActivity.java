@@ -501,11 +501,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			startActivityForResult(intent, Const.BOOK_RESULT);
 			return true;
 		}
-		case R.id.itemMessages: {
-			Intent intent = new Intent(this, MessagesActivity.class);
-			startActivity(intent);
-			return true;
-		}
+		
 		}
 		return super.onOptionsItemSelected(item);
 	}

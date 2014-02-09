@@ -71,14 +71,4 @@ public class UserDbAdapter {
 				null, null);
 	}
 
-	// fetch users filter by a string
-	public Cursor fetchUsersByFilter(String filter) {
-		Cursor mCursor = database.query(true, DATABASE_TABLE, new String[] {
-				KEY_ID, KEY_NAME, KEY_SURNAME, KEY_USERID, KEY_AUTOACCEPT },
-				KEY_NAME + " like '%" + filter + "%'", null, null, null, null,
-				null);
-
-		return mCursor;
-
-	}
 }

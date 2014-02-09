@@ -58,10 +58,9 @@ public class MessageDbAdapter {
 	}
 
 	// fetch all users
-	public ArrayList<Message> fetchMessages(User user, int limit, int start) {
+	public ArrayList<Message> fetchMessages(User user) {
 		Cursor cursor = database.query(DATABASE_TABLE, new String[] { KEY_TIME,
-				KEY_IDFROM, KEY_IDTO, KEY_MESSAGE }, user == null ? null
-				: KEY_IDFROM + "=" + user.id, null, null, null, KEY_TIME);
+				KEY_IDFROM, KEY_IDTO, KEY_MESSAGE }, KEY_IDFROM + "=" + user.id + " or " + KEY_IDTO + "=" + user.id, null, null, null, KEY_TIME);
 		ArrayList<Message> messages = new ArrayList<Message>();
 		while (cursor.moveToNext()) {
 			Message message = new Message(cursor.getLong(cursor

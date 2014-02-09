@@ -1,10 +1,8 @@
 package smartpointer.hereiam;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 
 public class Message {
 	private long time;
@@ -27,30 +25,17 @@ public class Message {
 	{
 		Credentials c = MySettings.readCredentials();
 		received = (c.getId() == idTo);
-		int otherId = received ? idFrom : idTo;
-		User u = MyApplication.getInstance().getUsers().fromId(otherId);
-		name = (u == null) ? "Unknown" :  u.toString();
-		
-		
+		if (received)
+		{
+		User u = MyApplication.getInstance().getUsers().fromId(idFrom);
+		name = (u == null) ? "Unknown" :  u.name;
+		}
+		else
+		{
+			name = "Me";
+		}
 	}
-	@Override
-	public String toString() {
-		Date d = new Date(time * 1000);
-		StringBuilder sb = new StringBuilder();
-		java.text.DateFormat timeFormat = DateFormat
-				.getTimeFormat(MyApplication.getInstance());
-		java.text.DateFormat dateFormat = DateFormat
-				.getDateFormat(MyApplication.getInstance());
-		sb.append(dateFormat.format(d));
-		sb.append(" - ");
-		sb.append(timeFormat.format(d));
-		sb.append(" - ");
-		sb.append(name);
-		sb.append("\r\n");
-		sb.append(message);
-		return sb.toString();
-	}
-
+	
 	public void saveToDB(Context context) {
 		MessageDbAdapter db = new MessageDbAdapter(context);
 		try {
@@ -62,12 +47,11 @@ public class Message {
 
 	}
 
-	public static ArrayList<Message> getMessages(Context context, User user,
-			int count, int start) {
+	public static ArrayList<Message> getMessages(Context context, User user) {
 		MessageDbAdapter db = new MessageDbAdapter(context);
 		try {
 			db.open();
-			return db.fetchMessages(user, count, start);
+			return db.fetchMessages(user);
 		} finally {
 			db.close();
 		}
@@ -97,6 +81,12 @@ public class Message {
 	
 	public String getMessage() {
 		return message;
+	}
+	public String getName() {
+		return name;
+	}
+	public boolean isReceived() {
+		return received;
 	}
 	
 

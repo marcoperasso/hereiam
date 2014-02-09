@@ -4,21 +4,23 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
 
-   <ImageButton
+    <ImageButton
         android:id="@+id/btnOptions"
         android:layout_width="wrap_content"
-        android:layout_marginLeft="4dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@android:color/transparent"
-        android:src="@drawable/expander" android:layout_gravity="center" >
+        android:contentDescription="@string/options"
+        android:src="@drawable/expander" >
     </ImageButton>
 
     <TextView
         android:id="@+id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:text="@+id/label"
-        android:textSize="14sp" android:layout_gravity="center_vertical" >
+        android:textSize="14sp" >
     </TextView>
 
 </LinearLayout>

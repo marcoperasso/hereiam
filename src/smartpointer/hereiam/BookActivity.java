@@ -145,6 +145,12 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			sendMessageToUser();
 
 			break;
+		case R.id.itemMessages:
+			Intent intent = new Intent(this,
+					UserMessagesActivity.class);
+			intent.putExtra(Const.USER, selectedUser);
+			startActivity(intent);
+			break;
 		case R.id.itemRemoveUser:
 			Helper.dialogMessage(this, BookActivity.this.getString(
 					R.string.are_you_sure_to_remove_user_s_, selectedUser),

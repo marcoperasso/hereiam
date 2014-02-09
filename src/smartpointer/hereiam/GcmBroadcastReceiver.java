@@ -135,7 +135,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 						Message message = new Message(time, fromUser.id, c.getId(), msg);
 						message.saveToDB(MyApplication.getInstance());
 						Intent intent2 = new Intent(context,
-								MessagesActivity.class);
+								UserMessagesActivity.class);
 						intent2.putExtra(Const.USER, fromUser);
 						
 						sendNotification(context, context.getString(

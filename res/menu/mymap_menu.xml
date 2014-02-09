@@ -26,10 +26,6 @@
         android:title="@string/users_book"
         android:titleCondensed="@string/users_book">
     </item>
-    <item
-        android:id="@+id/itemMessages"
-        android:title="@string/messages"
-        android:titleCondensed="@string/messages">
-    </item>
+    
 
 </menu>

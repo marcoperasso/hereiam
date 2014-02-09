@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,33 +6,35 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MessagesActivity" >
+    tools:context=".UserMessagesActivity" 
+    android:baselineAligned="false" android:orientation="vertical">
 
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dip"
         android:layout_marginTop="10dip"
-        android:background="@android:color/transparent" >
+        android:background="@android:color/transparent"
+        android:layout_weight = "1"
+         >
     </ListView>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@android:id/list"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dip"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+         android:layout_weight = "0" 
+         android:layout_gravity="center_horizontal"
+         >
 
         <Button
             android:id="@+id/buttonCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@android:string/cancel" />
+            android:text="@string/close" />
 
         <Button
             android:id="@+id/buttonRemoveAll"
@@ -41,4 +43,4 @@
             android:text="@string/remove_all" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
