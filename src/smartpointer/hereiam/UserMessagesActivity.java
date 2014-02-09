@@ -130,7 +130,7 @@ class MyMessageAdapter extends ArrayAdapter<Message> {
 			java.text.DateFormat dateFormat = DateFormat
 					.getDateFormat(MyApplication.getInstance());
 			tvDate.setText("(" + dateFormat.format(d) + ", " + timeFormat.format(d) + ")");
-			view.setBackgroundColor(position %2 == 0 ? Color.LTGRAY
+			view.setBackgroundColor(((position %2) == 0) ? Color.LTGRAY
 					: Color.GRAY);
 
 		} else {

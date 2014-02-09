@@ -319,8 +319,8 @@ public class Helper {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(R.string.write_your_message).setView(input)
-				.setPositiveButton(android.R.string.ok, null)
-				.setNegativeButton(android.R.string.cancel, null);
+		.setNegativeButton(android.R.string.cancel, null)
+				.setPositiveButton(R.string.send, null);
 		final AlertDialog dialog = builder.create();
 		dialog.show();
 
