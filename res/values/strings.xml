@@ -99,5 +99,6 @@
     <string name="me">Me</string>
     <string name="messages_from_to_s">Messages from/to %s</string>
     <string name="options">Options</string>
+    <string name="new_">New&#8230;</string>
 
 </resources>

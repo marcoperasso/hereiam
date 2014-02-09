@@ -3,7 +3,6 @@ package smartpointer.hereiam;
 import java.util.ArrayList;
 import java.util.Date;
 
-import smartpointer.hereiam.MyUserAdapter.ViewHolder;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -47,6 +46,7 @@ public class UserMessagesActivity extends ListActivity implements
 
 		findViewById(R.id.buttonCancel).setOnClickListener(this);
 		findViewById(R.id.buttonRemoveAll).setOnClickListener(this);
+		findViewById(R.id.buttonSend).setOnClickListener(this);
 	}
 
 	@Override
@@ -77,6 +77,10 @@ public class UserMessagesActivity extends ListActivity implements
 	public void onClick(View view) {
 		if (view.getId() == R.id.buttonCancel)
 			finish();
+		else if (view.getId() == R.id.buttonSend)
+		{
+			Helper.sendMessageToUser(this, user);
+		}
 		else if (view.getId() == R.id.buttonRemoveAll)
 
 			Helper.dialogMessage(this, "Remove all messages?",
@@ -114,7 +118,7 @@ class MyMessageAdapter extends ArrayAdapter<Message> {
 			LayoutInflater inflator = context.getLayoutInflater();
 			view = inflator.inflate(R.layout.mymessagerow, null);
 			TextView tvName = (TextView) view.findViewById(R.id.textViewName);
-			tvName.setText(message.getName() + ":");
+			tvName.setText(message.getName());
 			TextView tvMessage = (TextView) view
 					.findViewById(R.id.textViewMessage);
 			tvMessage.setText(message.getMessage());
@@ -125,9 +129,9 @@ class MyMessageAdapter extends ArrayAdapter<Message> {
 					.getTimeFormat(MyApplication.getInstance());
 			java.text.DateFormat dateFormat = DateFormat
 					.getDateFormat(MyApplication.getInstance());
-			tvDate.setText(dateFormat.format(d) + ", " + timeFormat.format(d));
-			view.setBackgroundColor(message.isReceived() ? Color.YELLOW
-					: Color.GREEN);
+			tvDate.setText("(" + dateFormat.format(d) + ", " + timeFormat.format(d) + ")");
+			view.setBackgroundColor(position %2 == 0 ? Color.LTGRAY
+					: Color.GRAY);
 
 		} else {
 			view = convertView;

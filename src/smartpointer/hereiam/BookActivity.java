@@ -4,14 +4,11 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -142,7 +139,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			break;
 
 		case R.id.itemSendMessage:
-			sendMessageToUser();
+			Helper.sendMessageToUser(this, selectedUser);
 
 			break;
 		case R.id.itemMessages:
@@ -230,105 +227,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		});
 	}
 
-	private void sendMessageToUser() {
-
-		// Set an EditText view to get user input
-		final EditText input = new EditText(this);
-		input.setInputType(InputType.TYPE_CLASS_TEXT
-				| InputType.TYPE_TEXT_VARIATION_NORMAL 
-				| InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.write_your_message).setView(input)
-				.setPositiveButton(android.R.string.ok, null)
-				.setNegativeButton(android.R.string.cancel, null);
-		final AlertDialog dialog = builder.create();
-		dialog.show();
-
-		Button cancelButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-		cancelButton.setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View v) {
-				dialog.dismiss();
-
-			}
-		});
-
-		Button okButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-		okButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Editable text = input.getText();
-				if (text.length() == 0)
-					return;
-				dialog.dismiss();
-				sendMessage(selectedUser, text.toString());
-			}
-
-		});
-	}
-
-	private void sendMessage(final User selectedUser, final String message) {
-		final ProgressDialog progressBar = new ProgressDialog(this);
-		progressBar.setCancelable(true);
-		progressBar.setMessage(getString(R.string.sending_message_));
-		progressBar.setIndeterminate(true);
-		progressBar.show();
-		new AsyncTask<Void, Void, Void>() {
-			protected void onPostExecute(Void result) {
-				progressBar.dismiss();
-			};
-
-			@Override
-			protected Void doInBackground(Void... params) {
-
-				Credentials.testCredentials(BookActivity.this,
-						new OnAsyncResponse() {
-
-							@Override
-							public void response(boolean success, String loginMessage) {
-								if (success) {
-									Credentials c = MySettings.readCredentials();
-									Message msg = new Message((long) (System.currentTimeMillis() / 1e3), c.getId(), selectedUser.id, message);
-									WebRequestResult result = HttpManager
-											.messageToUser(msg);
-
-									if (result.result)
-									{
-										Helper.showMessage(
-												BookActivity.this,
-												getString(R.string.message_successfully_delivered));
-										
-										
-										msg.saveToDB(BookActivity.this);
-										
-									}
-									else
-										Helper.showMessage(
-												BookActivity.this,
-												getString(
-														R.string.message_not_delivered_s,
-														result.message));
-								}
-								else
-								{
-									Helper.showMessage(
-											BookActivity.this,
-											getString(
-													R.string.message_not_delivered_s,
-													loginMessage));
-								}
-
-							}
-						});
-
-				return null;
-			}
-
-		}.execute(null, null, null);
-
-	}
+	
 
 	@Override
 	public void onClick(View v) {

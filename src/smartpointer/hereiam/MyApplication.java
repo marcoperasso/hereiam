@@ -154,6 +154,8 @@ public class MyApplication extends Application {
 	}
 	
 	
+	
+	
 	public void unregisterForPositions(
 			PositionsDownloadedEventHandler downloadHandler,
 			PositionReceivedEventHandler receiveHandler,

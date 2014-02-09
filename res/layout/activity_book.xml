@@ -14,7 +14,7 @@
         android:id="@+id/textViewLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tap_an_user_to_request_its_position_long_tap_for_more_options" />
+        android:text="@string/tap_an_user_to_request_its_position_long_tap_for_more_options" android:textStyle="bold" />
 
     <ListView
         android:id="@android:id/list"
