@@ -198,6 +198,9 @@ public abstract class BalloonItemizedOverlay<Item extends OverlayItem> extends I
 			View disconnect = (View) balloonView.findViewById(R.id.balloon_disconnect);
 			disconnect.setOnClickListener(this);
 			
+			View msg = (View) balloonView.findViewById(R.id.balloon_message);
+			msg.setOnClickListener(this);
+			
 			if (closeRegion != null) {
 			if (!showClose) {
 					closeRegion.setVisibility(View.GONE);

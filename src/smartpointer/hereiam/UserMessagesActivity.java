@@ -5,6 +5,7 @@ import java.util.Date;
 
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -40,7 +41,7 @@ public class UserMessagesActivity extends ListActivity implements
 		else
 			messages = (ArrayList<Message>) savedInstanceState
 					.getSerializable(MESSAGES);
-		setTitle(getString(R.string.messages_from_to_s, user));
+		setTitle(user.toString());
 		adapter = new MyMessageAdapter(this, R.layout.mymessagerow, messages);
 		setListAdapter(adapter);
 
@@ -72,6 +73,15 @@ public class UserMessagesActivity extends ListActivity implements
 
 		super.onListItemClick(l, v, position, id);
 	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == Const.SEND_MESSAGE_RESULT & resultCode == RESULT_OK)
+		{
+			messages.add((Message) data.getSerializableExtra(Const.MESSAGE));
+			adapter.notifyDataSetChanged();
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 
 	@Override
 	public void onClick(View view) {
@@ -79,11 +89,11 @@ public class UserMessagesActivity extends ListActivity implements
 			finish();
 		else if (view.getId() == R.id.buttonSend)
 		{
-			Helper.sendMessageToUser(this, user);
+			MessageActivity.sendMessageToUser(this, user);
 		}
 		else if (view.getId() == R.id.buttonRemoveAll)
 
-			Helper.dialogMessage(this, "Remove all messages?",
+			Helper.dialogMessage(this, R.string.remove_all_messages_,
 					new DialogInterface.OnClickListener() {
 
 						@Override

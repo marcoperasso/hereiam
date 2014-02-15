@@ -16,7 +16,8 @@ public class Const {
 	static final int LOGIN_RESULT = 1;
 	static final int SEARCH_ACTIVITY_RESULT = 2;
 	static final int REGISTER_RESULT = 3;
-	public static final int BOOK_RESULT = 4;
+	static final int BOOK_RESULT = 4;
+	static final int SEND_MESSAGE_RESULT = 5;
 	
 	static final String LATITUDE = "a";
 	static final String LONGITUDE = "b";
@@ -37,6 +38,8 @@ public class Const {
 	static final String USERS = "UU";
 	static final String PASSWORD = "PWD";
 	static final String NULL_TOKEN = "null";
+	static final String COMMAND_ID = "CMDID";
+	static final String MESSAGE = "MSG";
 	
 
 }

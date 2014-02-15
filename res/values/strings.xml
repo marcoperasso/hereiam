@@ -37,6 +37,7 @@
     <string name="find_user">Find User</string>
     <string name="found_user">%d users found; tap the chosen user.</string>
     <string name="no_user">No user found</string>
+    <string name="no_user_in_book">Your user book is empty.</string>
     <string name="balloon_text">Recording time: %1$s\nAddress: %2$s\nUsing GPS: %3$s</string>
     <string name="refine_query">%1$d Users of %2$d shown; if you do not find the person you are looking for, try refining your search criteria.</string>
     <string name="searching">Searching&#8230;</string>
@@ -78,7 +79,8 @@
     <string name="remove_user">Remove user</string>
     <string name="are_you_sure_to_remove_user_s_">Are you sure to remove user %s?</string>
     <string name="remove_all">Remove all</string>
-    <string name="tap_an_user_to_request_its_position_long_tap_for_more_options">Tap the user name to request her/his position, tap the dropdown button for more options.</string>
+    <string name="tap_an_user_for_action">Tap an user in the list to perform the requested action.</string>
+    <string name="tap_an_user_for_options">Tap an user in the list to see available actions.</string>
     <string name="user_name">User name</string>
     <string name="accept_automatically_position_requests_from_this_user">Always accept requests</string>
     <string name="warning_auto_accept">%s can now request your position without asking if you agree.</string>
@@ -97,9 +99,9 @@
     <string name="close">Close</string>
     <string name="unknown">Unknown</string>
     <string name="me">Me</string>
-    <string name="messages_from_to_s">Messages from/to %s</string>
     <string name="options">Options</string>
     <string name="new_">New&#8230;</string>
     <string name="send">Send</string>
+    <string name="remove_all_messages_">Remove all messages?</string>
 
 </resources>

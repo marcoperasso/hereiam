@@ -37,6 +37,7 @@
     <string name="find_user">Trova utente</string>
     <string name="found_user">Trovati %d utenti; tocca quello scelto.</string>
     <string name="no_user">Nessun utente trovato</string>
+    <string name="no_user_in_book">La tua rubrica utenti è vuota.</string>
     <string name="balloon_text">Ora di registrazione: %1$s\nIndirizzo: %2$s\nUso GPS: %3$s</string>
     <string name="refine_query">Visualizzati %1$d utenti di %2$d; se non trovi la persona che stavi cercando, prova a raffinare i criteri di ricerca.</string>
     <string name="searching">Ricerca&#8230;</string>
@@ -78,7 +79,8 @@
     <string name="remove_user">Rimuovi utente</string>
     <string name="are_you_sure_to_remove_user_s_">Sicuro di rimuovere l\'utente %s?</string>
     <string name="remove_all">Rimuovi tutti</string>
-    <string name="tap_an_user_to_request_its_position_long_tap_for_more_options">Tocca il nome utente per richiederne la posizione, tocca il bottone per visualizzare opzioni aggiuntive.</string>
+    <string name="tap_an_user_for_action">Tocca un utente della lista per eseguire l\'azione richiesta.</string>
+    <string name="tap_an_user_for_options">Tocca un utente della lista per vedere le azioni disponibili.</string>
     <string name="user_name">Nome utente</string>
     <string name="accept_automatically_position_requests_from_this_user">Accetta sempre richieste</string>
     <string name="warning_auto_accept">%s può adesso richiedere la tua posizione senza chiederti se sei d\'accordo.</string>

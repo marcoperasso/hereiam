@@ -131,6 +131,11 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> imp
 					}, null);
 
 		}
+		if (v.getId() == R.id.balloon_message)
+		{
+			MessageActivity.sendMessageToUser(mContext, pinnedUser);
+		}
+		
 		
 	}
 

@@ -31,9 +31,11 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	private ArrayList<User> users;
 	private User selectedUser;
 	private boolean usersChanged;
+	private int requestedCommandId;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestedCommandId = getIntent().getIntExtra(Const.COMMAND_ID, -1);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_book);
 		registerForContextMenu(findViewById(android.R.id.list));
@@ -44,8 +46,18 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 		findViewById(R.id.buttonAdd).setOnClickListener(this);
 		findViewById(R.id.buttonCancel).setOnClickListener(this);
-
+		refreshLabel();
 		handleIntent(getIntent());
+	}
+
+	private void refreshLabel() {
+		((TextView)findViewById(R.id.textViewLabel)).setText(getLabel());
+	}
+
+	private int getLabel() {
+		if (users.isEmpty())
+			return R.string.no_user_in_book;
+		return requestedCommandId == -1  ? R.string.tap_an_user_for_options : R.string.tap_an_user_for_action;
 	}
 
 	@Override
@@ -87,6 +99,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 						}
 					MyApplication.getInstance().getUsers().addUser(user);
 					adapter.notifyDataSetChanged();
+					refreshLabel();
 				}
 			}
 
@@ -98,9 +111,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			ContextMenuInfo menuInfo) {
 		if (v.getId() == android.R.id.list) {
 			createContextMenu(menu);
-		} else if (v.getId() == R.id.btnOptions) {
-			createContextMenu(menu);
-		}
+		} 
 	}
 
 	private void createContextMenu(ContextMenu menu) {
@@ -116,7 +127,13 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	public boolean onContextItemSelected(MenuItem item) {
 		if (selectedUser == null)
 			return true;
-		switch (item.getItemId()) {
+		doAction(item.getItemId());
+
+		return true;
+	}
+
+	private void doAction(int id) {
+		switch (id) {
 		case R.id.itemAutoAllow:
 
 			selectedUser.alwaysAcceptToSendPosition = !selectedUser.alwaysAcceptToSendPosition;
@@ -139,8 +156,8 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			break;
 
 		case R.id.itemSendMessage:
-			Helper.sendMessageToUser(this, selectedUser);
-
+			MessageActivity.sendMessageToUser(this, selectedUser);
+			finish();
 			break;
 		case R.id.itemMessages:
 			Intent intent = new Intent(this,
@@ -161,8 +178,6 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			break;
 
 		}
-
-		return true;
 	}
 
 	private void refreshRow() {
@@ -179,8 +194,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	private void removeUser() {
 		MyApplication.getInstance().getUsers().removeUser(selectedUser);
 		adapter.notifyDataSetChanged();
-		
-
+		refreshLabel();
 	}
 
 	void contactUser(User user, String password) {
@@ -227,7 +241,15 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		});
 	}
 
-	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		selectedUser = users.get(position);
+		if (requestedCommandId != -1)
+			doAction(requestedCommandId);
+		else
+			openContextMenu(v);
+		super.onListItemClick(l, v, position, id);
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -273,25 +295,10 @@ class MyUserAdapter extends ArrayAdapter<User> {
 		this.users = users;
 	}
 
-	static class ViewHolder implements OnClickListener {
+	static class ViewHolder {
 		TextView text;
-		ImageButton button;
 		BookActivity context;
 		User user;
-
-		@Override
-		public void onClick(View v) {
-			switch (v.getId()) {
-			case R.id.text1:
-				context.contactUser(user, null);
-				break;
-			case R.id.btnOptions:
-				context.setSelectedUser(user);
-				context.openContextMenu(v);
-				break;
-			}
-		}
-
 		public void setTextStyle() {
 			if (user.alwaysAcceptToSendPosition)
 				text.setTypeface(null, Typeface.BOLD_ITALIC);
@@ -312,11 +319,7 @@ class MyUserAdapter extends ArrayAdapter<User> {
 			viewHolder.user = user;
 			viewHolder.text = (TextView) view.findViewById(R.id.text1);
 			viewHolder.text.setText(user.toString());
-			viewHolder.text.setOnClickListener(viewHolder);
-
-			viewHolder.button = (ImageButton) view
-					.findViewById(R.id.btnOptions);
-			viewHolder.button.setOnClickListener(viewHolder);
+			
 			view.setTag(viewHolder);
 			viewHolder.context = context;
 		} else {
@@ -324,7 +327,6 @@ class MyUserAdapter extends ArrayAdapter<User> {
 		}
 		ViewHolder viewHolder = (ViewHolder) view.getTag();
 		viewHolder.setTextStyle();
-		viewHolder.button.setOnClickListener(viewHolder);
 		return view;
 	}
 

@@ -20,26 +20,18 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
-import android.text.Editable;
 import android.text.Html;
-import android.text.InputType;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -309,103 +301,5 @@ public class Helper {
 
 	}
 
-	static void sendMessageToUser(final Activity context, final User user) {
-
-		// Set an EditText view to get user input
-		final EditText input = new EditText(context);
-		input.setInputType(InputType.TYPE_CLASS_TEXT
-				| InputType.TYPE_TEXT_VARIATION_NORMAL 
-				| InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(R.string.write_your_message).setView(input)
-		.setNegativeButton(android.R.string.cancel, null)
-				.setPositiveButton(R.string.send, null);
-		final AlertDialog dialog = builder.create();
-		dialog.show();
-
-		Button cancelButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-		cancelButton.setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View v) {
-				dialog.dismiss();
-
-			}
-		});
-
-		Button okButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-		okButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Editable text = input.getText();
-				if (text.length() == 0)
-					return;
-				dialog.dismiss();
-				sendMessage(context, user, text.toString());
-			}
-
-		});
-	}
-
-	static void sendMessage(final Activity context, final User selectedUser, final String message) {
-		final ProgressDialog progressBar = new ProgressDialog(context);
-		progressBar.setCancelable(true);
-		progressBar.setMessage(context.getString(R.string.sending_message_));
-		progressBar.setIndeterminate(true);
-		progressBar.show();
-		new AsyncTask<Void, Void, Void>() {
-			protected void onPostExecute(Void result) {
-				progressBar.dismiss();
-			};
-
-			@Override
-			protected Void doInBackground(Void... params) {
-
-				Credentials.testCredentials(context,
-						new OnAsyncResponse() {
-
-							@Override
-							public void response(boolean success, String loginMessage) {
-								if (success) {
-									Credentials c = MySettings.readCredentials();
-									Message msg = new Message((long) (System.currentTimeMillis() / 1e3), c.getId(), selectedUser.id, message);
-									WebRequestResult result = HttpManager
-											.messageToUser(msg);
-
-									if (result.result)
-									{
-										Helper.showMessage(
-												context,
-												context.getString(R.string.message_successfully_delivered));
-										
-										
-										msg.saveToDB(context);
-										
-									}
-									else
-										Helper.showMessage(
-												context,
-												context.getString(
-														R.string.message_not_delivered_s,
-														result.message));
-								}
-								else
-								{
-									Helper.showMessage(
-											context,
-											context.getString(
-													R.string.message_not_delivered_s,
-													loginMessage));
-								}
-
-							}
-						});
-
-				return null;
-			}
-
-		}.execute(null, null, null);
-
-	}
+	
 }

@@ -1,10 +1,15 @@
 package smartpointer.hereiam;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.content.Context;
 
-public class Message {
+public class Message implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2514749928792720911L;
 	private long time;
 	private int idFrom;
 	private int idTo;

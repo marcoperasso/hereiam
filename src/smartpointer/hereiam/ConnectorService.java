@@ -34,10 +34,26 @@ public class ConnectorService extends Service implements LocationListener {
 
 	// procedura di invio della posizione corrente
 	private long sendLatestPositionInterval = 30000;// 30 secondi
-	private Runnable sendLatestPositionProcedureRunnable;
+	private long getLatestPositionInterval = 600000; //il server fa pulizia ogni 15 minuti, io invio ogni 10
+	private Runnable sendLatestPositionProcedureRunnable = new Runnable() {
+		public void run() {
+			sendLatestPositionProcedure();
+		}
+	};
+	//se ho degli utenti connessi ma il gps non prende, ogni tot devo impostare la posizione
+	//in base al network provider anche se non è cambiata, altrimenti
+	//dopo un po' sul server viene cancellata
+	private Runnable getLatestPositionRunnable = new Runnable() {
+		public void run() {
+			if (mLocation == null && users.size() > 0)
+				mLocation = mlocManager
+						.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);;
+		}
+	};
 
 	private Location mLocation;
 	private NotificationManager mNotificationManager;
+
 
 	public ConnectorService() {
 	}
@@ -152,11 +168,7 @@ public class ConnectorService extends Service implements LocationListener {
 		if (MyApplication.LogEnabled)
 			Log.i(Const.LOG_TAG, "Starting connector service");
 
-		sendLatestPositionProcedureRunnable = new Runnable() {
-			public void run() {
-				sendLatestPositionProcedure();
-			}
-		};
+		
 		MyApplication.getInstance().setConnectorService(this);
 		super.onCreate();
 	}
@@ -164,6 +176,7 @@ public class ConnectorService extends Service implements LocationListener {
 	public void onLocationChanged(Location location) {
 
 		mLocation = location;
+		resetTimeoutForGettingPosition();
 	}
 
 	public void onProviderEnabled(String provider) {
@@ -194,9 +207,16 @@ public class ConnectorService extends Service implements LocationListener {
 
 	private void sendLatestPositionProcedure() {
 		sendLatestPosition();
+		resetTimeoutForGettingPosition();
 		mHandler.postDelayed(sendLatestPositionProcedureRunnable,
 				sendLatestPositionInterval);
 
+	}
+
+	private void resetTimeoutForGettingPosition() {
+		mHandler.removeCallbacks(getLatestPositionRunnable);
+		mHandler.postDelayed(getLatestPositionRunnable,
+				getLatestPositionInterval);
 	}
 
 	private void setGPSOnNotification(boolean silent) {
@@ -209,7 +229,7 @@ public class ConnectorService extends Service implements LocationListener {
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				this)
-				.setSmallIcon(R.drawable.ic_livetracking)
+				.setSmallIcon(R.drawable.gps_on)
 				.setContentTitle(getString(R.string.app_name))
 				.setStyle(
 						new NotificationCompat.BigTextStyle().bigText(message))

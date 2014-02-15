@@ -26,11 +26,34 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/buttonLiveTracking"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:id="@+id/buttonLiveTrackingOn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/dowser"
+            android:background="@drawable/gps_on"
+            android:padding="10dp" />
+        <Button
+            android:id="@+id/buttonLiveTrackingOff"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/gps_off"
+           
+            android:padding="10dp" />
+        <Button
+            android:id="@+id/buttonMessage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/envelope"
+           
+            android:padding="10dp" />
+        <Button
+            android:id="@+id/buttonBook"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/book"
            
             android:padding="10dp" />
     </LinearLayout>

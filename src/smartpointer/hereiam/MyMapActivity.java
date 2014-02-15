@@ -24,7 +24,6 @@ import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -56,14 +55,6 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	private GoogleCloudMessaging gcm;
 	private String regid;
-
-	private GenericEventHandler mConnectorServiceChangedHandler = new GenericEventHandler() {
-
-		@Override
-		public void onEvent(Object sender, EventArgs args) {
-			showTrackingButton(isLiveTracking());
-		}
-	};
 
 	PositionsDownloadedEventHandler mPositionAvailableHandler = new PositionsDownloadedEventHandler() {
 
@@ -194,25 +185,16 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		});
 	}
 
-	private void showTrackingButton(Boolean show) {
-		Button btn = (Button) findViewById(R.id.buttonLiveTracking);
-		if (show) {
-			btn.setAnimation(mAnimation);
-			mAnimation.start();
-		} else {
-			btn.setAnimation(null);
-			mAnimation.cancel();
-		}
-
-	}
-
 	/** Called when the activity is first created. */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mymap);
-		findViewById(R.id.buttonLiveTracking).setOnClickListener(this);
+		findViewById(R.id.buttonLiveTrackingOn).setOnClickListener(this);
+		findViewById(R.id.buttonLiveTrackingOff).setOnClickListener(this);
+		findViewById(R.id.buttonBook).setOnClickListener(this);
+		findViewById(R.id.buttonMessage).setOnClickListener(this);
 		mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		enableGPS();
@@ -286,8 +268,6 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		}
 
 		mController.setZoom(zoomLevel);
-		MyApplication.getInstance().ConnectorServiceChanged
-				.addHandler(mConnectorServiceChangedHandler);
 
 		mAnimation = new AlphaAnimation(1, 0.5f);
 		// from
@@ -306,7 +286,6 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 														// will
 														// fade back in
 
-		showTrackingButton(isLiveTracking());
 	}
 
 	private void registerForGCM() {
@@ -344,8 +323,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	@Override
 	protected void onDestroy() {
-		MyApplication.getInstance().ConnectorServiceChanged
-				.removeHandler(mConnectorServiceChangedHandler);
+
 		super.onDestroy();
 	}
 
@@ -501,7 +479,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			startActivityForResult(intent, Const.BOOK_RESULT);
 			return true;
 		}
-		
+
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -575,8 +553,14 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.buttonLiveTracking) {
-			if (isLiveTracking()) {
+		if (v.getId() == R.id.buttonLiveTrackingOn) {
+
+			Intent intent = new Intent(this, BookActivity.class);
+			intent.putExtra(Const.COMMAND_ID, R.id.itemRequestUserPosition);
+			startActivityForResult(intent, Const.BOOK_RESULT);
+
+		} else if (v.getId() == R.id.buttonLiveTrackingOff) {
+			if (isLiveTracking())
 				Helper.dialogMessage(this,
 						R.string.do_you_want_to_stop_tracking_all_users,
 						new DialogInterface.OnClickListener() {
@@ -588,13 +572,14 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 										ConnectorService.class));
 							}
 						}, null);
-
-			} else {
-				Intent intent = new Intent(this, BookActivity.class);
-				startActivityForResult(intent, Const.BOOK_RESULT);
-			}
+		} else if (v.getId() == R.id.buttonMessage) {
+			Intent intent = new Intent(this, BookActivity.class);
+			intent.putExtra(Const.COMMAND_ID, R.id.itemSendMessage);
+			startActivity(intent);
+		} else if (v.getId() == R.id.buttonBook) {
+			Intent intent = new Intent(this, BookActivity.class);
+			startActivityForResult(intent, Const.BOOK_RESULT);
 		}
-
 	}
 
 }
