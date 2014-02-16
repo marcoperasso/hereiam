@@ -15,7 +15,10 @@ public class BalloonOverlayView extends FrameLayout {
 	private LinearLayout layout;
 	private TextView title;
 	private TextView snippet;
-
+	public BalloonOverlayView(Context context)
+	{
+		this(context, 0);
+	}
 	public BalloonOverlayView(Context context, int balloonBottomOffset) {
 		super(context);
 		setPadding(10, 0, 10, balloonBottomOffset);

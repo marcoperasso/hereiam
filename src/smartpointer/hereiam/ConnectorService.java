@@ -242,7 +242,7 @@ public class ConnectorService extends Service implements LocationListener {
 				notification);
 	}
 
-	private Object getUsersList() {
+	private String getUsersList() {
 		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < users.size(); i++) {
 			User user = users.get(i);
