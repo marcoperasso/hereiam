@@ -41,6 +41,8 @@ public class UserMessagesActivity extends ListActivity implements
 		else
 			messages = (ArrayList<Message>) savedInstanceState
 					.getSerializable(MESSAGES);
+		
+		refreshLabelVisibility();
 		setTitle(user.toString());
 		adapter = new MyMessageAdapter(this, R.layout.mymessagerow, messages);
 		setListAdapter(adapter);
@@ -48,6 +50,10 @@ public class UserMessagesActivity extends ListActivity implements
 		findViewById(R.id.buttonCancel).setOnClickListener(this);
 		findViewById(R.id.buttonRemoveAll).setOnClickListener(this);
 		findViewById(R.id.buttonSend).setOnClickListener(this);
+	}
+
+	private void refreshLabelVisibility() {
+		findViewById(R.id.textViewNoMessages).setVisibility((messages.size() > 0) ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
@@ -68,6 +74,7 @@ public class UserMessagesActivity extends ListActivity implements
 						messages.remove(message);
 						message.removeFromDB(UserMessagesActivity.this);
 						adapter.notifyDataSetChanged();
+						refreshLabelVisibility();
 					}
 				}, null);
 
@@ -79,6 +86,7 @@ public class UserMessagesActivity extends ListActivity implements
 		{
 			messages.add((Message) data.getSerializableExtra(Const.MESSAGE));
 			adapter.notifyDataSetChanged();
+			refreshLabelVisibility();
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -102,6 +110,7 @@ public class UserMessagesActivity extends ListActivity implements
 								m.removeFromDB(UserMessagesActivity.this);
 							messages.clear();
 							adapter.notifyDataSetChanged();
+							refreshLabelVisibility();
 						}
 					}, null);
 

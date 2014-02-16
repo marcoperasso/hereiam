@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,7 +31,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	private User selectedUser;
 	private boolean usersChanged;
 	private int requestedCommandId;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestedCommandId = getIntent().getIntExtra(Const.COMMAND_ID, -1);
@@ -51,13 +50,14 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	}
 
 	private void refreshLabel() {
-		((TextView)findViewById(R.id.textViewLabel)).setText(getLabel());
-	}
-
-	private int getLabel() {
+		int labelId = R.string.tap_an_user_for_options;
 		if (users.isEmpty())
-			return R.string.no_user_in_book;
-		return requestedCommandId == -1  ? R.string.tap_an_user_for_options : R.string.tap_an_user_for_action;
+			labelId = R.string.no_user_in_book;
+		else if (requestedCommandId == R.id.itemRequestUserPosition)
+			labelId = R.string.tap_an_user_for_locate;
+		else if (requestedCommandId == R.id.itemSendMessage)
+			labelId = R.string.tap_an_user_for_message;
+		((TextView) findViewById(R.id.textViewLabel)).setText(labelId);
 	}
 
 	@Override
@@ -100,6 +100,8 @@ public class BookActivity extends ListActivity implements OnClickListener {
 					MyApplication.getInstance().getUsers().addUser(user);
 					adapter.notifyDataSetChanged();
 					refreshLabel();
+					Helper.showMessage(this,
+							getString(R.string._s_has_been_added_to_your_users_book, user));
 				}
 			}
 
@@ -111,7 +113,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			ContextMenuInfo menuInfo) {
 		if (v.getId() == android.R.id.list) {
 			createContextMenu(menu);
-		} 
+		}
 	}
 
 	private void createContextMenu(ContextMenu menu) {
@@ -160,8 +162,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			finish();
 			break;
 		case R.id.itemMessages:
-			Intent intent = new Intent(this,
-					UserMessagesActivity.class);
+			Intent intent = new Intent(this, UserMessagesActivity.class);
 			intent.putExtra(Const.USER, selectedUser);
 			startActivity(intent);
 			break;
@@ -214,8 +215,8 @@ public class BookActivity extends ListActivity implements OnClickListener {
 				| InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getString(R.string.set_user_password, selectedUser)).setView(input)
-				.setPositiveButton(android.R.string.ok, null)
+		builder.setTitle(getString(R.string.set_user_password, selectedUser))
+				.setView(input).setPositiveButton(android.R.string.ok, null)
 				.setNegativeButton(android.R.string.cancel, null);
 		final AlertDialog dialogPwd = builder.create();
 		dialogPwd.show();
@@ -264,11 +265,9 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 	}
 
-	
-
 	@Override
 	protected void onPause() {
-		
+
 		if (usersChanged) {
 			MyApplication.getInstance().getUsers().updateUsers();
 			usersChanged = false;
@@ -299,6 +298,7 @@ class MyUserAdapter extends ArrayAdapter<User> {
 		TextView text;
 		BookActivity context;
 		User user;
+
 		public void setTextStyle() {
 			if (user.alwaysAcceptToSendPosition)
 				text.setTypeface(null, Typeface.BOLD_ITALIC);
@@ -319,7 +319,7 @@ class MyUserAdapter extends ArrayAdapter<User> {
 			viewHolder.user = user;
 			viewHolder.text = (TextView) view.findViewById(R.id.text1);
 			viewHolder.text.setText(user.toString());
-			
+
 			view.setTag(viewHolder);
 			viewHolder.context = context;
 		} else {

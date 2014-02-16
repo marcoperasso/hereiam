@@ -24,11 +24,13 @@ import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.internal.bt;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -46,6 +48,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	private UserPositionOverlay mUsersOverlay;
 	private MITULocationOverlay myLocationOverlay;
 	private boolean mTrackGPSPosition;
+	private boolean invalidGCMStauts;
 
 	MenuItem mMenuItemTrackGpsPosition;
 
@@ -55,6 +58,14 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	private GoogleCloudMessaging gcm;
 	private String regid;
+
+	private GenericEventHandler mConnectorServiceChangedHandler = new GenericEventHandler() {
+
+		@Override
+		public void onEvent(Object sender, EventArgs args) {
+			showTrackingButton(isLiveTracking());
+		}
+	};
 
 	PositionsDownloadedEventHandler mPositionAvailableHandler = new PositionsDownloadedEventHandler() {
 
@@ -126,6 +137,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	 */
 	private void registerInBackground() {
 		new AsyncTask<Void, Void, Void>() {
+
 			@Override
 			protected Void doInBackground(Void... params) {
 				try {
@@ -141,8 +153,10 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 						public void response(boolean success, String message) {
 							if (success)
 								MySettings.storeRegistrationId(regid);
-							else
+							else {
 								Helper.showMessage(MyMapActivity.this, message);
+								invalidGCMStauts = true;
+							}
 
 						}
 					});
@@ -154,6 +168,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 							getString(
 									R.string.error_registering_to_google_play_services_s,
 									ex.getMessage()));
+					invalidGCMStauts = true;
 				}
 				return null;
 			}
@@ -185,6 +200,20 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		});
 	}
 
+	private void showTrackingButton(Boolean show) {
+		Button btn = (Button) findViewById(R.id.buttonLiveTrackingOff);
+		if (show) {
+			btn.setVisibility(View.VISIBLE);
+			btn.setAnimation(mAnimation);
+			mAnimation.start();
+		} else {
+			btn.setVisibility(View.GONE);
+			btn.setAnimation(null);
+			mAnimation.cancel();
+		}
+
+	}
+
 	/** Called when the activity is first created. */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -195,6 +224,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		findViewById(R.id.buttonLiveTrackingOff).setOnClickListener(this);
 		findViewById(R.id.buttonBook).setOnClickListener(this);
 		findViewById(R.id.buttonMessage).setOnClickListener(this);
+		findViewById(R.id.buttonOther).setOnClickListener(this);
 		mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		enableGPS();
@@ -268,6 +298,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		}
 
 		mController.setZoom(zoomLevel);
+		MyApplication.getInstance().ConnectorServiceChanged
+				.addHandler(mConnectorServiceChangedHandler);
 
 		mAnimation = new AlphaAnimation(1, 0.5f);
 		// from
@@ -286,6 +318,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 														// will
 														// fade back in
 
+		showTrackingButton(isLiveTracking());
 	}
 
 	private void registerForGCM() {
@@ -323,7 +356,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	@Override
 	protected void onDestroy() {
-
+		MyApplication.getInstance().ConnectorServiceChanged
+				.removeHandler(mConnectorServiceChangedHandler);
 		super.onDestroy();
 	}
 
@@ -383,7 +417,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				.getConnectorService();
 		if (connectorService != null && connectorService.existUser(user)) {
 			Helper.showMessage(this,
-					getString(R.string._s_has_already_been_contacted, user));
+					getString(R.string._s_has_already_been_connected, user));
 			return;
 		}
 		final ProgressDialog progressBar = new ProgressDialog(this);
@@ -412,9 +446,13 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 														R.string.your_request_to_s_has_been_sent,
 														user));
 										mUsersOverlay.pinTo(user);
-										ConnectorService.activate(
-												MyMapActivity.this, user, true,
-												false);
+										//se non posso ricevere messaggi, mi connetto subito, 
+										//altrimenti mi connetter?ando ricevo conferma
+										if (invalidGCMStauts) {
+											ConnectorService.activate(
+													MyMapActivity.this, user,
+													true, false);
+										}
 
 									} else {
 										Helper.showMessage(MyMapActivity.this,
@@ -450,9 +488,9 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		// case R.id.itemTrackGpsPosition:
-		// setTrackGPSPosition(!mTrackGPSPosition);
-		// break;
+		case R.id.itemRequestUserPosition:
+			startBookContactUser();
+		 break;
 		case R.id.itemAccount: {
 			Intent intent = new Intent(this, UserActivity.class);
 			intent.putExtra(UserActivity.REGISTER_USER, false);
@@ -470,18 +508,22 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			startActivity(intent);
 			return true;
 		}
-		case R.id.itemFind: {
-			onSearchRequested();
-			return true;
-		}
+		
 		case R.id.itemBook: {
-			Intent intent = new Intent(this, BookActivity.class);
-			startActivityForResult(intent, Const.BOOK_RESULT);
+			startBook();
 			return true;
 		}
-
+		case R.id.itemSendMessage: {
+			startBookMessage();
+			return true;
+		}
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void startBook() {
+		Intent intent = new Intent(this, BookActivity.class);
+		startActivityForResult(intent, Const.BOOK_RESULT);
 	}
 
 	@SuppressWarnings("unused")
@@ -489,9 +531,9 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		mTrackGPSPosition = b;
 
 		MySettings.setTrackGPSPosition(this, mTrackGPSPosition);
-		mMenuItemTrackGpsPosition
-				.setTitleCondensed(getString(mTrackGPSPosition ? R.string.hide_position_menu
-						: R.string.show_position_menu));
+		//mMenuItemTrackGpsPosition
+		//		.setTitleCondensed(getString(mTrackGPSPosition ? R.string.hide_position_menu
+		//				: R.string.show_position_menu));
 
 		if (mTrackGPSPosition)
 			myLocationOverlay.enableMyLocation();
@@ -555,9 +597,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	public void onClick(View v) {
 		if (v.getId() == R.id.buttonLiveTrackingOn) {
 
-			Intent intent = new Intent(this, BookActivity.class);
-			intent.putExtra(Const.COMMAND_ID, R.id.itemRequestUserPosition);
-			startActivityForResult(intent, Const.BOOK_RESULT);
+			startBookContactUser();
 
 		} else if (v.getId() == R.id.buttonLiveTrackingOff) {
 			if (isLiveTracking())
@@ -573,13 +613,24 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 							}
 						}, null);
 		} else if (v.getId() == R.id.buttonMessage) {
-			Intent intent = new Intent(this, BookActivity.class);
-			intent.putExtra(Const.COMMAND_ID, R.id.itemSendMessage);
-			startActivity(intent);
+			startBookMessage();
 		} else if (v.getId() == R.id.buttonBook) {
-			Intent intent = new Intent(this, BookActivity.class);
-			startActivityForResult(intent, Const.BOOK_RESULT);
+			startBook();
+		} else if (v.getId() == R.id.buttonOther) {
+			openOptionsMenu();
 		}
+	}
+
+	private void startBookContactUser() {
+		Intent intent = new Intent(this, BookActivity.class);
+		intent.putExtra(Const.COMMAND_ID, R.id.itemRequestUserPosition);
+		startActivityForResult(intent, Const.BOOK_RESULT);
+	}
+
+	private void startBookMessage() {
+		Intent intent = new Intent(this, BookActivity.class);
+		intent.putExtra(Const.COMMAND_ID, R.id.itemSendMessage);
+		startActivity(intent);
 	}
 
 }

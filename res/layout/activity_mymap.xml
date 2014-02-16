@@ -21,40 +21,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
         android:baselineAligned="true"
         android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/buttonLiveTrackingOff"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/gps_off"
+            android:padding="10dp" />
 
         <Button
             android:id="@+id/buttonLiveTrackingOn"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="5dp"
             android:background="@drawable/gps_on"
-            android:padding="10dp"  />
-        <Button
-            android:id="@+id/buttonLiveTrackingOff"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/gps_off"
-           
             android:padding="10dp" />
+
         <Button
             android:id="@+id/buttonMessage"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/envelope"
-           
+            android:background="@drawable/message"
             android:padding="10dp" />
+
         <Button
             android:id="@+id/buttonBook"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="5dp"
             android:background="@drawable/book"
-           
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/buttonOther"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/other"
             android:padding="10dp" />
     </LinearLayout>
 

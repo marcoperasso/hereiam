@@ -17,25 +17,24 @@
         android:layout_gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
- <LinearLayout
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_gravity="right"
-     android:layout_marginTop="10dip"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dip"
         android:orientation="horizontal" >
 
-     <Button
-         android:id="@+id/buttonNo"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="@string/no" />
-     <Button
-         android:id="@+id/buttonYes"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="@string/yes" />
+        <Button
+            android:id="@+id/buttonNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no" />
 
-
+        <Button
+            android:id="@+id/buttonYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/yes" />
     </LinearLayout>
-    
+
 </LinearLayout>

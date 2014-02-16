@@ -28,29 +28,21 @@ public class UserActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user);
 
+		mUserid = (EditText) findViewById(R.id.editTextUserId);
+		mName = (EditText) findViewById(R.id.editTextName);
+		mSurname = (EditText) findViewById(R.id.editTextSurname);
+		mPassword = (EditText) findViewById(R.id.editTextPassword);
+		mPassword1 = (EditText) findViewById(R.id.editTextRepeatPassword);
+		mMail = (EditText) findViewById(R.id.editTextMail);
 		newUser = getIntent().getBooleanExtra(REGISTER_USER, true);
-		if (!newUser)
-		{
+		if (!newUser) {
 			Credentials c = MySettings.readCredentials();
-			mPassword = (EditText) findViewById(R.id.editTextPassword);
-			mPassword.setText(c.getPassword());
-	
-			mUserid = (EditText) findViewById(R.id.editTextUserId);
 			mUserid.setText(c.getUserId());
 			mUserid.setEnabled(false);
-			mName = (EditText) findViewById(R.id.editTextName);
 			mName.setText(c.getName());
-	
-			mSurname = (EditText) findViewById(R.id.editTextSurname);
 			mSurname.setText(c.getSurname());
-	
-			mPassword = (EditText) findViewById(R.id.editTextPassword);
 			mPassword.setText(c.getPassword());
-	
-			mPassword1 = (EditText) findViewById(R.id.editTextRepeatPassword);
 			mPassword1.setText(c.getPassword());
-	
-			mMail = (EditText) findViewById(R.id.editTextMail);
 			mMail.setText(c.getEmail());
 		}
 		Button btnOk = (Button) findViewById(R.id.ButtonOK);
@@ -71,15 +63,18 @@ public class UserActivity extends Activity implements OnClickListener {
 		}
 
 	}
+
 	private String checkField(int id) {
-		EditText t = (EditText)findViewById(id);
+		EditText t = (EditText) findViewById(id);
 		String s = t.getText().toString();
 		if (Helper.isNullOrEmpty(s)) {
-			Helper.showMessage(UserActivity.this, getString(R.string.the_field_s_is_obligatory_, t.getHint()));
+			Helper.showMessage(UserActivity.this,
+					getString(R.string.the_field_s_is_obligatory_, t.getHint()));
 			return null;
 		}
 		return s;
 	}
+
 	private void doRegister() {
 		String userId = checkField(R.id.editTextUserId);
 		if (userId == null)
@@ -90,7 +85,7 @@ public class UserActivity extends Activity implements OnClickListener {
 		String pwd1 = checkField(R.id.editTextRepeatPassword);
 		if (pwd1 == null)
 			return;
-		
+
 		if (!pwd.equals(pwd1)) {
 			Toast.makeText(this, R.string.passwords_do_not_match_,
 					Toast.LENGTH_LONG).show();
@@ -99,7 +94,7 @@ public class UserActivity extends Activity implements OnClickListener {
 		String name = mName.getText().toString();
 		String surname = mSurname.getText().toString();
 		String mail = mMail.getText().toString();
-		
+
 		final Credentials credentials = new Credentials(userId, pwd);
 		credentials.setName(name);
 		credentials.setSurname(surname);
@@ -127,19 +122,14 @@ public class UserActivity extends Activity implements OnClickListener {
 				progressBar.dismiss();
 				if (result.result) {
 					Intent returnIntent = new Intent();
-					setResult(RESULT_OK,
-							returnIntent);
+					setResult(RESULT_OK, returnIntent);
 					finish();
-				}
-				else
-				{
+				} else {
 					Helper.showMessage(UserActivity.this, result.message);
 				}
 			};
 
 		}.execute(null, null, null);
 	}
-
-	
 
 }

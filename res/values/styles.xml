@@ -9,6 +9,7 @@
     <style name="buttonStyle">
         <item name="android:background">@drawable/button_background</item>
         <item name="android:gravity">center</item>
+        <item name="android:minWidth">60dip</item>
     </style>
 
 </resources>

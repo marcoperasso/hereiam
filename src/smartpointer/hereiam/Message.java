@@ -33,11 +33,11 @@ public class Message implements Serializable {
 		if (received)
 		{
 		User u = MyApplication.getInstance().getUsers().fromId(idFrom);
-		name = (u == null) ? "Unknown" :  u.name;
+		name = (u == null) ? MyApplication.getInstance().getString(R.string.unknown) :  u.name;
 		}
 		else
 		{
-			name = "Me";
+			name =  MyApplication.getInstance().getString(R.string.me);
 		}
 	}
 	

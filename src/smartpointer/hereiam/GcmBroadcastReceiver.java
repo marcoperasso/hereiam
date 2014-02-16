@@ -59,7 +59,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					if (c == null || !touserid.equals(c.getId()))
 						return;
 					User fromUser = User.parseJSON(extras.getString("user"));
-					//replace request user from book user if available
+					// replace request user from book user if available
 					for (User u : MyApplication.getInstance().getUsers())
 						if (u.id == fromUser.id) {
 							fromUser = u;
@@ -74,7 +74,9 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 							if (c.getPassword().equals(
 									Helper.decrypt(secureToken))) {
 								ConnectorService.activate(context, fromUser,
-										true, true); //do not notify in case the phpne has been stolen
+										true, true); // do not notify in case
+														// the phpne has been
+														// stolen
 								MyApplication.getInstance().respondToUser(
 										fromUser.id, Const.MSG_ACCEPT_CONTACT);
 							} else {
@@ -83,7 +85,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 							}
 
 						} else if (fromUser.alwaysAcceptToSendPosition) {
-							ConnectorService.activate(context, fromUser, true, false);
+							ConnectorService.activate(context, fromUser, true,
+									false);
 							MyApplication.getInstance().respondToUser(
 									fromUser.id, Const.MSG_ACCEPT_CONTACT);
 						} else {
@@ -104,6 +107,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 								context.getString(
 										R.string.s_has_accepted_to_let_you_know_her_its_position,
 										fromUser), null, fromUser.id);
+						ConnectorService.activate(context, fromUser, true,
+								false);
 						break;
 					}
 					case Const.MSG_REJECT_CONTACT: {
@@ -112,14 +117,16 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 								context.getString(
 										R.string.s_has_refused_to_let_you_know_her_its_position,
 										fromUser.id), null, fromUser.id);
-						ConnectorService.activate(context, fromUser, false, false);
+						ConnectorService.activate(context, fromUser, false,
+								false);
 						break;
 					}
 					case Const.MSG_REMOVE_CONTACT: {
 						sendNotification(context, context.getString(
 								R.string.s_stopped_sending_her_its_position,
 								fromUser), null, fromUser.id);
-						ConnectorService.activate(context, fromUser, false, false);
+						ConnectorService.activate(context, fromUser, false,
+								false);
 
 						break;
 					}
@@ -132,21 +139,24 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					case Const.MSG_MESSAGE: {
 						String msg = extras.getString("message");
 						long time = Long.parseLong(extras.getString("time"));
-						Message message = new Message(time, fromUser.id, c.getId(), msg);
+						Message message = new Message(time, fromUser.id,
+								c.getId(), msg);
 						message.saveToDB(MyApplication.getInstance());
 						Intent intent2 = new Intent(context,
 								UserMessagesActivity.class);
 						intent2.putExtra(Const.USER, fromUser);
-						
+
 						sendNotification(context, context.getString(
-								R.string._s_says,
-								fromUser, msg), intent2, fromUser.id);
-						
+								R.string._s_says, fromUser, msg), intent2,
+								fromUser.id);
+
 						break;
 					}
 					case Const.MSG_POSITION: {
-						JSONObject jsonObject = new JSONObject(extras.getString("position"));
-						UserPosition pos = new UserPosition(fromUser, GpsPoint.parseJSON(jsonObject));
+						JSONObject jsonObject = new JSONObject(
+								extras.getString("position"));
+						UserPosition pos = new UserPosition(fromUser,
+								GpsPoint.parseJSON(jsonObject));
 						MyApplication.getInstance().receivedPosition(pos);
 						break;
 					}
@@ -161,7 +171,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 	// Put the message into a notification and post it.
 	// This is just one simple example of what you might choose to do with
 	// a GCM message.
-	private void sendNotification(Context context, String msg, Intent intent, int fromUserId) {
+	private void sendNotification(Context context, String msg, Intent intent,
+			int fromUserId) {
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -170,15 +181,15 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				context).setSmallIcon(R.drawable.envelope)
+				context).setSmallIcon(R.drawable.message)
 				.setContentTitle(context.getString(R.string.app_name))
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
 				.setContentText(msg).setContentIntent(contentIntent);
 		Notification notification = mBuilder.build();
 		notification.defaults |= Notification.DEFAULT_ALL;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		mNotificationManager.notify(Const.TRACE_REQUEST_NOTIFICATION_ID + fromUserId,
-				notification);
+		mNotificationManager.notify(Const.TRACE_REQUEST_NOTIFICATION_ID
+				+ fromUserId, notification);
 
 	}
 }
