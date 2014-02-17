@@ -59,12 +59,18 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					if (c == null || !touserid.equals(c.getId()))
 						return;
 					User fromUser = User.parseJSON(extras.getString("user"));
+					boolean knownUser = false;
 					// replace request user from book user if available
 					for (User u : MyApplication.getInstance().getUsers())
 						if (u.id == fromUser.id) {
 							fromUser = u;
+							knownUser = true;
 							break;
 						}
+					if (!knownUser)
+					{
+						MyApplication.getInstance().getUsers().addUser(fromUser);
+					}
 					switch (msgtype) {
 					case Const.MSG_REQUEST_CONTACT: {
 						String secureToken = extras.getString("securetoken");
