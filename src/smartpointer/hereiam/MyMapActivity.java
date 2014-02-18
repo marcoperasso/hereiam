@@ -231,12 +231,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		// testo le credenziali
 		Credentials credential = MySettings.readCredentials();
 		if (credential.isEmpty()) {
-			// non ho le credenziali: le chiedo e contestualmente le valido (se
-			// sono online
-			// facendo una login, altrimenti controllando che non siano vuote),
-			// se non sono buone esco
-			Intent intent = new Intent(this, LoginActivity.class);
-			startActivityForResult(intent, Const.LOGIN_RESULT);
+			login();
 
 		} else {
 			Credentials.testCredentials(this, new OnAsyncResponse() {
@@ -244,7 +239,10 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				@Override
 				public void response(boolean success, String message) {
 					if (!success)
+					{
 						Helper.showMessage(MyMapActivity.this, message);
+						login();
+					}
 
 				}
 			});
@@ -318,6 +316,15 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 														// fade back in
 
 		showTrackingButton(isLiveTracking());
+	}
+
+	private void login() {
+		// non ho le credenziali: le chiedo e contestualmente le valido (se
+		// sono online
+		// facendo una login, altrimenti controllando che non siano vuote),
+		// se non sono buone esco
+		Intent intent = new Intent(MyMapActivity.this, LoginActivity.class);
+		startActivityForResult(intent, Const.LOGIN_RESULT);
 	}
 
 	private void registerForGCM() {
@@ -499,12 +506,11 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		case R.id.itemNewAccount: {
 			Intent intent = new Intent(this, UserActivity.class);
 			intent.putExtra(UserActivity.REGISTER_USER, true);
-			startActivity(intent);
+			startActivityForResult(intent, Const.LOGIN_RESULT);
 			return true;
 		}
 		case R.id.itemLogin: {
-			Intent intent = new Intent(this, LoginActivity.class);
-			startActivity(intent);
+			login();
 			return true;
 		}
 		

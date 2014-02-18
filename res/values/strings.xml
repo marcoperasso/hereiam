@@ -104,5 +104,6 @@
     <string name="write_here_your_message_">Write here your message:</string>
     <string name="_s_has_been_added_to_your_users_book">%s has been added to your users book</string>
     <string name="there_are_no_messages">There are no messages</string>
+    <string name="saving_user_data_">Saving user data&#8230;</string>
 
 </resources>

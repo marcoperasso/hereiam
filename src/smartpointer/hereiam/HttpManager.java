@@ -43,7 +43,7 @@ public class HttpManager {
 		}
 	}
 
-	private static final int CONNECTION_TIMEOUT = 15000;
+	private static final int CONNECTION_TIMEOUT = 60000;
 	private static String ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.!~*()";
 	private static String cookie;
 	private static final boolean debuggingServer = false;

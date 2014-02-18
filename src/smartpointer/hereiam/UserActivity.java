@@ -101,7 +101,7 @@ public class UserActivity extends Activity implements OnClickListener {
 		credentials.setEmail(mail);
 
 		final ProgressDialog progressBar = new ProgressDialog(this);
-		progressBar.setMessage("Saving user data...");
+		progressBar.setMessage(getString(R.string.saving_user_data_));
 		progressBar.setCancelable(false);
 		progressBar.setIndeterminate(true);
 		progressBar.show();

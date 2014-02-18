@@ -27,7 +27,7 @@ public class Credentials {
 	}
 
 	public boolean isEmpty() {
-		return Helper.isNullOrEmpty(email) || Helper.isNullOrEmpty(password);
+		return Helper.isNullOrEmpty(userId) || Helper.isNullOrEmpty(password);
 	}
 
 	String getPassword() {
