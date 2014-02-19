@@ -56,8 +56,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					// if i registered the phone for multiple users, the message
 					// could arrive
 					// even if it's not for me!
-					//if (c == null || !touserid.equals(c.getId()))
-					//	return;
+					if (c == null || !touserid.equals(c.getId()))
+						return;
 					User fromUser = User.parseJSON(extras.getString("user"));
 					boolean knownUser = false;
 					// replace request user from book user if available
