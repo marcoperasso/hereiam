@@ -59,25 +59,25 @@ class MyPosition extends GpsPoint implements IJsonSerializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 3865710892328782713L;
-	int id;
-	Integer[] connectedUsers;
-	MyPosition(int id, Integer[] connectedUsers, int lat, int lon, long time, boolean gps) {
+	String phone;
+	String[] connectedUsers;
+	MyPosition(String phone, String[] connectedUsers, int lat, int lon, long time, boolean gps) {
 		super(lat, lon, time, gps);
-		this.id = id;
+		this.phone = phone;
 		this.connectedUsers = connectedUsers;
 	}
 
 	@Override
 	public JSONObject toJson() throws JSONException {
 		JSONObject object = new JSONObject();
-		object.put("id", id);
+		object.put("phone", phone);
 		object.put("lat", lat);
 		object.put("lon", lon);
 		object.put("time", time);
 		object.put("gps", gps);
 		JSONArray jsonArray = new JSONArray();
-		for (Integer id : connectedUsers)
-			jsonArray.put(id);
+		for (String phone : connectedUsers)
+			jsonArray.put(phone);
 		object.put("users", jsonArray);
 		return object;
 	}

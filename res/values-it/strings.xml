@@ -7,14 +7,13 @@
     <string name="need_gps">Questa app ha bisogno del gps, ma è disabilitato; vuoi attivarlo?</string>
     <string name="your_position">La tua posizione</string>
     <string name="wrong_version">La tua app non è aggiornata, per favore scarica la nuova versione.</string>
-    <string name="credential_userid">Id utente*</string>
+    <string name="credential_userphone">Il tuo numero di telefono*</string>
     <string name="credential_password">Password*</string>
     <string name="credential_repeat_password">Ripeti Password*</string>
     <string name="insert_credential_title">Inserisci le tue credenziali</string>
     <string name="user_credentials">Il mio account</string>
     <string name="new_user_credentials">Nuovo account</string>
     <string name="retrieving_info">Sto scaricando informazioni dal server&#8230;</string>
-    <string name="welcome_s">Benvenuto/a, %s</string>
     <string name="action_settings">Impostazioni</string>
     <string name="gps_available">GPS disponibile.</string>
     <string name="gps_out_of_service">GPS fuori servizio</string>
@@ -29,22 +28,13 @@
     <string name="login">Login</string>
     <string name="warning_to_user">Questa app è in grado di tracciare la tua posizione ed inviarla ad altre persone; ogni volta che questo accadrà verrai avvisato; potrai in ogni momento disabilitare questo comportamento.</string>
     <string name="no_show_again">Non mostrare più</string>
-    <string name="title_activity_search">Trova utente</string>
-    <string name="search_hint">Nome o id utente</string>
-    <string name="find_user">Trova utente</string>
-    <string name="found_user">Trovati %d utenti; tocca quello scelto.</string>
-    <string name="no_user">Nessun utente trovato</string>
     <string name="no_user_in_book">La tua rubrica utenti è vuota.</string>
     <string name="balloon_text">Ora di registrazione: %1$s\nIndirizzo: %2$s\nUso GPS: %3$s</string>
-    <string name="refine_query">Visualizzati %1$d utenti di %2$d; se non trovi la persona che stavi cercando, prova a raffinare i criteri di ricerca.</string>
-    <string name="searching">Ricerca&#8230;</string>
     <string name="title_activity_user">Utente</string>
     <string name="name">Nome</string>
-    <string name="credential_name">Nome</string>
-    <string name="credential_surname">Cognome</string>
     <string name="credential_mail">Mail</string>
     <string name="credential_register">Registrati&#8230;</string>
-    <string name="credentials_descri">Per favore inserisci i tuoi dati; i campi contrassegnati con * sono obbligatori; ti suggeriemo di inserire anche la tua mail, sarà utile nel caso dimentichi la password, ed il tuo nome e cognome, per chiarire chi sei quando contatti altre persone.</string>
+    <string name="credentials_descri">Per favore inserisci i tuoi dati; i campi contrassegnati con * sono obbligatori; ti suggeriemo di inserire anche la tua mail, sarà utile nel caso dimentichi la password.</string>
     <string name="the_field_s_is_obligatory_">Il campo \'%s\' è obbligatorio.</string>
     <string name="passwords_do_not_match_">Le password non coincidono.</string>
     <string name="title_activity_accept_connection">Accetta connessione</string>
@@ -60,16 +50,13 @@
     <string name="do_you_want_to_stop_tracking_all_users">Vuoi interrompere la connessione con tutti gli utenti attualmente connessi?</string>
     <string name="send_error">Errore di invio: "%s"</string>
     <string name="deleted_messages_on_server_s">Messaggi cancellati sul server %s</string>
-    <string name="search_again">Cerca ancora</string>
     <string name="cannot_get_address">Impossibile ottenere l\'indirizzo</string>
     <string name="request_user_position">Richiedi posizione</string>
     <string name="force_get_user_position">Forza ottenimento posizione</string>
     <string name="wrong_password_specified_for_user_s">Password errata specificata per l\'utente %s</string>
     <string name="title_activity_book">Rubrica Utenti</string>
-    <string name="add_">Aggiungi&#8230;</string>
     <string name="set_user_password">Inserisci la password di %s</string>
     <string name="users_book">Rubrica utenti</string>
-    <string name="user_already_in_book">Utente già in rubrica</string>
     <string name="sending_request_">Invio richiesta&#8230;</string>
     <string name="sending_message_">Invio messaggio&#8230;</string>
     <string name="remove_user">Rimuovi utente</string>
@@ -92,7 +79,7 @@
     <string name="no_valid_google_play_services_apk_found">APK di Google Play Servicesnon trovato. Non potrai ricevere notifiche da parte di altri utenti.</string>
     <string name="_s_has_already_been_connected">%s è già connesso</string>
     <string name="delete_this_message_">Cancello questo messaggio?</string>
-    <string name="messages">Messaggi</string>
+    <string name="messages">Lista messaggi</string>
     <string name="close">Chiudi</string>
     <string name="unknown">Sconosciuto</string>
     <string name="me">Io</string>
@@ -105,5 +92,6 @@
     <string name="_s_has_been_added_to_your_users_book">%s è stato/a aggiunto/a alla tua rubrica utenti</string>
     <string name="there_are_no_messages">Non ci sono messaggi</string>
     <string name="saving_user_data_">Salvataggio dati utente&#8230;</string>
+    <string name="_s_is_not_yet_registered_invite_her_him_to_register_">%s non è ancora registrato/a, invitalo/a a registrarsi!</string>
 
 </resources>

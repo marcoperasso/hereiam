@@ -9,16 +9,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class UserActivity extends Activity implements OnClickListener {
 
 	static final String REGISTER_USER = "ru";
 	private EditText mPassword;
-	private EditText mUserid;
-	private EditText mName;
-	private TextView mSurname;
+	private EditText mUserPhone;
 	private EditText mMail;
 	private boolean newUser;
 	private EditText mPassword1;
@@ -28,19 +25,17 @@ public class UserActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user);
 
-		mUserid = (EditText) findViewById(R.id.editTextUserId);
-		mName = (EditText) findViewById(R.id.editTextName);
-		mSurname = (EditText) findViewById(R.id.editTextSurname);
+		mUserPhone = (EditText) findViewById(R.id.editTextUserPhone);
+		mUserPhone.setText(MyApplication.getInstance().getPhone());
 		mPassword = (EditText) findViewById(R.id.editTextPassword);
 		mPassword1 = (EditText) findViewById(R.id.editTextRepeatPassword);
 		mMail = (EditText) findViewById(R.id.editTextMail);
 		newUser = getIntent().getBooleanExtra(REGISTER_USER, true);
 		if (!newUser) {
 			Credentials c = MySettings.readCredentials();
-			mUserid.setText(c.getUserId());
-			mUserid.setEnabled(false);
-			mName.setText(c.getName());
-			mSurname.setText(c.getSurname());
+			mUserPhone.setText(c.getPhone());
+			mUserPhone.setEnabled(false);
+
 			mPassword.setText(c.getPassword());
 			mPassword1.setText(c.getPassword());
 			mMail.setText(c.getEmail());
@@ -76,9 +71,10 @@ public class UserActivity extends Activity implements OnClickListener {
 	}
 
 	private void doRegister() {
-		String userId = checkField(R.id.editTextUserId);
+		String userId = checkField(R.id.editTextUserPhone);
 		if (userId == null)
 			return;
+
 		String pwd = checkField(R.id.editTextPassword);
 		if (pwd == null)
 			return;
@@ -91,13 +87,11 @@ public class UserActivity extends Activity implements OnClickListener {
 					Toast.LENGTH_LONG).show();
 			return;
 		}
-		String name = mName.getText().toString();
-		String surname = mSurname.getText().toString();
 		String mail = mMail.getText().toString();
 
-		final Credentials credentials = new Credentials(userId, pwd);
-		credentials.setName(name);
-		credentials.setSurname(surname);
+		String phone = mUserPhone.getText().toString();
+		phone = Helper.adjustPhoneNumber(phone);
+		final Credentials credentials = new Credentials(phone, pwd);
 		credentials.setEmail(mail);
 
 		final ProgressDialog progressBar = new ProgressDialog(this);

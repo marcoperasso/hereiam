@@ -134,7 +134,7 @@ public class ConnectorService extends Service implements LocationListener {
 					ConnectorService.this);
 		}
 		for (int i = 0; i < users.size(); i++)
-			if (users.get(i).id == user.id) {
+			if (users.get(i).phone.equals(user.phone)) {
 				return;
 			}
 		users.add(user);
@@ -144,7 +144,7 @@ public class ConnectorService extends Service implements LocationListener {
 
 	boolean existUser(final User user) {
 		for (int i = 0; i < users.size(); i++)
-			if (users.get(i).id == user.id) {
+			if (users.get(i).phone.equals(user.phone)) {
 				return true;
 			}
 		return false;
@@ -152,7 +152,7 @@ public class ConnectorService extends Service implements LocationListener {
 	}
 	private void removeUser(final User user) {
 		for (int i = 0; i < users.size(); i++)
-			if (users.get(i).id == user.id) {
+			if (users.get(i).phone.equals(user.phone)) {
 				users.remove(i);
 				break;
 			}
@@ -258,15 +258,15 @@ public class ConnectorService extends Service implements LocationListener {
 				|| !Helper.isOnline(ConnectorService.this))
 			return;
 
-		Integer[] ids = new Integer[users.size()];
+		String[] phones = new String[users.size()];
 		for (int i = 0; i < users.size(); i++) {
 			User user = users.get(i);
-			ids[i] = user.id;
+			phones[i] = user.phone;
 		}
 
 		Credentials currentCredentials = MySettings.readCredentials();
-		final MyPosition loc = new MyPosition(currentCredentials == null ? 0
-				: currentCredentials.getId(), ids,
+		final MyPosition loc = new MyPosition(currentCredentials == null ? ""
+				: currentCredentials.getPhone(), phones,
 				(int) (mLocation.getLatitude() * 1E6),
 				(int) (mLocation.getLongitude() * 1E6),
 				(long) (System.currentTimeMillis() / 1E3),

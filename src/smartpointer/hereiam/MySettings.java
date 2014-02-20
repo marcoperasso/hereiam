@@ -9,19 +9,12 @@ import android.util.Log;
 public class MySettings {
 	public static final String PREFS_NAME = "i";
 	public static final String TRACK_GPS = "l";
-	public static final String MAX_TASK_ID = "m";
-	public static final String VISIBLE_ROUTES = "r";
-	public static final String LATEST_SYNC = "q";
 	public static final String EMAIL = "o";
 	public static final String PASSWORD = "p";
-	public static final String USERID = "uid";
-	public static final String ID = "id";
+	public static final String PHONE = "ph";
 	private static final String HIDDEN_MESSAGE_ = "hm_";
-	private static final String NAME = "n";
-	private static final String SURNAME = "s";
 	private static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
-	private static final String PROPERTY_REG_ID_USER = "registration_user_id";
 
 	private static Credentials credentials;
 
@@ -45,12 +38,9 @@ public class MySettings {
 					PREFS_NAME, 0);
 
 			String pwd = settings.getString(PASSWORD, "");
-			credentials = new Credentials(settings.getString(USERID, ""),
+			credentials = new Credentials(settings.getString(PHONE, ""),
 					Helper.isNullOrEmpty(pwd) ? "" : Helper.decrypt(pwd));
-			credentials.setId(settings.getInt(ID, 0));
 			credentials.setEmail(settings.getString(EMAIL, ""));
-			credentials.setName(settings.getString(NAME, ""));
-			credentials.setSurname(settings.getString(SURNAME, ""));
 		}
 		return credentials;
 	}
@@ -59,54 +49,16 @@ public class MySettings {
 		SharedPreferences settings = MyApplication.getInstance()
 				.getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt(ID, c.getId());
-		editor.putString(USERID, c.getUserId());
+		editor.putString(PHONE, c.getPhone());
 		editor.putString(EMAIL, c.getEmail());
 		editor.putString(PASSWORD, Helper.encrypt(c.getPassword()));
-		editor.putString(NAME, c.getName());
-		editor.putString(SURNAME, c.getSurname());
 		editor.commit();
 		credentials = c;
 	}
 
 	static Hashtable<String, Boolean> hiddenRoutes = new Hashtable<String, Boolean>();
 
-	public static boolean isHiddenRoute(Context context, String routeName) {
-		String key = VISIBLE_ROUTES + routeName;
-		if (hiddenRoutes.containsKey(key))
-			return hiddenRoutes.get(key);
-		SharedPreferences settings = context
-				.getSharedPreferences(PREFS_NAME, 0);
-		Boolean b = settings.getBoolean(key, false);
-		hiddenRoutes.put(key, b);
-		return b;
-	}
-
-	public static void setHiddenRoute(Context context, String routeName,
-			boolean b) {
-		String key = VISIBLE_ROUTES + routeName;
-		SharedPreferences settings = context
-				.getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putBoolean(key, b);
-		editor.commit();
-		hiddenRoutes.put(key, b);
-	}
-
-	public static long getLatestSyncDate(Context context) {
-		SharedPreferences settings = context
-				.getSharedPreferences(PREFS_NAME, 0);
-		return settings.getLong(LATEST_SYNC, 0L);
-	}
-
-	public static void setLatestSyncDate(Context context, long date) {
-		SharedPreferences settings = context
-				.getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putLong(LATEST_SYNC, date);
-		editor.commit();
-	}
-
+	
 	public static boolean isHiddenMessage(int messageId) {
 		SharedPreferences settings = MyApplication.getInstance()
 				.getSharedPreferences(PREFS_NAME, 0);
@@ -140,7 +92,6 @@ public class MySettings {
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(PROPERTY_REG_ID, regId);
 		editor.putInt(PROPERTY_APP_VERSION, appVersion);
-		editor.putInt(PROPERTY_REG_ID_USER, credentials.getId());
 		editor.commit();
 	}
 
@@ -172,14 +123,7 @@ public class MySettings {
 			return "";
 		}
 
-		// Check if the user is changed
-		int registeredUser = settings.getInt(PROPERTY_REG_ID_USER,
-				Integer.MIN_VALUE);
-
-		if (registeredUser != credentials.getId()) {
-			Log.i(Const.LOG_TAG, "User changed.");
-			return "";
-		}
+		
 		return registrationId;
 	}
 }

@@ -14,9 +14,8 @@ import android.widget.TextView.OnEditorActionListener;
 
 public class LoginActivity extends Activity implements OnEditorActionListener,
 		OnClickListener {
-
+	private EditText mPhone;
 	private EditText mPassword;
-	private EditText mUserid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +24,16 @@ public class LoginActivity extends Activity implements OnEditorActionListener,
 		setTitle(R.string.insert_credential_title);
 
 		mPassword = (EditText) findViewById(R.id.editTextPassword);
-		mUserid = (EditText) findViewById(R.id.editTextUserId);
-
+		mPhone = (EditText) findViewById(R.id.editTextUserPhone);
 		Credentials c = MySettings.readCredentials();
-		mUserid.setText(c.getUserId());
 		mPassword.setText(c.getPassword());
 		mPassword.setOnEditorActionListener(this);
 		mPassword.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
+		String phone = c.getPhone();
+		if (Helper.isNullOrEmpty(phone))
+			phone = MyApplication.getInstance().getPhone();
+		mPhone.setText(phone);
+		
 		findViewById(R.id.ButtonOK).setOnClickListener(this);
 		findViewById(R.id.buttonCancel).setOnClickListener(this);
 		findViewById(R.id.ButtonRegister).setOnClickListener(this);
@@ -47,6 +48,7 @@ public class LoginActivity extends Activity implements OnEditorActionListener,
 		}
 		return false;
 	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == Const.REGISTER_RESULT) {
@@ -77,13 +79,14 @@ public class LoginActivity extends Activity implements OnEditorActionListener,
 	}
 
 	private void doLogin() {
-		String userId = mUserid.getText().toString();
 		String pwd = mPassword.getText().toString();
-		if (Helper.isNullOrEmpty(userId) || Helper.isNullOrEmpty(pwd)) {
+		String phone = mPhone.getText().toString();
+		phone = Helper.adjustPhoneNumber(phone);
+		if (Helper.isNullOrEmpty(pwd) || Helper.isNullOrEmpty(phone)) {
 			return;
 		}
 
-		final Credentials credentials = new Credentials(userId, pwd);
+		final Credentials credentials = new Credentials(phone, pwd);
 		final ProgressDialog progressBar = new ProgressDialog(this);
 		progressBar.setMessage(getString(R.string.verifying_credentials));
 		progressBar.setCancelable(false);

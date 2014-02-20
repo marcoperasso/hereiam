@@ -1,6 +1,7 @@
 package smartpointer.hereiam;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,54 +9,41 @@ import org.json.JSONObject;
 public class User implements IJsonSerializable, Serializable {
 	@Override
 	public String toString() {
-		return name + " " + surname + " (" + userId + ")";
+		return name + " " + " (" + phone + ")";
 	}
 
-	int id;
-	String userId;
+	String phone;
 	String name;
-	String surname;
+
 	boolean alwaysAcceptToSendPosition = false;
+	boolean registered = false;
 	transient boolean changed = false;
-	
+
 	private static final long serialVersionUID = -5703092633640293472L;
 
-	public User(int id, String userId, String name, String surname) {
-		this.id = id;
-		this.userId = userId;
+	public User(String phone, String name) {
+		this.phone = phone;
 		this.name = name;
-		this.surname = surname;
-	}
-
-	public User(int id, String userId) {
-		this.id = id;
-		this.userId = userId;
-		this.name = null;
-		this.surname = null;
 	}
 
 	public JSONObject toJson() throws JSONException {
 		JSONObject obj = new JSONObject();
-		obj.put("id", id);
-		obj.put("userid", userId);
-		if (name != null)
-			obj.put("name", name);
-		if (surname != null)
-			obj.put("surname", surname);
+		obj.put("phone", phone);
+		obj.put("name", name);
 
 		return obj;
 	}
 
-	public static User parseJSON(String jsonString) throws JSONException {
-		return parseJSON(new JSONObject(jsonString));
+}
 
+class UserComparator implements Comparator<User> {
+	@Override
+	public int compare(User u1, User u2) {
+		if (u1.registered && !u2.registered)
+			return -1;
+		if (u2.registered && !u1.registered)
+			return 1;
+
+		return u1.name.compareTo(u2.name);
 	}
-
-	public static User parseJSON(JSONObject jsonObject) throws JSONException {
-		User user = new User(jsonObject.getInt("id"),
-				jsonObject.getString("userid"), jsonObject.getString("name"),
-				jsonObject.getString("surname"));
-		return user;
-	}
-
 }

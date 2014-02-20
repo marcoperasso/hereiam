@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -85,7 +84,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				UserPosition userPosition = positions.get(i);
 				// tolgo le posizioni più vecchie di 15 minuti e quella che sto
 				// per aggiungere
-				if (userPosition.getUser().id == position.getUser().id
+				if (userPosition.getUser().phone.equals(position.getUser().phone)
 						|| (long) (System.currentTimeMillis() / 1E3)
 								- userPosition.getPosition().time > 900)
 					positions.remove(i);
@@ -187,8 +186,10 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			@Override
 			public void response(boolean success, String message) {
 				if (success) {
+					Credentials c = MySettings.readCredentials();
+					c.setRegid(regid);
 					WebRequestResult resp = HttpManager
-							.sendRegistrationIds(regid);
+							.saveCredentials(c, false);
 					onResponse.response(resp.result, resp.message);
 
 				} else {
@@ -291,7 +292,6 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		} else {
 			// testVersion();
 			Helper.hideableMessage(this, R.string.warning_to_user);
-			handleIntent(getIntent());
 		}
 
 		mController.setZoom(zoomLevel);
@@ -342,25 +342,6 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	}
 
 	@Override
-	public void onNewIntent(Intent intent) {
-		setIntent(intent);
-		handleIntent(intent);
-	}
-
-	private void handleIntent(Intent intent) {
-		// Get the intent, verify the action and get the query
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			// manually launch the real search activity
-			final Intent searchIntent = new Intent(getApplicationContext(),
-					SearchActivity.class);
-			// add query to the Intent Extras
-			searchIntent.putExtra(SearchManager.QUERY, query);
-			startActivityForResult(searchIntent, Const.SEARCH_ACTIVITY_RESULT);
-		}
-	}
-
-	@Override
 	protected void onDestroy() {
 		MyApplication.getInstance().ConnectorServiceChanged
 				.removeHandler(mConnectorServiceChangedHandler);
@@ -394,10 +375,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 					.show();
 		} else if (requestCode == Const.LOGIN_RESULT) {
 			if (resultCode == RESULT_OK) {
-				Helper.showMessage(
-						this,
-						String.format(getString(R.string.welcome_s),
-								MySettings.readCredentials()));
+				
 				registerForGCM();
 			} else
 				finish();
@@ -442,7 +420,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 							public void response(boolean success, String message) {
 								if (success) {
 									WebRequestResult contactUser = HttpManager.contactUser(
-											user.id,
+											user.phone,
 											Helper.isNullOrEmpty(pwd) ? Const.NULL_TOKEN
 													: Helper.encrypt(pwd));
 									if (contactUser.result) {

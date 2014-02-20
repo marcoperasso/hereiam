@@ -20,13 +20,13 @@
             android:text="@string/credentials_descri" />
 
         <EditText
-            android:id="@+id/editTextUserId"
+            android:id="@+id/editTextUserPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/credential_userid"
-            android:inputType="textFilter|textNoSuggestions"
-            android:maxLength="20" />
+            android:hint="@string/credential_userphone"
+            android:inputType="phone"
+         android:maxLength="20" />
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -43,23 +43,6 @@
             android:ems="10"
             android:hint="@string/credential_repeat_password"
             android:inputType="textPassword" />
-
-        <EditText
-            android:id="@+id/editTextName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/credential_name"
-            android:inputType="textCapWords" >
-        </EditText>
-
-        <EditText
-            android:id="@+id/editTextSurname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/credential_surname"
-            android:inputType="textCapWords" />
 
         <EditText
             android:id="@+id/editTextMail"

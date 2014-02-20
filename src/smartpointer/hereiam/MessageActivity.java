@@ -56,7 +56,7 @@ public class MessageActivity extends Activity implements OnClickListener {
 											.readCredentials();
 									Message msg = new Message((long) (System
 											.currentTimeMillis() / 1e3), c
-											.getId(), user.id, message);
+											.getPhone(), user.phone, message);
 									WebRequestResult result = HttpManager
 											.messageToUser(msg);
 

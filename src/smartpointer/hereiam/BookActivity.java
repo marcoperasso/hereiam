@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -21,13 +20,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class BookActivity extends ListActivity implements OnClickListener {
 
 	private MyUserAdapter adapter;
-	private ArrayList<User> users;
+	private Users users;
 	private User selectedUser;
 	private boolean usersChanged;
 	private int requestedCommandId;
@@ -39,14 +39,12 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		setContentView(R.layout.activity_book);
 		registerForContextMenu(findViewById(android.R.id.list));
 		users = MyApplication.getInstance().getUsers();
-
+		//users.verifyRegistration();
 		adapter = new MyUserAdapter(this, R.layout.mymultichoicelistrow, users);
 		setListAdapter(adapter);
 
-		findViewById(R.id.buttonAdd).setOnClickListener(this);
 		findViewById(R.id.buttonCancel).setOnClickListener(this);
 		refreshLabel();
-		handleIntent(getIntent());
 	}
 
 	private void refreshLabel() {
@@ -58,55 +56,6 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		else if (requestedCommandId == R.id.itemSendMessage)
 			labelId = R.string.tap_an_user_for_message;
 		((TextView) findViewById(R.id.textViewLabel)).setText(labelId);
-	}
-
-	@Override
-	public void onNewIntent(Intent intent) {
-		setIntent(intent);
-		handleIntent(intent);
-	}
-
-	private void handleIntent(Intent intent) {
-		// Get the intent, verify the action and get the query
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			// manually launch the real search activity
-			final Intent searchIntent = new Intent(getApplicationContext(),
-					SearchActivity.class);
-			// add query to the Intent Extras
-			searchIntent.putExtra(SearchManager.QUERY, query);
-			startActivityForResult(searchIntent, Const.SEARCH_ACTIVITY_RESULT);
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == Const.SEARCH_ACTIVITY_RESULT) {
-			if (resultCode == RESULT_OK) {
-				if (!data.hasExtra(Const.USER)) {
-					// success but no user? means 'search again'
-					onSearchRequested();
-				} else {
-					User user = (User) data.getSerializableExtra(Const.USER);
-
-					for (User u : users)
-						if (u.id == user.id) {
-							Helper.showMessage(this,
-									getString(R.string.user_already_in_book));
-							super.onActivityResult(requestCode, resultCode,
-									data);
-							return;
-						}
-					MyApplication.getInstance().getUsers().addUser(user);
-					adapter.notifyDataSetChanged();
-					refreshLabel();
-					Helper.showMessage(this,
-							getString(R.string._s_has_been_added_to_your_users_book, user));
-				}
-			}
-
-		}
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	public void onCreateContextMenu(ContextMenu menu, View v,
@@ -166,17 +115,6 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			intent.putExtra(Const.USER, selectedUser);
 			startActivity(intent);
 			break;
-		case R.id.itemRemoveUser:
-			Helper.dialogMessage(this, BookActivity.this.getString(
-					R.string.are_you_sure_to_remove_user_s_, selectedUser),
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							removeUser();
-						}
-					}, null);
-
-			break;
 
 		}
 	}
@@ -190,12 +128,6 @@ public class BookActivity extends ListActivity implements OnClickListener {
 				list.getAdapter().getView(i, view, list);
 				break;
 			}
-	}
-
-	private void removeUser() {
-		MyApplication.getInstance().getUsers().removeUser(selectedUser);
-		adapter.notifyDataSetChanged();
-		refreshLabel();
 	}
 
 	void contactUser(User user, String password) {
@@ -245,6 +177,11 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		selectedUser = users.get(position);
+		if (!selectedUser.registered)
+		{
+			Helper.showMessage(this, getString(R.string._s_is_not_yet_registered_invite_her_him_to_register_, selectedUser) );
+			return;
+		}
 		if (requestedCommandId != -1)
 			doAction(requestedCommandId);
 		else
@@ -254,10 +191,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.buttonAdd) {
-
-			onSearchRequested();
-		} else if (v.getId() == R.id.buttonCancel) {
+		if (v.getId() == R.id.buttonCancel) {
 			Intent intent = new Intent();
 			setResult(RESULT_CANCELED, intent);
 			finish();
@@ -269,7 +203,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	protected void onPause() {
 
 		if (usersChanged) {
-			MyApplication.getInstance().getUsers().updateUsers();
+			// TODO MyApplication.getInstance().getUsers().updateUsers();
 			usersChanged = false;
 		}
 		super.onPause();
@@ -298,6 +232,7 @@ class MyUserAdapter extends ArrayAdapter<User> {
 		TextView text;
 		BookActivity context;
 		User user;
+		public ImageView image;
 
 		public void setTextStyle() {
 			if (user.alwaysAcceptToSendPosition)
@@ -312,20 +247,18 @@ class MyUserAdapter extends ArrayAdapter<User> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
 		User user = users.get(position);
-		if (convertView == null) {
-			LayoutInflater inflator = context.getLayoutInflater();
-			view = inflator.inflate(R.layout.mymultichoicelistrow, null);
-			final ViewHolder viewHolder = new ViewHolder();
-			viewHolder.user = user;
-			viewHolder.text = (TextView) view.findViewById(R.id.text1);
-			viewHolder.text.setText(user.toString());
 
-			view.setTag(viewHolder);
-			viewHolder.context = context;
-		} else {
-			view = convertView;
-		}
-		ViewHolder viewHolder = (ViewHolder) view.getTag();
+		LayoutInflater inflator = context.getLayoutInflater();
+		view = inflator.inflate(R.layout.mymultichoicelistrow, null);
+		final ViewHolder viewHolder = new ViewHolder();
+		viewHolder.user = user;
+		viewHolder.text = (TextView) view.findViewById(R.id.text1);
+		viewHolder.image = (ImageView) view.findViewById(R.id.imageRegistered);
+		viewHolder.image.setVisibility(user.registered ? View.VISIBLE : View.INVISIBLE);
+		viewHolder.text.setText(user.toString());
+
+		view.setTag(viewHolder);
+		viewHolder.context = context;
 		viewHolder.setTextStyle();
 		return view;
 	}

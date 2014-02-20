@@ -39,38 +39,27 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 						.equals(messageType)) {
 					sendNotification(context,
 							context.getString(R.string.send_error, extras),
-							null, 0);
+							null, "");
 				} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED
 						.equals(messageType)) {
 					sendNotification(context, context.getString(
 							R.string.deleted_messages_on_server_s, extras),
-							null, 0);
+							null, "");
 					// If it's a regular GCM message, do some work.
 				} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE
 						.equals(messageType)) {
 
 					int msgtype = Integer.parseInt(extras.getString("msgtype"));
-					Integer touserid = Integer.parseInt(extras
-							.getString("touserid"));
+					String touserphone = extras.getString("touserphone");
 					Credentials c = MySettings.readCredentials();
 					// if i registered the phone for multiple users, the message
 					// could arrive
 					// even if it's not for me!
-					if (c == null || !touserid.equals(c.getId()))
+					if (c == null || !touserphone.equals(c.getPhone()))
 						return;
-					User fromUser = User.parseJSON(extras.getString("user"));
-					boolean knownUser = false;
-					// replace request user from book user if available
-					for (User u : MyApplication.getInstance().getUsers())
-						if (u.id == fromUser.id) {
-							fromUser = u;
-							knownUser = true;
-							break;
-						}
-					if (!knownUser)
-					{
-						MyApplication.getInstance().getUsers().addUser(fromUser);
-					}
+					String fromUserPhone = extras.getString("fromuserphone");
+					User fromUser = MyApplication.getInstance().getUsers().fromPhone(fromUserPhone);
+					
 					switch (msgtype) {
 					case Const.MSG_REQUEST_CONTACT: {
 						String secureToken = extras.getString("securetoken");
@@ -84,17 +73,17 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 														// the phpne has been
 														// stolen
 								MyApplication.getInstance().respondToUser(
-										fromUser.id, Const.MSG_ACCEPT_CONTACT);
+										fromUser.phone, Const.MSG_ACCEPT_CONTACT);
 							} else {
 								MyApplication.getInstance().respondToUser(
-										fromUser.id, Const.MSG_WRONG_PASSWORD);
+										fromUser.phone, Const.MSG_WRONG_PASSWORD);
 							}
 
 						} else if (fromUser.alwaysAcceptToSendPosition) {
 							ConnectorService.activate(context, fromUser, true,
 									false);
 							MyApplication.getInstance().respondToUser(
-									fromUser.id, Const.MSG_ACCEPT_CONTACT);
+									fromUser.phone, Const.MSG_ACCEPT_CONTACT);
 						} else {
 
 							Intent intent2 = new Intent(context,
@@ -103,7 +92,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 
 							sendNotification(context, context.getString(
 									R.string.s_wants_to_know_your_position,
-									fromUser), intent2, fromUser.id);
+									fromUser), intent2, fromUser.phone);
 						}
 						break;
 					}
@@ -112,7 +101,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 								context,
 								context.getString(
 										R.string.s_has_accepted_to_let_you_know_her_its_position,
-										fromUser), null, fromUser.id);
+										fromUser), null, fromUser.phone);
 						ConnectorService.activate(context, fromUser, true,
 								false);
 						break;
@@ -122,7 +111,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 								context,
 								context.getString(
 										R.string.s_has_refused_to_let_you_know_her_its_position,
-										fromUser.id), null, fromUser.id);
+										fromUser), null, fromUser.phone);
 						ConnectorService.activate(context, fromUser, false,
 								false);
 						break;
@@ -130,7 +119,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					case Const.MSG_REMOVE_CONTACT: {
 						sendNotification(context, context.getString(
 								R.string.s_stopped_sending_her_its_position,
-								fromUser), null, fromUser.id);
+								fromUser), null, fromUser.phone);
 						ConnectorService.activate(context, fromUser, false,
 								false);
 
@@ -139,14 +128,14 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					case Const.MSG_WRONG_PASSWORD: {
 						sendNotification(context, context.getString(
 								R.string.wrong_password_specified_for_user_s,
-								fromUser), null, fromUser.id);
+								fromUser), null, fromUser.phone);
 						break;
 					}
 					case Const.MSG_MESSAGE: {
 						String msg = extras.getString("message");
 						long time = Long.parseLong(extras.getString("time"));
-						Message message = new Message(time, fromUser.id,
-								c.getId(), msg);
+						Message message = new Message(time, fromUser.phone,
+								c.getPhone(), msg);
 						message.saveToDB(MyApplication.getInstance());
 						Intent intent2 = new Intent(context,
 								UserMessagesActivity.class);
@@ -154,7 +143,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 
 						sendNotification(context, context.getString(
 								R.string._s_says, fromUser, msg), intent2,
-								fromUser.id);
+								fromUser.phone);
 
 						break;
 					}
@@ -178,7 +167,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 	// This is just one simple example of what you might choose to do with
 	// a GCM message.
 	private void sendNotification(Context context, String msg, Intent intent,
-			int fromUserId) {
+			String fromUserPhone) {
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -195,7 +184,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 		notification.defaults |= Notification.DEFAULT_ALL;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		mNotificationManager.notify(Const.TRACE_REQUEST_NOTIFICATION_ID
-				+ fromUserId, notification);
+				+ fromUserPhone.hashCode(), notification);
 
 	}
 }

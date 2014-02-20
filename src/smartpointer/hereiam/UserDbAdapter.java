@@ -1,13 +1,8 @@
 package smartpointer.hereiam;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 
 public class UserDbAdapter {
-
+/*
 	private Context context;
 	private SQLiteDatabase database;
 	private DatabaseHelper dbHelper;
@@ -70,5 +65,5 @@ public class UserDbAdapter {
 				KEY_SURNAME, KEY_USERID, KEY_AUTOACCEPT }, null, null, null,
 				null, null);
 	}
-
+*/
 }

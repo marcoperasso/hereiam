@@ -18,8 +18,8 @@ public class MessageDbAdapter {
 	static final String DATABASE_TABLE = "messages";
 
 	static final String KEY_TIME = "time";
-	static final String KEY_IDFROM = "idfrom";
-	static final String KEY_IDTO = "idto";
+	static final String KEY_PHONEFROM = "phonefrom";
+	static final String KEY_PHONETO = "phoneto";
 	static final String KEY_MESSAGE = "message";
 
 	public MessageDbAdapter(Context context) {
@@ -39,8 +39,8 @@ public class MessageDbAdapter {
 	private ContentValues createContentValues(Message message) {
 		ContentValues values = new ContentValues();
 		values.put(KEY_TIME, message.getTime());
-		values.put(KEY_IDFROM, message.getIdFrom());
-		values.put(KEY_IDTO, message.getIdTo());
+		values.put(KEY_PHONEFROM, message.getPhoneFrom());
+		values.put(KEY_PHONETO, message.getPhoneTo());
 		values.put(KEY_MESSAGE, message.getMessage());
 
 		return values;
@@ -53,22 +53,22 @@ public class MessageDbAdapter {
 
 	public boolean deleteMessage(Message message) {
 		return database.delete(DATABASE_TABLE, KEY_TIME + "=" + message.getTime()
-				+ " and " + KEY_IDFROM + "=" + message.getIdFrom() + " and "
-				+ KEY_IDTO + "=" + message.getIdTo(), null) > 0;
+				+ " and " + KEY_PHONEFROM + "='" + message.getPhoneFrom() + "' and "
+				+ KEY_PHONETO + "='" + message.getPhoneTo() + "'", null) > 0;
 	}
 
 	// fetch all users
 	public ArrayList<Message> fetchMessages(User user) {
 		Cursor cursor = database.query(DATABASE_TABLE, new String[] { KEY_TIME,
-				KEY_IDFROM, KEY_IDTO, KEY_MESSAGE }, KEY_IDFROM + "=" + user.id + " or " + KEY_IDTO + "=" + user.id, null, null, null, KEY_TIME);
+				KEY_PHONEFROM, KEY_PHONETO, KEY_MESSAGE }, KEY_PHONEFROM + "='" + user.phone + "' or " + KEY_PHONETO + "='" + user.phone + "'", null, null, null, KEY_TIME);
 		ArrayList<Message> messages = new ArrayList<Message>();
 		while (cursor.moveToNext()) {
 			Message message = new Message(cursor.getLong(cursor
 					.getColumnIndex(MessageDbAdapter.KEY_TIME)),
-					cursor.getInt(cursor
-							.getColumnIndex(MessageDbAdapter.KEY_IDFROM)),
-					cursor.getInt(cursor
-							.getColumnIndex(MessageDbAdapter.KEY_IDTO)),
+					cursor.getString(cursor
+							.getColumnIndex(MessageDbAdapter.KEY_PHONEFROM)),
+					cursor.getString(cursor
+							.getColumnIndex(MessageDbAdapter.KEY_PHONETO)),
 					cursor.getString(cursor
 							.getColumnIndex(MessageDbAdapter.KEY_MESSAGE)));
 

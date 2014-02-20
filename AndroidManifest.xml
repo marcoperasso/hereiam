@@ -17,6 +17,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 	<uses-permission android:name="smartpointer.hereiam.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     
     <permission
         android:name="smartpointer.hereiam.permission.C2D_MESSAGE"
@@ -48,16 +50,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".SearchActivity" />
+           
         </activity>
 
         <service
@@ -85,11 +78,7 @@
             android:name="smartpointer.hereiam.UserMessagesActivity"
             android:label="@string/messages" >
         </activity>
-        <activity
-            android:name="smartpointer.hereiam.SearchActivity"
-            android:label="@string/title_activity_search"
-            android:launchMode="singleTop" >
-        </activity>
+        
         <activity
             android:name="smartpointer.hereiam.UserActivity"
             android:label="@string/title_activity_user" >
@@ -118,16 +107,7 @@
             android:name="smartpointer.hereiam.BookActivity"
             android:label="@string/title_activity_book"
             android:launchMode="singleTop" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".SearchActivity" />
+           
         </activity>
         <activity
             android:name="smartpointer.hereiam.MessageActivity"

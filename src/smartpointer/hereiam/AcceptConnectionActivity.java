@@ -42,13 +42,13 @@ public class AcceptConnectionActivity extends Activity implements
 	}
 
 	private void acceptUser() {
-		MyApplication.getInstance().respondToUser(user.id, Const.MSG_ACCEPT_CONTACT);
+		MyApplication.getInstance().respondToUser(user.phone, Const.MSG_ACCEPT_CONTACT);
 		finish();
 
 	}
 
 	private void rejectUser() {
-		MyApplication.getInstance().respondToUser(user.id, Const.MSG_REJECT_CONTACT);
+		MyApplication.getInstance().respondToUser(user.phone, Const.MSG_REJECT_CONTACT);
 		finish();
 	}
 

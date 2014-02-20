@@ -10,12 +10,12 @@
     tools:context=".LoginActivity" >
 
     <EditText
-        android:id="@+id/editTextUserId"
+        android:id="@+id/editTextUserPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/credential_userid"
-        android:inputType="textNoSuggestions"
+        android:hint="@string/credential_userphone"
+        android:inputType="phone"
         android:maxLength="20" >
 
         <requestFocus android:layout_width="wrap_content" />

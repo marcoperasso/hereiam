@@ -11,17 +11,17 @@ public class Message implements Serializable {
 	 */
 	private static final long serialVersionUID = 2514749928792720911L;
 	private long time;
-	private int idFrom;
-	private int idTo;
+	private String phoneFrom;
+	private String phoneTo;
 	private String message;
 	
 	private String name;
 	private boolean received;
 
-	public Message(long time, int idFrom, int idTo, String message) {
+	public Message(long time, String phoneFrom, String phoneTo, String message) {
 		this.time = time;
-		this.idFrom = idFrom;
-		this.idTo = idTo;
+		this.phoneFrom = phoneFrom;
+		this.phoneTo  = phoneTo;
 		this.message = message;
 		
 		calculateAuxData();
@@ -29,10 +29,10 @@ public class Message implements Serializable {
 	void calculateAuxData()
 	{
 		Credentials c = MySettings.readCredentials();
-		received = (c.getId() == idTo);
+		received = (c.getPhone().equals(phoneTo));
 		if (received)
 		{
-		User u = MyApplication.getInstance().getUsers().fromId(idFrom);
+		User u = MyApplication.getInstance().getUsers().fromPhone(phoneFrom);
 		name = (u == null) ? MyApplication.getInstance().getString(R.string.unknown) :  u.name;
 		}
 		else
@@ -76,12 +76,12 @@ public class Message implements Serializable {
 		return time;
 	}
 	
-	public int getIdFrom() {
-		return idFrom;
+	public String getPhoneFrom() {
+		return phoneFrom;
 	}
 	
-	public int getIdTo() {
-		return idTo;
+	public String getPhoneTo() {
+		return phoneTo;
 	}
 	
 	public String getMessage() {

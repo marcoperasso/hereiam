@@ -10,7 +10,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@+id/label"
-        android:textSize="14sp" >
+        android:textSize="14sp" android:layout_weight="1"  >
     </TextView>
+
+    <ImageView
+        android:id="@+id/imageRegistered"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher"  >
+    </ImageView>
 
 </LinearLayout>

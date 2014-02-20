@@ -6,28 +6,18 @@ import android.os.Looper;
 
 public class Credentials {
 
-	private int id;
-	private String userId;
-	private String email;
-	private String password;
-	private String name;
-	private String surname;
+	private String phone = "";
+	private String email = "";
+	private String password = "";
+	private String regid = "";
 
-	@Override
-	public String toString() {
-		if (Helper.isNullOrEmpty(name) || Helper.isNullOrEmpty(surname))
-			return email;
-		return name + " " + surname;
-	}
-
-	public Credentials(String userId, String pwd) {
-		this.id = 0;
-		this.userId = userId;
+	public Credentials(String phone, String pwd) {
+		this.phone = phone;
 		this.password = pwd;
 	}
 
 	public boolean isEmpty() {
-		return Helper.isNullOrEmpty(userId) || Helper.isNullOrEmpty(password);
+		return Helper.isNullOrEmpty(phone) || Helper.isNullOrEmpty(password) ;
 	}
 
 	String getPassword() {
@@ -46,29 +36,14 @@ public class Credentials {
 		this.email = email;
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSurname() {
-		return surname;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
 
 	public static void testCredentials(final Context context,
 			final OnAsyncResponse testResponse) {
@@ -101,12 +76,13 @@ public class Credentials {
 
 	}
 
-	public int getId() {
-		return id;
+
+	public String getRegid() {
+		return regid;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setRegid(String regid) {
+		this.regid = regid;
 	}
 
 }
@@ -154,12 +130,11 @@ class LoginAsyncTask extends
 	@Override
 	protected WebRequestResult doInBackground(Credentials... params) {
 		Credentials c = params[0];
-		WebRequestResult res = HttpManager.login(c.getUserId(), c.getPassword());
-		if (res.result) {
-			int id = c.getId();
-			HttpManager.fillCredentialsData(c);
-			if (id != c.getId())
-				MySettings.setCredentials(c);
+		String mail = c.getEmail();
+		WebRequestResult res = HttpManager.login(c);
+		if (res.result && !mail.equals(c.getEmail()))
+		{
+			MySettings.setCredentials(c);
 		}
 		return res;
 	}

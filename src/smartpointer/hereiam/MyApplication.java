@@ -5,9 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Application;
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
+import android.telephony.TelephonyManager;
 
 public class MyApplication extends Application {
 
@@ -32,6 +34,7 @@ public class MyApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		sInstance = this;
+		
 	}
 
 	@Override
@@ -65,7 +68,7 @@ public class MyApplication extends Application {
 							@Override
 							public void response(boolean success, String message) {
 								if (success) {
-									HttpManager.disconnectUser(user.id);
+									HttpManager.disconnectUser(user.phone);
 
 								}
 							}
@@ -77,7 +80,7 @@ public class MyApplication extends Application {
 
 	}
 
-	void respondToUser(final int userId, final int response) {
+	void respondToUser(final String phone, final int response) {
 		new AsyncTask<Void, Void, Void>() {
 
 			@Override
@@ -87,7 +90,7 @@ public class MyApplication extends Application {
 							@Override
 							public void response(boolean success, String message) {
 								if (success) {
-									HttpManager.respondToUser(userId, response);
+									HttpManager.respondToUser(phone, response);
 								}
 							}
 						});
@@ -192,6 +195,11 @@ public class MyApplication extends Application {
 	public void downloadedPositions(ArrayList<UserPosition> positions) {
 		positionsDownloaded.fire(this, positions);
 
+	}
+
+	public String getPhone() {
+		TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+		return tMgr.getLine1Number();
 	}
 
 	

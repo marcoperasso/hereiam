@@ -88,7 +88,7 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> imp
 					title, text);
 			mOverlays.add(overlayitem);
 			
-			if (pinnedUser != null && pinnedUser.id == up.getUser().id)
+			if (pinnedUser != null && pinnedUser.phone.equals(up.getUser().phone))
 			{
 				itemToFocus = overlayitem;
 			}
