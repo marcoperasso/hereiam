@@ -30,6 +30,8 @@ public class MyApplication extends Application {
 	private PositionsDownloadedEvent positionsDownloaded = new PositionsDownloadedEvent();
 	private Event positionsPurgeNeeded = new Event();
 
+	private User pinnedUser;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -200,6 +202,14 @@ public class MyApplication extends Application {
 	public String getPhone() {
 		TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		return tMgr.getLine1Number();
+	}
+
+	public User getPinnedUser() {
+		return pinnedUser;
+	}
+
+	public void setPinnedUser(User pinnedUser) {
+		this.pinnedUser = pinnedUser;
 	}
 
 	

@@ -429,7 +429,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 												getString(
 														R.string.your_request_to_s_has_been_sent,
 														user));
-										mUsersOverlay.pinTo(user);
+										MyApplication.getInstance().setPinnedUser(user);
 										//se non posso ricevere messaggi, mi connetto subito, 
 										//altrimenti mi connetter?ando ricevo conferma
 										if (invalidGCMStauts) {

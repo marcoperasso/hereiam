@@ -24,7 +24,7 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> imp
 	int currentZoomLevel = -1;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private ArrayList<UserPosition> mPositions = new ArrayList<UserPosition>();
-	private User pinnedUser;
+	
 	private MyMapActivity mContext;
 
 	public UserPositionOverlay(Drawable defaultMarker, MyMapActivity context,
@@ -43,7 +43,7 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> imp
 	@Override
 	protected void onBalloonOpen(int index) {
 		if (index < mPositions.size()) {
-			pinnedUser = mPositions.get(index).getUser();
+			MyApplication.getInstance().setPinnedUser(mPositions.get(index).getUser());
 
 		}
 		super.onBalloonOpen(index);
@@ -51,7 +51,7 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> imp
 
 	@Override
 	protected void onBalloonHide() {
-		pinnedUser = null;
+		MyApplication.getInstance().setPinnedUser(null);
 		super.onBalloonHide();
 	}
 
@@ -88,7 +88,8 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> imp
 					title, text);
 			mOverlays.add(overlayitem);
 			
-			if (pinnedUser != null && pinnedUser.phone.equals(up.getUser().phone))
+			User pinnedUser = MyApplication.getInstance().getPinnedUser();
+			if (pinnedUser != null && up.getUser().phone.equals(pinnedUser.phone))
 			{
 				itemToFocus = overlayitem;
 			}
@@ -107,25 +108,17 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> imp
 		return mPositions;
 	}
 
-	public void pinTo(User user) {
-		pinnedUser = user;
-		
-	}
-
-	User getPinnedUser() {
-		return pinnedUser;
-	}
-
+	
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.balloon_disconnect)
 		{
-			Helper.dialogMessage(mContext, mContext.getString(R.string.do_you_want_to_stop_tracking_this_user, pinnedUser),
+			Helper.dialogMessage(mContext, mContext.getString(R.string.do_you_want_to_stop_tracking_this_user, MyApplication.getInstance().getPinnedUser()),
 					new DialogInterface.OnClickListener() {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							TrackedUsersActivity.disconnectUser(pinnedUser);
+							TrackedUsersActivity.disconnectUser(MyApplication.getInstance().getPinnedUser());
 							hideBalloon();
 						}					
 					}, null);
@@ -133,7 +126,7 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> imp
 		}
 		if (v.getId() == R.id.balloon_message)
 		{
-			MessageActivity.sendMessageToUser(mContext, pinnedUser);
+			MessageActivity.sendMessageToUser(mContext, MyApplication.getInstance().getPinnedUser());
 		}
 		
 		

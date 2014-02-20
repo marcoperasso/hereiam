@@ -322,6 +322,9 @@ public class ConnectorService extends Service implements LocationListener {
 		intent1.putExtra(Const.COMMAND, new ConnectorServiceCommand(user,
 				activate, silent));
 		context.startService(intent1);
+		User pinnedUser = MyApplication.getInstance().getPinnedUser();
+		if (!activate && pinnedUser != null && pinnedUser.phone.equals(user.phone))
+			MyApplication.getInstance().setPinnedUser(null);
 
 	}
 }

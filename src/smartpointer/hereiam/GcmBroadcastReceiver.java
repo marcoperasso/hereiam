@@ -104,6 +104,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 										fromUser), null, fromUser.phone);
 						ConnectorService.activate(context, fromUser, true,
 								false);
+						MyApplication.getInstance().setPinnedUser(fromUser);
 						break;
 					}
 					case Const.MSG_REJECT_CONTACT: {

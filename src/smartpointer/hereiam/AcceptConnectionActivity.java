@@ -33,6 +33,7 @@ public class AcceptConnectionActivity extends Activity implements
 		case R.id.buttonYes:
 			acceptUser();
 			ConnectorService.activate(AcceptConnectionActivity.this, user, true, false);
+			MyApplication.getInstance().setPinnedUser(user);
 			break;
 		case R.id.buttonNo:
 			rejectUser();
