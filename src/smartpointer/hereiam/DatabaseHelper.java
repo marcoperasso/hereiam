@@ -11,7 +11,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String CREATE_USERS = "create table "
 			+ UserDbAdapter.DATABASE_TABLE
-			+ " (phone text primary key, trusted integer not null);";
+			+ " (phone text primary key, trusted integer not null, registered integer not null);";
 
 	private static final String CREATE_MESSAGES = "create table "
 			+ MessageDbAdapter.DATABASE_TABLE

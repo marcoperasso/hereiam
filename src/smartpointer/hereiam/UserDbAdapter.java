@@ -17,6 +17,7 @@ public class UserDbAdapter {
 
 	static final String KEY_ID = "phone";
 	static final String KEY_TRUSTED = "trusted";
+	static final String KEY_REGISTERED = "registered";
 
 	public UserDbAdapter(Context context) {
 		this.context = context;
@@ -35,35 +36,37 @@ public class UserDbAdapter {
 	private ContentValues createContentValues(User user) {
 		ContentValues values = new ContentValues();
 		values.put(KEY_ID, user.phone);
-		values.put(KEY_TRUSTED, user.alwaysAcceptToSendPosition);
-
+		values.put(KEY_TRUSTED, user.trusted);
+		values.put(KEY_REGISTERED, user.registered);
 		return values;
 	}
 
 	// create a user
-	public long createUser(User user) {
+	private long createUser(User user) {
 		ContentValues initialValues = createContentValues(user);
 		return database.insertOrThrow(DATABASE_TABLE, null, initialValues);
 	}
 
 	// update a user
-	public boolean updateUser(User user) {
+	private boolean updateUser(User user) {
 		ContentValues updateValues = createContentValues(user);
 		return database.update(DATABASE_TABLE, updateValues, KEY_ID + "='"
 				+ user.phone + "'", null) > 0;
 	}
 
-
 	// fetch all users
-	public boolean isTrustedUser(String phone) {
+	public void setAuxData(User user) {
 		Cursor cursor = null;
 		try {
-			cursor = database
-					.query(DATABASE_TABLE,
-							new String[] { KEY_ID, KEY_TRUSTED }, KEY_ID + "='"
-									+ phone + "'", null, null, null, null);
-			return cursor.moveToNext() ? cursor.getInt(cursor
-					.getColumnIndex(KEY_TRUSTED)) == 1 : false;
+			cursor = database.query(DATABASE_TABLE, new String[] { KEY_ID,
+					KEY_TRUSTED, KEY_REGISTERED }, KEY_ID + "='" + user.phone + "'", null,
+					null, null, null);
+			if (cursor.moveToNext()) {
+				user.trusted = cursor
+						.getInt(cursor.getColumnIndex(KEY_TRUSTED)) == 1;
+				user.registered = cursor.getInt(cursor
+						.getColumnIndex(KEY_REGISTERED)) == 1;
+			}
 		} finally {
 			cursor.close();
 		}
@@ -81,5 +84,13 @@ public class UserDbAdapter {
 		} finally {
 			cursor.close();
 		}
+	}
+
+	public void persist(User user) {
+		if (existUser(user))
+			updateUser(user);
+		else
+			createUser(user);
+
 	}
 }

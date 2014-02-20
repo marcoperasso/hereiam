@@ -44,7 +44,8 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 				if (t != ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
 					continue;
 				phoneNumber = Helper.adjustPhoneNumber(phoneNumber);
-				User u = new User(phoneNumber, name, dbUser.isTrustedUser(phoneNumber));
+				User u = new User(phoneNumber, name);
+				dbUser.setAuxData(u);
 				add(u);
 			}
 		} finally {
@@ -54,20 +55,6 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 
 		Collections.sort(Users.this, new UserComparator());
 		verifyRegistration();
-
-		/*
-		 * UserDbAdapter dbHelper = new UserDbAdapter(context); dbHelper.open();
-		 * Cursor cursor = dbHelper.fetchAllUsers();
-		 * 
-		 * while (cursor.moveToNext()) { User user = new
-		 * User(cursor.getInt(cursor .getColumnIndex(UserDbAdapter.KEY_ID)),
-		 * cursor.getString(cursor .getColumnIndex(UserDbAdapter.KEY_USERID)),
-		 * cursor.getString(cursor .getColumnIndex(UserDbAdapter.KEY_NAME)),
-		 * cursor.getString(cursor .getColumnIndex(UserDbAdapter.KEY_SURNAME)));
-		 * user.alwaysAcceptToSendPosition = cursor.getInt(cursor
-		 * .getColumnIndex(UserDbAdapter.KEY_AUTOACCEPT)) == 1; add(user); }
-		 * cursor.close(); dbHelper.close();
-		 */
 
 	}
 
@@ -83,40 +70,34 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 			}
 
 			protected void onPostExecute(boolean[] result) {
-				for (int i = 0; i < size(); i++)
-					Users.this.get(i).registered = result[i];
+				UserDbAdapter dbUser = null;
+				try {
+					dbUser = new UserDbAdapter(MyApplication.getInstance());
+					dbUser.open();
+					for (int i = 0; i < size(); i++) {
+						User user = Users.this.get(i);
+						boolean b = result[i];
+						if (user.registered != b) {
+							user.registered = b;
+							dbUser.persist(user);
+						}
+
+					}
+
+				} finally {
+					dbUser.close();
+				}
 
 				Collections.sort(Users.this, new UserComparator());
 			};
 		}.execute(null, null, null);
 	}
 
-	/*
-	 * public void removeUser(User selectedUser) { for (int i = 0; i < size();
-	 * i++) { User u = get(i); if (u.id == selectedUser.id) { remove(i);
-	 * UserDbAdapter dbHelper = new UserDbAdapter(context); dbHelper.open();
-	 * dbHelper.deleteUser(u.id); dbHelper.close(); return; } }
-	 * 
-	 * }
-	 * 
-	 * public void addUser(User user) { add(user); UserDbAdapter dbHelper = new
-	 * UserDbAdapter(context); dbHelper.open(); dbHelper.createUser(user);
-	 * dbHelper.close();
-	 * 
-	 * }
-	 * 
-	 * public void updateUsers() { UserDbAdapter dbHelper = new
-	 * UserDbAdapter(context); dbHelper.open(); for (User user : this) if
-	 * (user.changed) { dbHelper.updateUser(user); user.changed = false; }
-	 * dbHelper.close();
-	 * 
-	 * }
-	 */
 	public User fromPhone(String phone) {
 		for (User user : this)
 			if (user.phone.equals(phone))
 				return user;
-		return new User(phone, context.getString(R.string.unknown), false);
+		return new User(phone, context.getString(R.string.unknown));
 	}
 
 	@Override

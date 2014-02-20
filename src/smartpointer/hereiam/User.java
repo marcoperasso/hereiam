@@ -15,15 +15,14 @@ public class User implements IJsonSerializable, Serializable {
 	String phone;
 	String name;
 
-	boolean alwaysAcceptToSendPosition = false;
+	boolean trusted = false;
 	boolean registered = false;
 
 	private static final long serialVersionUID = -5703092633640293472L;
 
-	public User(String phone, String name, boolean alwaysAcceptToSendPosition) {
+	public User(String phone, String name) {
 		this.phone = phone;
 		this.name = name;
-		this.alwaysAcceptToSendPosition = alwaysAcceptToSendPosition;
 	}
 
 	public JSONObject toJson() throws JSONException {
@@ -39,10 +38,8 @@ public class User implements IJsonSerializable, Serializable {
 		try {
 			dbUser = new UserDbAdapter(MyApplication.getInstance());
 			dbUser.open();
-			if (dbUser.existUser(this))
-				dbUser.updateUser(this);
-			else
-				dbUser.createUser(this);
+			dbUser.persist(this);
+			
 		} finally {
 			dbUser.close();
 		}

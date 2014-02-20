@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Eccomi qui!</string>
-    <string name="app_description">Trova la posizione dei tuoi amici.</string>
+    <string name="app_name">People Dowser Lite</string>
+    <string name="app_description">Trova la posizione delle persone a cui sei interessato.</string>
     <string name="gps_enabled">GPS abilitato</string>
     <string name="need_gps">Questa app ha bisogno del gps, ma è disabilitato; vuoi attivarlo?</string>
     <string name="your_position">La tua posizione</string>
@@ -66,7 +66,7 @@
     <string name="tap_an_user_for_options">Tocca un utente della lista per vedere le azioni disponibili.</string>
     <string name="user_name">Nome utente</string>
     <string name="accept_automatically_position_requests_from_this_user">Accetta sempre richieste</string>
-    <string name="warning_auto_accept">%s può adesso richiedere la tua posizione senza chiederti se sei d\'accordo.</string>
+    <string name="warning_auto_accept">%s può adesso richiedere la tua posizione senza bisogno che tu accetti.</string>
     <string name="send_message">Invia messaggio</string>
     <string name="write_your_message">Scrivi il tuo messaggio</string>
     <string name="you_are_not_logged">Non sei autenticato</string>
@@ -92,5 +92,6 @@
     <string name="there_are_no_messages">Non ci sono messaggi</string>
     <string name="saving_user_data_">Salvataggio dati utente&#8230;</string>
     <string name="_s_is_not_yet_registered_invite_her_him_to_register_">%s non è ancora registrato/a, invitalo/a a registrarsi!</string>
+    <string name="refresh">Aggiorna</string>
 
 </resources>

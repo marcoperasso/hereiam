@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources >
 
-    <string name="app_name">Here I Am!</string>
-    <string name="app_description">Find your friend\'s position.</string>
+    <string name="app_name">People Dowser Lite</string>
+    <string name="app_description">Find the position of people you are interested in.</string>
     <string name="gps_enabled">GPS enabled</string>
     <string name="need_gps">This app needs GPS, but it\'s disabled; do you want to activate it?</string>
     <string name="your_position">Your position</string>
@@ -63,7 +63,7 @@
      <string name="tap_an_user_for_locate">Tap the user you want to locate.</string>
     <string name="tap_an_user_for_options">Tap an user in the list to see available actions.</string>
     <string name="accept_automatically_position_requests_from_this_user">Always accept requests</string>
-    <string name="warning_auto_accept">%s can now request your position without asking if you agree.</string>
+    <string name="warning_auto_accept">%s can now know your position without the need for you to accept.</string>
     <string name="send_message">Send message</string>
     <string name="write_your_message">Write your message</string>
     <string name="you_are_not_logged">You are not logged</string>
@@ -89,5 +89,6 @@
     <string name="there_are_no_messages">There are no messages</string>
     <string name="saving_user_data_">Saving user data&#8230;</string>
     <string name="_s_is_not_yet_registered_invite_her_him_to_register_">%s is not yet registered, invite her/him to register!</string>
+    <string name="refresh">Refresh</string>
 
 </resources>

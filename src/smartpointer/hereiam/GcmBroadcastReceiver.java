@@ -79,7 +79,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 										fromUser.phone, Const.MSG_WRONG_PASSWORD);
 							}
 
-						} else if (fromUser.alwaysAcceptToSendPosition) {
+						} else if (fromUser.trusted) {
 							ConnectorService.activate(context, fromUser, true,
 									false);
 							MyApplication.getInstance().respondToUser(

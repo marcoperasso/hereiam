@@ -157,7 +157,12 @@ public class MyApplication extends Application {
 			return users;
 		}
 	}
-	
+	public void invalidateUsers() {
+		synchronized (userTicket) {
+			users = null;
+		}
+		
+	}
 	
 	
 	
@@ -211,6 +216,8 @@ public class MyApplication extends Application {
 	public void setPinnedUser(User pinnedUser) {
 		this.pinnedUser = pinnedUser;
 	}
+
+
 
 	
 

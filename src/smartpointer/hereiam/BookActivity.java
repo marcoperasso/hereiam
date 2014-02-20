@@ -37,12 +37,17 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_book);
 		registerForContextMenu(findViewById(android.R.id.list));
+		populate();
+		
+		findViewById(R.id.buttonCancel).setOnClickListener(this);
+		findViewById(R.id.buttonRefresh).setOnClickListener(this);
+		
+	}
+
+	private void populate() {
 		users = MyApplication.getInstance().getUsers();
-		// users.verifyRegistration();
 		adapter = new MyUserAdapter(this, R.layout.mymultichoicelistrow, users);
 		setListAdapter(adapter);
-
-		findViewById(R.id.buttonCancel).setOnClickListener(this);
 		refreshLabel();
 	}
 
@@ -70,7 +75,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.book_context_menu, menu);
 		menu.findItem(R.id.itemAutoAllow).setChecked(
-				selectedUser.alwaysAcceptToSendPosition);
+				selectedUser.trusted);
 	}
 
 	@Override
@@ -86,12 +91,12 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		switch (id) {
 		case R.id.itemAutoAllow:
 
-			selectedUser.alwaysAcceptToSendPosition = !selectedUser.alwaysAcceptToSendPosition;
+			selectedUser.trusted = !selectedUser.trusted;
 			selectedUser.saveToDb();
 
 			refreshRow();
 
-			if (selectedUser.alwaysAcceptToSendPosition) {
+			if (selectedUser.trusted) {
 				Helper.hideableMessage(this, R.string.warning_auto_accept,
 						selectedUser);
 			}
@@ -198,6 +203,10 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			setResult(RESULT_CANCELED, intent);
 			finish();
 		}
+		else if (v.getId() == R.id.buttonRefresh) {
+			MyApplication.getInstance().invalidateUsers();
+			populate();
+		}
 
 	}
 
@@ -252,7 +261,7 @@ class MyUserAdapter extends ArrayAdapter<User> {
 		viewHolder.image.setVisibility(user.registered ? View.VISIBLE
 				: View.INVISIBLE);
 		viewHolder.text.setText(user.toString());
-		if (user.alwaysAcceptToSendPosition)
+		if (user.trusted)
 			viewHolder.text.setTypeface(null, Typeface.BOLD_ITALIC);
 		else
 			viewHolder.text.setTypeface(null, Typeface.NORMAL);
