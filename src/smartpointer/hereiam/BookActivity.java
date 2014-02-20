@@ -7,6 +7,7 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
@@ -38,10 +39,10 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		setContentView(R.layout.activity_book);
 		registerForContextMenu(findViewById(android.R.id.list));
 		populate();
-		
+
 		findViewById(R.id.buttonCancel).setOnClickListener(this);
 		findViewById(R.id.buttonRefresh).setOnClickListener(this);
-		
+
 	}
 
 	private void populate() {
@@ -74,8 +75,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			return;
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.book_context_menu, menu);
-		menu.findItem(R.id.itemAutoAllow).setChecked(
-				selectedUser.trusted);
+		menu.findItem(R.id.itemAutoAllow).setChecked(selectedUser.trusted);
 	}
 
 	@Override
@@ -182,11 +182,18 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		selectedUser = users.get(position);
 		if (!selectedUser.registered) {
-			Helper.showMessage(
-					this,
-					getString(
-							R.string._s_is_not_yet_registered_invite_her_him_to_register_,
-							selectedUser));
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"
+					+ selectedUser.phone));
+			intent.putExtra(
+					"sms_body",getString(R.string.hello_s_would_you_like_to_install_,
+							selectedUser.name,
+							"https://play.google.com/store/apps/details?id=smartpointer.hereiam"));
+			startActivity(intent);
+			/*
+			 * Helper.showMessage( this, getString(
+			 * R.string._s_is_not_yet_registered_invite_her_him_to_register_,
+			 * selectedUser));
+			 */
 			return;
 		}
 		if (requestedCommandId != -1)
@@ -202,8 +209,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			Intent intent = new Intent();
 			setResult(RESULT_CANCELED, intent);
 			finish();
-		}
-		else if (v.getId() == R.id.buttonRefresh) {
+		} else if (v.getId() == R.id.buttonRefresh) {
 			MyApplication.getInstance().invalidateUsers();
 			populate();
 		}

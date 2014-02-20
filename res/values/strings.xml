@@ -88,7 +88,6 @@
     <string name="_s_has_been_added_to_your_users_book">%s has been added to your users book</string>
     <string name="there_are_no_messages">There are no messages</string>
     <string name="saving_user_data_">Saving user data&#8230;</string>
-    <string name="_s_is_not_yet_registered_invite_her_him_to_register_">%s is not yet registered, invite her/him to register!</string>
     <string name="refresh">Refresh</string>
-
+    <string name="hello_s_would_you_like_to_install_">Hello %1$s, would you like to install this app:\r\n%2$s\r\nso we can know our mutual position when needed?</string>
 </resources>

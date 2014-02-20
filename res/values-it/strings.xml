@@ -91,7 +91,7 @@
     <string name="_s_has_been_added_to_your_users_book">%s è stato/a aggiunto/a alla tua rubrica utenti</string>
     <string name="there_are_no_messages">Non ci sono messaggi</string>
     <string name="saving_user_data_">Salvataggio dati utente&#8230;</string>
-    <string name="_s_is_not_yet_registered_invite_her_him_to_register_">%s non è ancora registrato/a, invitalo/a a registrarsi!</string>
     <string name="refresh">Aggiorna</string>
-
+<string name="hello_s_would_you_like_to_install_">Ciao %1$s, vuoi installare questa app:\r\n%2$s\r\ncosì possiamo conoscere la nostra reciproca posizione quando necessario?</string>
+    
 </resources>
