@@ -17,13 +17,13 @@ public class User implements IJsonSerializable, Serializable {
 
 	boolean alwaysAcceptToSendPosition = false;
 	boolean registered = false;
-	transient boolean changed = false;
 
 	private static final long serialVersionUID = -5703092633640293472L;
 
-	public User(String phone, String name) {
+	public User(String phone, String name, boolean alwaysAcceptToSendPosition) {
 		this.phone = phone;
 		this.name = name;
+		this.alwaysAcceptToSendPosition = alwaysAcceptToSendPosition;
 	}
 
 	public JSONObject toJson() throws JSONException {
@@ -32,6 +32,20 @@ public class User implements IJsonSerializable, Serializable {
 		obj.put("name", name);
 
 		return obj;
+	}
+
+	public void saveToDb() {
+		UserDbAdapter dbUser = null;
+		try {
+			dbUser = new UserDbAdapter(MyApplication.getInstance());
+			dbUser.open();
+			if (dbUser.existUser(this))
+				dbUser.updateUser(this);
+			else
+				dbUser.createUser(this);
+		} finally {
+			dbUser.close();
+		}
 	}
 
 }

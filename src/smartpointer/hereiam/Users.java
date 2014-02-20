@@ -25,23 +25,33 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 		Cursor phones = context.getContentResolver().query(
 				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,
 				null, null);
-		while (phones.moveToNext()) {
-			String name = phones
-					.getString(phones
-							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-			String phoneNumber = phones
-					.getString(phones
-							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-			int t = Integer
-					.parseInt(phones.getString(phones
-							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
-			if (t != ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
-				continue;
 
-			User u = new User(Helper.adjustPhoneNumber(phoneNumber), name);
-			add(u);
+		UserDbAdapter dbUser = null;
+		try {
+			dbUser = new UserDbAdapter(MyApplication.getInstance());
+			dbUser.open();
+
+			while (phones.moveToNext()) {
+				String name = phones
+						.getString(phones
+								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+				String phoneNumber = phones
+						.getString(phones
+								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+				int t = Integer
+						.parseInt(phones.getString(phones
+								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
+				if (t != ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+					continue;
+				phoneNumber = Helper.adjustPhoneNumber(phoneNumber);
+				User u = new User(phoneNumber, name, dbUser.isTrustedUser(phoneNumber));
+				add(u);
+			}
+		} finally {
+			dbUser.close();
+			phones.close();
 		}
-		phones.close();
+
 		Collections.sort(Users.this, new UserComparator());
 		verifyRegistration();
 
@@ -67,14 +77,15 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 			@Override
 			protected boolean[] doInBackground(Void... params) {
 
-				boolean[] res = new boolean [Users.this.size()];
+				boolean[] res = new boolean[Users.this.size()];
 				HttpManager.verifyRegistration(Users.this, res);
 				return res;
 			}
+
 			protected void onPostExecute(boolean[] result) {
 				for (int i = 0; i < size(); i++)
 					Users.this.get(i).registered = result[i];
-				
+
 				Collections.sort(Users.this, new UserComparator());
 			};
 		}.execute(null, null, null);
@@ -105,7 +116,7 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 		for (User user : this)
 			if (user.phone.equals(phone))
 				return user;
-		return new User(phone, context.getString(R.string.unknown));
+		return new User(phone, context.getString(R.string.unknown), false);
 	}
 
 	@Override
@@ -118,5 +129,4 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 		return obj;
 	}
 
-	
 }

@@ -44,7 +44,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	private MapController mController;
 
 	private UserPositionOverlay mUsersOverlay;
-	private MITULocationOverlay myLocationOverlay;
+	private HIALocationOverlay myLocationOverlay;
 	private boolean mTrackGPSPosition;
 	private boolean invalidGCMStauts;
 
@@ -262,7 +262,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		mUsersOverlay = new UserPositionOverlay(drawable, this, mMap);
 		mapOverlays.add(mUsersOverlay);
 
-		myLocationOverlay = new MITULocationOverlay(this, mMap, mController,
+		myLocationOverlay = new HIALocationOverlay(this, mMap, mController,
 				mUsersOverlay);
 		myLocationOverlay.runOnFirstFix(new Runnable() {
 			public void run() {

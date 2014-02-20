@@ -23,9 +23,5 @@
         android:id="@+id/itemForceGetUserPosition"
         android:title="@string/force_get_user_position">
     </item>
-    <item
-        android:id="@+id/itemRemoveUser"
-        android:title="@string/remove_user">
-    </item>
 
 </menu>

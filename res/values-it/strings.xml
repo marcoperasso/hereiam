@@ -59,7 +59,6 @@
     <string name="users_book">Rubrica utenti</string>
     <string name="sending_request_">Invio richiesta&#8230;</string>
     <string name="sending_message_">Invio messaggio&#8230;</string>
-    <string name="remove_user">Rimuovi utente</string>
     <string name="are_you_sure_to_remove_user_s_">Sicuro di rimuovere l\'utente %s?</string>
     <string name="remove_all">Rimuovi tutti</string>
     <string name="tap_an_user_for_message">Tocca l\'utente della lista a cui vuoi inviare il messaggio.</string>

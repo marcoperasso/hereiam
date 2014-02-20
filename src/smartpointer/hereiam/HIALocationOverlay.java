@@ -9,12 +9,12 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 
-public class MITULocationOverlay extends MyLocationOverlay {
+public class HIALocationOverlay extends MyLocationOverlay {
 
 	private MapController mController;
 	private UserPositionOverlay mUsersOverlay;
 
-	public MITULocationOverlay(Context context, MapView map,
+	public HIALocationOverlay(Context context, MapView map,
 			MapController controller, UserPositionOverlay routesOverlay) {
 		super(context, map);
 		this.mController = controller;

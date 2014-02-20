@@ -9,10 +9,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "hereiam.db";
 	private static final int DATABASE_VERSION = 1;
 
-	// Lo statement SQL di creazione del database
-	//private static final String CREATE_USERS = "create table "
-	//		+ UserDbAdapter.DATABASE_TABLE
-	//		+ " (id integer primary key, name text not null, surname text not null, userid text not null, autoaccept integer not null);";
+	private static final String CREATE_USERS = "create table "
+			+ UserDbAdapter.DATABASE_TABLE
+			+ " (phone text primary key, trusted integer not null);";
 
 	private static final String CREATE_MESSAGES = "create table "
 			+ MessageDbAdapter.DATABASE_TABLE
@@ -26,7 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	// Questo metodo viene chiamato durante la creazione del database
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		//database.execSQL(CREATE_USERS);
+		database.execSQL(CREATE_USERS);
 		database.execSQL(CREATE_MESSAGES);
 	}
 

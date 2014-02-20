@@ -29,7 +29,6 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	private MyUserAdapter adapter;
 	private Users users;
 	private User selectedUser;
-	private boolean usersChanged;
 	private int requestedCommandId;
 
 	@Override
@@ -39,7 +38,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		setContentView(R.layout.activity_book);
 		registerForContextMenu(findViewById(android.R.id.list));
 		users = MyApplication.getInstance().getUsers();
-		//users.verifyRegistration();
+		// users.verifyRegistration();
 		adapter = new MyUserAdapter(this, R.layout.mymultichoicelistrow, users);
 		setListAdapter(adapter);
 
@@ -88,10 +87,10 @@ public class BookActivity extends ListActivity implements OnClickListener {
 		case R.id.itemAutoAllow:
 
 			selectedUser.alwaysAcceptToSendPosition = !selectedUser.alwaysAcceptToSendPosition;
-			selectedUser.changed = true;
-			usersChanged = true;
+			selectedUser.saveToDb();
 
 			refreshRow();
+
 			if (selectedUser.alwaysAcceptToSendPosition) {
 				Helper.hideableMessage(this, R.string.warning_auto_accept,
 						selectedUser);
@@ -177,9 +176,12 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		selectedUser = users.get(position);
-		if (!selectedUser.registered)
-		{
-			Helper.showMessage(this, getString(R.string._s_is_not_yet_registered_invite_her_him_to_register_, selectedUser) );
+		if (!selectedUser.registered) {
+			Helper.showMessage(
+					this,
+					getString(
+							R.string._s_is_not_yet_registered_invite_her_him_to_register_,
+							selectedUser));
 			return;
 		}
 		if (requestedCommandId != -1)
@@ -202,10 +204,6 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	@Override
 	protected void onPause() {
 
-		if (usersChanged) {
-			// TODO MyApplication.getInstance().getUsers().updateUsers();
-			usersChanged = false;
-		}
 		super.onPause();
 	}
 
@@ -231,35 +229,34 @@ class MyUserAdapter extends ArrayAdapter<User> {
 	static class ViewHolder {
 		TextView text;
 		BookActivity context;
-		User user;
 		public ImageView image;
-
-		public void setTextStyle() {
-			if (user.alwaysAcceptToSendPosition)
-				text.setTypeface(null, Typeface.BOLD_ITALIC);
-			else
-				text.setTypeface(null, Typeface.NORMAL);
-
-		}
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
 		User user = users.get(position);
-
-		LayoutInflater inflator = context.getLayoutInflater();
-		view = inflator.inflate(R.layout.mymultichoicelistrow, null);
-		final ViewHolder viewHolder = new ViewHolder();
-		viewHolder.user = user;
-		viewHolder.text = (TextView) view.findViewById(R.id.text1);
-		viewHolder.image = (ImageView) view.findViewById(R.id.imageRegistered);
-		viewHolder.image.setVisibility(user.registered ? View.VISIBLE : View.INVISIBLE);
+		ViewHolder viewHolder;
+		if (convertView == null) {
+			LayoutInflater inflator = context.getLayoutInflater();
+			view = inflator.inflate(R.layout.mymultichoicelistrow, null);
+			viewHolder = new ViewHolder();
+			viewHolder.text = (TextView) view.findViewById(R.id.text1);
+			viewHolder.image = (ImageView) view
+					.findViewById(R.id.imageRegistered);
+			view.setTag(viewHolder);
+		} else {
+			view = convertView;
+			viewHolder = (ViewHolder) view.getTag();
+		}
+		viewHolder.image.setVisibility(user.registered ? View.VISIBLE
+				: View.INVISIBLE);
 		viewHolder.text.setText(user.toString());
+		if (user.alwaysAcceptToSendPosition)
+			viewHolder.text.setTypeface(null, Typeface.BOLD_ITALIC);
+		else
+			viewHolder.text.setTypeface(null, Typeface.NORMAL);
 
-		view.setTag(viewHolder);
-		viewHolder.context = context;
-		viewHolder.setTextStyle();
 		return view;
 	}
 
