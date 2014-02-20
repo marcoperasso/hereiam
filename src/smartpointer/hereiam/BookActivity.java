@@ -187,7 +187,7 @@ public class BookActivity extends ListActivity implements OnClickListener {
 			intent.putExtra(
 					"sms_body",getString(R.string.hello_s_would_you_like_to_install_,
 							selectedUser.name,
-							"https://play.google.com/store/apps/details?id=smartpointer.hereiam"));
+							"https://play.google.com/apps/testing/smartpointer.hereiam"));
 			startActivity(intent);
 			/*
 			 * Helper.showMessage( this, getString(
