@@ -27,14 +27,19 @@
         <Button
             android:id="@+id/buttonNo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/no" />
 
         <Button
             android:id="@+id/buttonYes"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/yes" />
+          <Button
+            android:id="@+id/buttonAlways"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/always_from_this_user" />
     </LinearLayout>
 
 </LinearLayout>

@@ -23,8 +23,8 @@
     <string name="internet_unavailable">Internet non disponibile</string>
     <string name="verifying_credentials">Verifica credenziali&#8230;</string>
     <string name="sending_position">Sto mandando la tua posizione a: %s</string>
-    <string name="yes">si</string>
-    <string name="no">no</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
     <string name="login">Login</string>
     <string name="warning_to_user">Questa app è in grado di tracciare la tua posizione ed inviarla ad altre persone; ogni volta che questo accadrà verrai avvisato; potrai in ogni momento disabilitare questo comportamento.</string>
     <string name="no_show_again">Non mostrare più</string>
@@ -92,6 +92,6 @@
     <string name="there_are_no_messages">Non ci sono messaggi</string>
     <string name="saving_user_data_">Salvataggio dati utente&#8230;</string>
     <string name="refresh">Aggiorna</string>
-<string name="hello_s_would_you_like_to_install_">Ciao %1$s, vuoi installare questa app:\r\n%2$s\r\ncosì possiamo conoscere la nostra reciproca posizione quando necessario?</string>
-    
+    <string name="hello_s_would_you_like_to_install_">Ciao %1$s, vuoi installare questa app:\r\n%2$s\r\ncosì possiamo conoscere la nostra reciproca posizione quando necessario?</string>
+ <string name="always_from_this_user">Accetta sempre le richieste di questo utente</string>
 </resources>

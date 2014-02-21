@@ -1,7 +1,5 @@
 package smartpointer.hereiam;
 
-
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +23,7 @@ public class AcceptConnectionActivity extends Activity implements
 
 		findViewById(R.id.buttonYes).setOnClickListener(this);
 		findViewById(R.id.buttonNo).setOnClickListener(this);
+		findViewById(R.id.buttonAlways).setOnClickListener(this);
 	}
 
 	@Override
@@ -32,8 +31,17 @@ public class AcceptConnectionActivity extends Activity implements
 		switch (v.getId()) {
 		case R.id.buttonYes:
 			acceptUser();
-			ConnectorService.activate(AcceptConnectionActivity.this, user, true, false);
-			MyApplication.getInstance().setPinnedUser(user);
+			break;
+		case R.id.buttonAlways:
+			// prendo l'equivalente utente nella lista, così non devo
+			// rinfrescarla
+			User fromPhone = MyApplication.getInstance().getUsers()
+					.fromPhone(user.phone);
+			if (fromPhone != null) {
+				fromPhone.trusted = true;
+				fromPhone.saveToDb();
+			}
+			acceptUser();
 			break;
 		case R.id.buttonNo:
 			rejectUser();
@@ -43,15 +51,19 @@ public class AcceptConnectionActivity extends Activity implements
 	}
 
 	private void acceptUser() {
-		MyApplication.getInstance().respondToUser(user.phone, Const.MSG_ACCEPT_CONTACT);
+		MyApplication.getInstance().respondToUser(user.phone,
+				Const.MSG_ACCEPT_CONTACT);
+		ConnectorService.activate(AcceptConnectionActivity.this, user, true,
+				false);
+		MyApplication.getInstance().setPinnedUser(user);
 		finish();
 
 	}
 
 	private void rejectUser() {
-		MyApplication.getInstance().respondToUser(user.phone, Const.MSG_REJECT_CONTACT);
+		MyApplication.getInstance().respondToUser(user.phone,
+				Const.MSG_REJECT_CONTACT);
 		finish();
 	}
 
-	
 }

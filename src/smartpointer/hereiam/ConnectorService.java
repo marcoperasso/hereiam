@@ -229,7 +229,7 @@ public class ConnectorService extends Service implements LocationListener {
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				this)
-				.setSmallIcon(R.drawable.gps_on)
+				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(getString(R.string.app_name))
 				.setStyle(
 						new NotificationCompat.BigTextStyle().bigText(message))

@@ -452,7 +452,11 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			}
 
 			protected void onPostExecute(Void result) {
-				progressBar.dismiss();
+				try {
+					progressBar.dismiss();
+				} catch (Exception e) {
+					
+				}
 			};
 		}.execute(null, null, null);
 	}
