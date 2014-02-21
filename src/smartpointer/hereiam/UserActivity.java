@@ -26,7 +26,6 @@ public class UserActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_user);
 
 		mUserPhone = (EditText) findViewById(R.id.editTextUserPhone);
-		mUserPhone.setText(MyApplication.getInstance().getPhone());
 		mPassword = (EditText) findViewById(R.id.editTextPassword);
 		mPassword1 = (EditText) findViewById(R.id.editTextRepeatPassword);
 		mMail = (EditText) findViewById(R.id.editTextMail);

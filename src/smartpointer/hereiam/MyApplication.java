@@ -204,11 +204,6 @@ public class MyApplication extends Application {
 
 	}
 
-	public String getPhone() {
-		TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-		return tMgr.getLine1Number();
-	}
-
 	public User getPinnedUser() {
 		return pinnedUser;
 	}

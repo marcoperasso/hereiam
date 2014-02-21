@@ -29,10 +29,7 @@ public class LoginActivity extends Activity implements OnEditorActionListener,
 		mPassword.setText(c.getPassword());
 		mPassword.setOnEditorActionListener(this);
 		mPassword.setImeOptions(EditorInfo.IME_ACTION_DONE);
-		String phone = c.getPhone();
-		if (Helper.isNullOrEmpty(phone))
-			phone = MyApplication.getInstance().getPhone();
-		mPhone.setText(phone);
+		mPhone.setText(c.getPhone());
 		
 		findViewById(R.id.ButtonOK).setOnClickListener(this);
 		findViewById(R.id.buttonCancel).setOnClickListener(this);
