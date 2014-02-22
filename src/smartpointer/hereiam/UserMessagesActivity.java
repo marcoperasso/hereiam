@@ -41,7 +41,7 @@ public class UserMessagesActivity extends ListActivity implements
 		else
 			messages = (ArrayList<Message>) savedInstanceState
 					.getSerializable(MESSAGES);
-		
+
 		refreshLabelVisibility();
 		setTitle(user.toString());
 		adapter = new MyMessageAdapter(this, R.layout.mymessagerow, messages);
@@ -53,7 +53,8 @@ public class UserMessagesActivity extends ListActivity implements
 	}
 
 	private void refreshLabelVisibility() {
-		findViewById(R.id.textViewNoMessages).setVisibility((messages.size() > 0) ? View.GONE : View.VISIBLE);
+		findViewById(R.id.textViewNoMessages).setVisibility(
+				(messages.size() > 0) ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
@@ -80,10 +81,10 @@ public class UserMessagesActivity extends ListActivity implements
 
 		super.onListItemClick(l, v, position, id);
 	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == Const.SEND_MESSAGE_RESULT & resultCode == RESULT_OK)
-		{
+		if (requestCode == Const.SEND_MESSAGE_RESULT & resultCode == RESULT_OK) {
 			messages.add((Message) data.getSerializableExtra(Const.MESSAGE));
 			adapter.notifyDataSetChanged();
 			refreshLabelVisibility();
@@ -95,11 +96,9 @@ public class UserMessagesActivity extends ListActivity implements
 	public void onClick(View view) {
 		if (view.getId() == R.id.buttonCancel)
 			finish();
-		else if (view.getId() == R.id.buttonSend)
-		{
+		else if (view.getId() == R.id.buttonSend) {
 			MessageActivity.sendMessageToUser(this, user);
-		}
-		else if (view.getId() == R.id.buttonRemoveAll)
+		} else if (view.getId() == R.id.buttonRemoveAll)
 
 			Helper.dialogMessage(this, R.string.remove_all_messages_,
 					new DialogInterface.OnClickListener() {
@@ -119,43 +118,39 @@ public class UserMessagesActivity extends ListActivity implements
 
 class MyMessageAdapter extends ArrayAdapter<Message> {
 
-	private ArrayList<Message> messages;
 	private UserMessagesActivity context;
 
 	public MyMessageAdapter(UserMessagesActivity context, int resource,
 			ArrayList<Message> messages) {
 		super(context, resource, messages);
 		this.context = context;
-		this.messages = messages;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
-		Message message = messages.get(position);
+		Message message = getItem(position);
 		if (convertView == null) {
 			LayoutInflater inflator = context.getLayoutInflater();
 			view = inflator.inflate(R.layout.mymessagerow, null);
-			TextView tvName = (TextView) view.findViewById(R.id.textViewName);
-			tvName.setText(message.getName());
-			TextView tvMessage = (TextView) view
-					.findViewById(R.id.textViewMessage);
-			tvMessage.setText(message.getMessage());
-			TextView tvDate = (TextView) view.findViewById(R.id.textViewDate);
-			Date d = new Date(message.getTime() * 1000);
-
-			java.text.DateFormat timeFormat = DateFormat
-					.getTimeFormat(MyApplication.getInstance());
-			java.text.DateFormat dateFormat = DateFormat
-					.getDateFormat(MyApplication.getInstance());
-			tvDate.setText("(" + dateFormat.format(d) + ", " + timeFormat.format(d) + ")");
-			view.setBackgroundColor(((position %2) == 0) ? Color.LTGRAY
-					: Color.GRAY);
-
 		} else {
 			view = convertView;
 		}
+		TextView tvName = (TextView) view.findViewById(R.id.textViewName);
+		tvName.setText(message.getName());
+		TextView tvMessage = (TextView) view.findViewById(R.id.textViewMessage);
+		tvMessage.setText(message.getMessage());
+		TextView tvDate = (TextView) view.findViewById(R.id.textViewDate);
+		Date d = new Date(message.getTime() * 1000);
 
+		java.text.DateFormat timeFormat = DateFormat
+				.getTimeFormat(MyApplication.getInstance());
+		java.text.DateFormat dateFormat = DateFormat
+				.getDateFormat(MyApplication.getInstance());
+		tvDate.setText("(" + dateFormat.format(d) + ", " + timeFormat.format(d)
+				+ ")");
+		view.setBackgroundColor(((position % 2) == 0) ? Color.LTGRAY
+				: Color.GRAY);
 		return view;
 	}
 
