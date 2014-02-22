@@ -227,7 +227,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		findViewById(R.id.buttonOther).setOnClickListener(this);
 		mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-		enableGPS();
+		
 
 		// testo le credenziali
 		Credentials credential = MySettings.readCredentials();
@@ -290,6 +290,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				mUsersOverlay.setPositions((ArrayList<UserPosition>) positions);
 
 		} else {
+			enableGPS();
 			// testVersion();
 			Helper.hideableMessage(this, R.string.warning_to_user);
 		}

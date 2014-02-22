@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -21,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,35 +32,57 @@ import android.widget.TextView;
 public class BookActivity extends ListActivity implements OnClickListener {
 
 	private MyUserAdapter adapter;
-	private Users users;
+	// private Users users;
 	private User selectedUser;
 	private int requestedCommandId;
+	private EditText editFilter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestedCommandId = getIntent().getIntExtra(Const.COMMAND_ID, -1);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_book);
-		registerForContextMenu(findViewById(android.R.id.list));
+		editFilter = (EditText) findViewById(R.id.editTextFilter);
+		ListView list = (ListView) findViewById(android.R.id.list);
+		registerForContextMenu(list);
+		list.setEmptyView(findViewById(R.id.textViewEmpty));
 		populate();
 
+		editFilter.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence cs, int arg1, int arg2,
+					int arg3) {
+				// When user changed the Text
+				BookActivity.this.adapter.getFilter().filter(cs);
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+			}
+		});
 		findViewById(R.id.buttonCancel).setOnClickListener(this);
 		findViewById(R.id.buttonRefresh).setOnClickListener(this);
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void populate() {
-		users = MyApplication.getInstance().getUsers();
-		adapter = new MyUserAdapter(this, R.layout.mymultichoicelistrow, users);
+		adapter = new MyUserAdapter(this, R.layout.mymultichoicelistrow,
+				(ArrayList<User>) MyApplication.getInstance().getUsers().clone());
 		setListAdapter(adapter);
 		refreshLabel();
 	}
 
 	private void refreshLabel() {
 		int labelId = R.string.tap_an_user_for_options;
-		if (users.isEmpty())
-			labelId = R.string.no_user_in_book;
-		else if (requestedCommandId == R.id.itemRequestUserPosition)
+		editFilter.setVisibility(View.VISIBLE);
+		if (requestedCommandId == R.id.itemRequestUserPosition)
 			labelId = R.string.tap_an_user_for_locate;
 		else if (requestedCommandId == R.id.itemSendMessage)
 			labelId = R.string.tap_an_user_for_message;
@@ -180,12 +206,13 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		selectedUser = users.get(position);
+		selectedUser = adapter.getItem(position);
 		if (!selectedUser.registered) {
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"
 					+ selectedUser.phone));
 			intent.putExtra(
-					"sms_body",getString(R.string.hello_s_would_you_like_to_install_,
+					"sms_body",
+					getString(R.string.hello_s_would_you_like_to_install_,
 							selectedUser.name,
 							"https://play.google.com/apps/testing/smartpointer.hereiam"));
 			startActivity(intent);
@@ -229,16 +256,14 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 }
 
-class MyUserAdapter extends ArrayAdapter<User> {
+class MyUserAdapter extends ArrayAdapter<User> implements Filterable {
 
 	private BookActivity context;
-	private ArrayList<User> users;
 
 	public MyUserAdapter(BookActivity context, int resource,
 			ArrayList<User> users) {
 		super(context, resource, users);
 		this.context = context;
-		this.users = users;
 	}
 
 	static class ViewHolder {
@@ -249,8 +274,9 @@ class MyUserAdapter extends ArrayAdapter<User> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+
 		View view = null;
-		User user = users.get(position);
+		User user = getItem(position);
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			LayoutInflater inflator = context.getLayoutInflater();
@@ -275,8 +301,53 @@ class MyUserAdapter extends ArrayAdapter<User> {
 		return view;
 	}
 
-	public ArrayList<User> getUsers() {
-		return users;
+	@Override
+	public Filter getFilter() {
+
+		Filter filter = new Filter() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void publishResults(CharSequence constraint,
+					FilterResults results) {
+
+				MyUserAdapter.super.clear();
+
+				if (results.count == 0) {
+					notifyDataSetInvalidated();
+				} else {
+					for (User u : (Iterable<User>) results.values)
+						MyUserAdapter.this.add(u);
+					notifyDataSetChanged();
+				}
+
+			}
+
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
+
+				FilterResults results = new FilterResults();
+				ArrayList<User> filteredArray = new ArrayList<User>();
+
+				// perform your search here using the searchConstraint String.
+
+				constraint = constraint.toString().toLowerCase();
+				Users originalUsers = MyApplication.getInstance().getUsers();
+				for (int i = 0; i < originalUsers.size(); i++) {
+					User user = originalUsers.get(i);
+					if (user.name.toLowerCase().startsWith(constraint.toString())) {
+						filteredArray.add(user);
+					}
+				}
+
+				results.count = filteredArray.size();
+				results.values = filteredArray;
+
+				return results;
+			}
+		};
+
+		return filter;
 	}
 
 }

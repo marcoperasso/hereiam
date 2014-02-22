@@ -45,23 +45,18 @@ public class HttpManager {
 	private static String cookie;
 	private static final boolean debuggingServer = false;
 	private static final String host = debuggingServer ? "http://10.0.2.2:8888/"
-			: "http://www.ecommuters.com/";
-	private static final String getUserLoggedRequest = host + "hia/user_logged";
-	private static final String sendPositionDataRequest = host
-			+ "hia/update_position";
-	private static final String getPositionsRequest = host
-			+ "hia/get_positions/";
-	public static final String login_request = host + "hia/login/";
-	public static final String save_user_request = host + "hia/save_user/";
-	public static final String contact_user_request = host + "hia/contact_user";
-	public static final String disconnect_user_request = host
-			+ "hia/disconnect_user/";
-	public static final String respond_to_user_request = host
-			+ "hia/respond_to_user/";
-	public static final String message_to_user_request = host
-			+ "hia/message_to_user/";
-	public static final String verify_registratoin_request = host
-			+ "hia/verify_registration/";
+			: "http://www.smartpointer.it/";
+	private static final String controllerUrl = host + "hereiam/";
+	private static final String getUserLoggedRequest = controllerUrl + "user_logged/";
+	private static final String sendPositionDataRequest = controllerUrl + "update_position/";
+	private static final String getPositionsRequest = controllerUrl + "get_positions/";
+	public static final String login_request = controllerUrl + "login/";
+	public static final String save_user_request = controllerUrl + "save_user/";
+	public static final String contact_user_request = controllerUrl + "contact_user";
+	public static final String disconnect_user_request = controllerUrl + "disconnect_user/";
+	public static final String respond_to_user_request = controllerUrl + "respond_to_user/";
+	public static final String message_to_user_request = controllerUrl + "message_to_user/";
+	public static final String verify_registratoin_request = controllerUrl + "verify_registration/";
 
 	static JSONArray postRequestForArray(String reqString)
 			throws ClientProtocolException, IOException, JSONException {

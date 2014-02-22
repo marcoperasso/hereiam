@@ -5,11 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Application;
-import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
-import android.telephony.TelephonyManager;
 
 public class MyApplication extends Application {
 

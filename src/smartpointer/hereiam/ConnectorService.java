@@ -85,11 +85,12 @@ public class ConnectorService extends Service implements LocationListener {
 					mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 					mHandler = new Handler();
 					mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-					execute(command);
 					if (mLocation == null)
 						mLocation = mlocManager
 								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-					sendLatestPositionProcedure();
+					execute(command);
+					mHandler.post(sendLatestPositionProcedureRunnable);
+					
 					Looper.loop();
 
 					mlocManager.removeUpdates(ConnectorService.this);

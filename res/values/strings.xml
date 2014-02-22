@@ -91,4 +91,5 @@
     <string name="refresh">Refresh</string>
     <string name="hello_s_would_you_like_to_install_">Hello %1$s, would you like to install this app:\r\n%2$s\r\nso we can know our mutual position when needed?</string>
     <string name="always_from_this_user">Always accept requests from this user</string>
+    <string name="search_user">Search user</string>
 </resources>

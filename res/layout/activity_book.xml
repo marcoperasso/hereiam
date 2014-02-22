@@ -15,22 +15,39 @@
         android:layout_height="wrap_content"
         android:textStyle="bold" />
 
+    <EditText
+        android:id="@+id/editTextFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:hint="@string/search_user" >
+    </EditText>
+
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_marginBottom="20dip"
-        android:layout_marginTop="20dip"
+        android:layout_marginBottom="10dip"
+        android:layout_marginTop="1dip"
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:choiceMode="singleChoice" >
+
+        <requestFocus />
     </ListView>
+
+    <TextView
+        android:id="@+id/textViewEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_user_in_book"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_marginTop="10dip"
+        android:layout_marginTop="5dip"
         android:orientation="horizontal" >
 
         <Button
