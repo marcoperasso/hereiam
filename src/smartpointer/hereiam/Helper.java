@@ -35,6 +35,8 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -158,6 +160,64 @@ public class Helper {
 				.findViewById(android.R.id.message);
 		messageView.setLinksClickable(true);
 		messageView.setMovementMethod(LinkMovementMethod.getInstance());
+	}
+
+	public static void hideableQuestion(Context context,
+			final IFinishCallback yesCallback,
+			final IFinishCallback noCallback, final int messageId,
+			Object... formatArgs) {
+		switch (MySettings.isHiddenQuestion(messageId)) {
+		case MySettings.QUESTION_RESULT_YES:
+			if (yesCallback != null)
+				yesCallback.finished();
+			return;
+		case MySettings.QUESTION_RESULT_NO:
+			if (noCallback != null)
+				noCallback.finished();
+			return;
+		}
+		Spanned msg = Html.fromHtml(context.getString(messageId, formatArgs));
+		final CheckBox input = new CheckBox(context);
+		input.setText(R.string.no_show_again);
+		AlertDialog dialog = new AlertDialog.Builder(context)
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setTitle(R.string.app_name)
+				.setMessage(msg)
+				.setView(input)
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (input.isChecked())
+									MySettings.setHiddenQuestion(messageId,
+											MySettings.QUESTION_RESULT_YES);
+								if (yesCallback != null)
+									yesCallback.finished();
+
+							}
+						})
+				.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (input.isChecked())
+									MySettings.setHiddenQuestion(messageId,
+											MySettings.QUESTION_RESULT_NO);
+								if (noCallback != null)
+									noCallback.finished();
+
+							}
+						}).show();
+		TextView messageView = (TextView) dialog
+				.findViewById(android.R.id.message);
+		messageView.setLinksClickable(true);
+		messageView.setMovementMethod(LinkMovementMethod.getInstance());
+		input.setTextColor(messageView.getTextColors());
+		
 	}
 
 	public static List<File> getFiles(Context context, String ext) {

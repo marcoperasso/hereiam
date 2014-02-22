@@ -84,7 +84,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				UserPosition userPosition = positions.get(i);
 				// tolgo le posizioni più vecchie di 15 minuti e quella che sto
 				// per aggiungere
-				if (userPosition.getUser().phone.equals(position.getUser().phone)
+				if (userPosition.getUser().phone
+						.equals(position.getUser().phone)
 						|| (long) (System.currentTimeMillis() / 1E3)
 								- userPosition.getPosition().time > 900)
 					positions.remove(i);
@@ -188,8 +189,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				if (success) {
 					Credentials c = MySettings.readCredentials();
 					c.setRegid(regid);
-					WebRequestResult resp = HttpManager
-							.saveCredentials(c, false);
+					WebRequestResult resp = HttpManager.saveCredentials(c,
+							false);
 					onResponse.response(resp.result, resp.message);
 
 				} else {
@@ -227,8 +228,6 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		findViewById(R.id.buttonOther).setOnClickListener(this);
 		mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-		
-
 		// testo le credenziali
 		Credentials credential = MySettings.readCredentials();
 		if (credential.isEmpty()) {
@@ -239,8 +238,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 				@Override
 				public void response(boolean success, String message) {
-					if (!success)
-					{
+					if (!success) {
 						Helper.showMessage(MyMapActivity.this, message);
 						login();
 					}
@@ -351,21 +349,17 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	private void enableGPS() {
 		if (!mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			Helper.hideableQuestion(this, new IFinishCallback() {
 
-			Helper.dialogMessage(this, R.string.need_gps, R.string.app_name,
-					new DialogInterface.OnClickListener() {
+				@Override
+				public void finished() {
+					Intent myIntent = new Intent(
+							Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+					startActivityForResult(myIntent, Const.ACTIVATE_GPS_RESULT);
 
-						public void onClick(DialogInterface dialog, int which) {
-							Intent myIntent = new Intent(
-									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-							startActivityForResult(myIntent,
-									Const.ACTIVATE_GPS_RESULT);
-							return;
+				}
+			}, null, R.string.need_gps);
 
-						}
-					}, null);
-
-			return;
 		}
 	}
 
@@ -376,7 +370,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 					.show();
 		} else if (requestCode == Const.LOGIN_RESULT) {
 			if (resultCode == RESULT_OK) {
-				
+
 				registerForGCM();
 			} else
 				finish();
@@ -430,9 +424,12 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 												getString(
 														R.string.your_request_to_s_has_been_sent,
 														user));
-										MyApplication.getInstance().setPinnedUser(user);
-										//se non posso ricevere messaggi, mi connetto subito, 
-										//altrimenti mi connetter?ando ricevo conferma
+										MyApplication.getInstance()
+												.setPinnedUser(user);
+										// se non posso ricevere messaggi, mi
+										// connetto subito,
+										// altrimenti mi connetter?ando ricevo
+										// conferma
 										if (invalidGCMStauts) {
 											ConnectorService.activate(
 													MyMapActivity.this, user,
@@ -456,7 +453,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				try {
 					progressBar.dismiss();
 				} catch (Exception e) {
-					
+
 				}
 			};
 		}.execute(null, null, null);
@@ -479,7 +476,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		switch (item.getItemId()) {
 		case R.id.itemRequestUserPosition:
 			startBookContactUser();
-		 break;
+			break;
 		case R.id.itemAccount: {
 			Intent intent = new Intent(this, UserActivity.class);
 			intent.putExtra(UserActivity.REGISTER_USER, false);
@@ -496,7 +493,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			login();
 			return true;
 		}
-		
+
 		case R.id.itemBook: {
 			startBook();
 			return true;
@@ -519,9 +516,10 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		mTrackGPSPosition = b;
 
 		MySettings.setTrackGPSPosition(this, mTrackGPSPosition);
-		//mMenuItemTrackGpsPosition
-		//		.setTitleCondensed(getString(mTrackGPSPosition ? R.string.hide_position_menu
-		//				: R.string.show_position_menu));
+		// mMenuItemTrackGpsPosition
+		// .setTitleCondensed(getString(mTrackGPSPosition ?
+		// R.string.hide_position_menu
+		// : R.string.show_position_menu));
 
 		if (mTrackGPSPosition)
 			myLocationOverlay.enableMyLocation();

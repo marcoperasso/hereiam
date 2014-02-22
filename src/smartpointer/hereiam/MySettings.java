@@ -13,8 +13,12 @@ public class MySettings {
 	public static final String PASSWORD = "p";
 	public static final String PHONE = "ph";
 	private static final String HIDDEN_MESSAGE_ = "hm_";
+	private static final String HIDDEN_QUESTION = "hq_";
 	private static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
+	static final int QUESTION_RESULT_UNDEFINED = 0;
+	static final int QUESTION_RESULT_YES = 1;
+	static final int QUESTION_RESULT_NO = 2;
 
 	private static Credentials credentials;
 
@@ -74,6 +78,20 @@ public class MySettings {
 
 	}
 
+	public static int isHiddenQuestion(int messageId) {
+		SharedPreferences settings = MyApplication.getInstance()
+				.getSharedPreferences(PREFS_NAME, 0);
+		return settings.getInt(HIDDEN_QUESTION + messageId, QUESTION_RESULT_UNDEFINED);
+	}
+
+	public static void setHiddenQuestion(int messageId, int set) {
+		SharedPreferences settings = MyApplication.getInstance()
+				.getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(HIDDEN_QUESTION + messageId, set);
+		editor.commit();
+
+	}
 	/**
 	 * Stores the registration ID and app versionCode in the application's
 	 * {@code SharedPreferences}.
