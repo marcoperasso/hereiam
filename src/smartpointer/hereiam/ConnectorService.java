@@ -270,7 +270,7 @@ public class ConnectorService extends Service implements LocationListener {
 				: currentCredentials.getPhone(), phones,
 				(int) (mLocation.getLatitude() * 1E6),
 				(int) (mLocation.getLongitude() * 1E6),
-				(long) (System.currentTimeMillis() / 1E3),
+				Helper.getUnixTime(),
 				LocationManager.GPS_PROVIDER.equals(mLocation.getProvider()));
 		new Thread() {
 			@Override

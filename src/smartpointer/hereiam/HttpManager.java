@@ -242,6 +242,7 @@ public class HttpManager {
 		try {
 			List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 			postParameters.add(new BasicNameValuePair("userphone", userPhone));
+			postParameters.add(new BasicNameValuePair("time", Long.toString(Helper.getUnixTime())));
 			postParameters.add(new BasicNameValuePair("securetoken",
 					secureToken));
 			JSONObject obj = new JSONObject(postRequest(contact_user_request,
@@ -264,6 +265,7 @@ public class HttpManager {
 		try {
 			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("userphone", userPhone));
+			params.add(new BasicNameValuePair("time", Long.toString(Helper.getUnixTime())));
 			params.add(new BasicNameValuePair("responsecode", Integer
 					.toString(responseCode)));
 			JSONObject obj = postRequestForObject(respond_to_user_request,
@@ -284,6 +286,7 @@ public class HttpManager {
 		try {
 			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("userphone", userPhone));
+			params.add(new BasicNameValuePair("time", Long.toString(Helper.getUnixTime())));
 			JSONObject obj = postRequestForObject(disconnect_user_request,
 					params);
 

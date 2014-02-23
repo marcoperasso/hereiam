@@ -40,10 +40,10 @@
     <string name="title_activity_accept_connection">Accetta connessione</string>
     <string name="wants_to_know_your_position_do_you_agree">%s vuole conoscere la tua posizione; acconsenti?</string>
     <string name="your_request_to_s_has_been_sent">La tua richiesta a %s è stata inviata; quando sarà accettata (o rifiutata) verrai avvisato</string>
-    <string name="s_wants_to_know_your_position">%s vuole conoscere la tua posizione.</string>
-    <string name="s_has_accepted_to_let_you_know_her_its_position">%s ha accettato di inviarti la sua posizione. Adesso stai inviando anche la tua a lei/lui</string>
-    <string name="s_has_refused_to_let_you_know_her_its_position">%s ha rifiutato di inviarti la sua posizione.</string>
-    <string name="s_stopped_sending_her_its_position">%s ha interrotto l\'invio della sua posizione.</string>
+    <string name="s_wants_to_know_your_position">%1$s - %2$s vuole conoscere la tua posizione.</string>
+    <string name="s_has_accepted_to_let_you_know_her_its_position">%1$s - %2$s ha accettato di inviarti la sua posizione. Adesso stai inviando anche la tua a lei/lui</string>
+    <string name="s_has_refused_to_let_you_know_her_its_position">%1$s - %2$s ha rifiutato di inviarti la sua posizione.</string>
+    <string name="s_stopped_sending_her_its_position">%1$s - %2$s ha interrotto l\'invio della sua posizione.</string>
     <string name="title_activity_tracked_users">Utenti tracciati</string>
     <string name="you_are_sending_your_position_to_the_following_users">Stai inviando la tua posizione agli utenti elencati; tocca un utente per disconnetterlo</string>
     <string name="do_you_want_to_stop_tracking_this_user">Vuoi interrompere la connessione con %s?</string>

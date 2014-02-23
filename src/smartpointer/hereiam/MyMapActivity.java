@@ -86,7 +86,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				// per aggiungere
 				if (userPosition.getUser().phone
 						.equals(position.getUser().phone)
-						|| (long) (System.currentTimeMillis() / 1E3)
+						|| Helper.getUnixTime()
 								- userPosition.getPosition().time > 900)
 					positions.remove(i);
 			}
@@ -104,8 +104,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 				UserPosition userPosition = positions.get(i);
 				// tolgo le posizioni più vecchie di 15 minuti e quella che sto
 				// per aggiungere
-				if ((long) (System.currentTimeMillis() / 1E3)
-						- userPosition.getPosition().time > 900)
+				if (Helper.getUnixTime() - userPosition.getPosition().time > 900)
 					positions.remove(i);
 			}
 			mUsersOverlay.setPositions(positions);

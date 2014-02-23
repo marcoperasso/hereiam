@@ -63,7 +63,6 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					switch (msgtype) {
 					case Const.MSG_REQUEST_CONTACT: {
 						String secureToken = extras.getString("securetoken");
-
 						if (!Helper.isNullOrEmpty(secureToken)
 								&& !Const.NULL_TOKEN.equals(secureToken)) {
 							if (c.getPassword().equals(
@@ -90,37 +89,41 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 									AcceptConnectionActivity.class);
 							intent2.putExtra(Const.USER, fromUser);
 
+							String time = extras.getString("time");
 							sendNotification(context, context.getString(
 									R.string.s_wants_to_know_your_position,
-									fromUser), intent2, fromUser.phone);
+									Helper.formatTimestamp(time), fromUser), intent2, fromUser.phone);
 						}
 						break;
 					}
 					case Const.MSG_ACCEPT_CONTACT: {
+						String time = extras.getString("time");
 						sendNotification(
 								context,
 								context.getString(
 										R.string.s_has_accepted_to_let_you_know_her_its_position,
-										fromUser), null, fromUser.phone);
+										Helper.formatTimestamp(time), fromUser), null, fromUser.phone);
 						ConnectorService.activate(context, fromUser, true,
 								false);
 						MyApplication.getInstance().setPinnedUser(fromUser);
 						break;
 					}
 					case Const.MSG_REJECT_CONTACT: {
+						String time = extras.getString("time");
 						sendNotification(
 								context,
 								context.getString(
 										R.string.s_has_refused_to_let_you_know_her_its_position,
-										fromUser), null, fromUser.phone);
+										Helper.formatTimestamp(time), fromUser), null, fromUser.phone);
 						ConnectorService.activate(context, fromUser, false,
 								false);
 						break;
 					}
 					case Const.MSG_REMOVE_CONTACT: {
+						String time = extras.getString("time");
 						sendNotification(context, context.getString(
 								R.string.s_stopped_sending_her_its_position,
-								fromUser), null, fromUser.phone);
+								Helper.formatTimestamp(time), fromUser), null, fromUser.phone);
 						ConnectorService.activate(context, fromUser, false,
 								false);
 

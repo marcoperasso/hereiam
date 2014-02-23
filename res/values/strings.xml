@@ -40,10 +40,10 @@
     <string name="title_activity_accept_connection">Accept connection</string>
     <string name="wants_to_know_your_position_do_you_agree">%s wants to know your position; do you agree?</string>
     <string name="your_request_to_s_has_been_sent">Your request to %s has been sent, you will be notified when it is accepted or refused</string>
-    <string name="s_wants_to_know_your_position">%s wants to know your position.</string>
-    <string name="s_has_accepted_to_let_you_know_her_its_position">%s has accepted to send you her/its position. You are now sending yours to her/him, too</string>
-    <string name="s_has_refused_to_let_you_know_her_its_position">%s has refused to send you her/its position.</string>
-    <string name="s_stopped_sending_her_its_position">%s has stopped sending you her/its position.</string>
+    <string name="s_wants_to_know_your_position">%1$s - %2$s wants to know your position.</string>
+    <string name="s_has_accepted_to_let_you_know_her_its_position">%1$s - %2$s has accepted to send you her/its position. You are now sending yours to her/him, too</string>
+    <string name="s_has_refused_to_let_you_know_her_its_position">%1$s - %2$s has refused to send you her/its position.</string>
+    <string name="s_stopped_sending_her_its_position">%1$s - %2$s has stopped sending you her/its position.</string>
     <string name="title_activity_tracked_users">Tracked users</string>
     <string name="you_are_sending_your_position_to_the_following_users">You are sending your position to the listed users; tap an user to disconnect her/him</string>
     <string name="do_you_want_to_stop_tracking_this_user">Disconnect %s?</string>

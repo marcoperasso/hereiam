@@ -12,6 +12,7 @@ import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.format.DateFormat;
 import android.text.method.LinkMovementMethod;
 import android.util.Base64;
 import android.util.Log;
@@ -217,7 +219,7 @@ public class Helper {
 		messageView.setLinksClickable(true);
 		messageView.setMovementMethod(LinkMovementMethod.getInstance());
 		input.setTextColor(messageView.getTextColors());
-		
+
 	}
 
 	public static List<File> getFiles(Context context, String ext) {
@@ -336,6 +338,10 @@ public class Helper {
 
 		}
 		return null;
+	}
+
+	static long getUnixTime() {
+		return (long) (System.currentTimeMillis() / 1000);
 	}
 
 	/**
@@ -661,6 +667,14 @@ public class Helper {
 		country2phone.put("AQ", "");
 		country2phone.put("AQ", "");
 		country2phone.put("AQ", "");
+	}
+	public static String formatTimestamp(String unixTime) {
+		try {
+			Date d = new Date(Long.parseLong(unixTime)*1000);
+			return DateFormat.getDateFormat(MyApplication.getInstance()).format(d) +" " + DateFormat.getTimeFormat(MyApplication.getInstance()).format(d);
+		} catch (NumberFormatException e) {
+			return "";
+		}
 	}
 
 }

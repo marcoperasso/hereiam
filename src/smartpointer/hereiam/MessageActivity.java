@@ -54,8 +54,7 @@ public class MessageActivity extends Activity implements OnClickListener {
 								if (success) {
 									Credentials c = MySettings
 											.readCredentials();
-									Message msg = new Message((long) (System
-											.currentTimeMillis() / 1e3), c
+									Message msg = new Message(Helper.getUnixTime(), c
 											.getPhone(), user.phone, message);
 									WebRequestResult result = HttpManager
 											.messageToUser(msg);
