@@ -38,7 +38,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 

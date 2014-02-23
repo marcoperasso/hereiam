@@ -1,6 +1,8 @@
 package smartpointer.hereiam;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Looper;
 
@@ -64,7 +66,7 @@ public class Credentials {
 		if (!Helper.isOnline(context)) {
 			onResponse.response(true, "");
 		}
-		LoginAsyncTask loginAsyncTask = new LoginAsyncTask(onResponse);
+		LoginAsyncTask loginAsyncTask = new LoginAsyncTask(context, onResponse);
 		if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
 			loginAsyncTask.execute(this);
 		}
@@ -120,29 +122,44 @@ class TestIfLoggedAsyncTask extends
 }
 
 class LoginAsyncTask extends
-		AsyncTask<Credentials, Void, WebRequestResult> {
+		AsyncTask<Credentials, Void, LoginResult> {
 	private final OnAsyncResponse onResponse;
+	private Context context;
 
-	LoginAsyncTask(OnAsyncResponse onResponse) {
+	LoginAsyncTask(Context context, OnAsyncResponse onResponse) {
 		this.onResponse = onResponse;
+		this.context = context;
 	}
 
 	@Override
-	protected WebRequestResult doInBackground(Credentials... params) {
+	protected LoginResult doInBackground(Credentials... params) {
 		Credentials c = params[0];
 		String mail = c.getEmail();
-		WebRequestResult res = HttpManager.login(c);
+		LoginResult res = HttpManager.login(c);
 		if (res.result && !mail.equals(c.getEmail()))
 		{
 			MySettings.setCredentials(c);
 		}
+		
 		return res;
 	}
 
 	@Override
-	protected void onPostExecute(WebRequestResult result) {
+	protected void onPostExecute(LoginResult result) {
 		onResponse.response(result.result, result.message.toString());
+		if (result.wrongVersion)
+			launchActivityForPlay();
 		super.onPostExecute(result);
+	}
+	
+	public void launchActivityForPlay() {
+		final String appPackageName = context.getPackageName(); // getPackageName() from Context or Activity object
+		try {
+			context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+		} catch (android.content.ActivityNotFoundException anfe) {
+			context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+		}
+		
 	}
 }
 

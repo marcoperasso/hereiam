@@ -181,12 +181,12 @@ public class HttpManager {
 
 	}
 
-	public static WebRequestResult login(Credentials c) {
+	public static LoginResult login(Credentials c) {
 		List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 		postParameters.add(new BasicNameValuePair("phone", c.getPhone()));
 		postParameters.add(new BasicNameValuePair("pwd", Helper.md5(c
 				.getPassword())));
-		WebRequestResult result = new WebRequestResult();
+		LoginResult result = new LoginResult();
 		try {
 			String postRequest = postRequest(login_request, postParameters);
 			JSONObject obj = new JSONObject(postRequest);
@@ -198,6 +198,7 @@ public class HttpManager {
 				result.message = MyApplication.getInstance().getString(
 						R.string.wrong_version);
 				result.result = false;
+				result.wrongVersion = true;
 			}
 			if (obj.has("mail"))
 				c.setEmail(obj.getString("mail"));
@@ -367,3 +368,8 @@ class WebRequestResult {
 	public boolean result;
 	public String message;
 }
+
+class LoginResult extends WebRequestResult {
+	boolean wrongVersion = false;
+}
+

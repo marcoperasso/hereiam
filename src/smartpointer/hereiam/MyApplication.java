@@ -209,7 +209,7 @@ public class MyApplication extends Application {
 	public void setPinnedUser(User pinnedUser) {
 		this.pinnedUser = pinnedUser;
 	}
-	
+
 }
 
 class GeoAddress {

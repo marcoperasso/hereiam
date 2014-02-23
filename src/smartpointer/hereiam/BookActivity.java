@@ -74,7 +74,8 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	@SuppressWarnings("unchecked")
 	private void populate() {
 		adapter = new MyUserAdapter(this, R.layout.mymultichoicelistrow,
-				(ArrayList<User>) MyApplication.getInstance().getUsers().clone());
+				(ArrayList<User>) MyApplication.getInstance().getUsers()
+						.clone());
 		setListAdapter(adapter);
 		refreshLabel();
 	}
@@ -208,19 +209,25 @@ public class BookActivity extends ListActivity implements OnClickListener {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		selectedUser = adapter.getItem(position);
 		if (!selectedUser.registered) {
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"
-					+ selectedUser.phone));
-			intent.putExtra(
-					"sms_body",
-					getString(R.string.hello_s_would_you_like_to_install_,
-							selectedUser.name,
-							"https://play.google.com/apps/testing/smartpointer.hereiam"));
-			startActivity(intent);
-			/*
-			 * Helper.showMessage( this, getString(
-			 * R.string._s_is_not_yet_registered_invite_her_him_to_register_,
-			 * selectedUser));
-			 */
+			Helper.dialogMessage(this,
+					getString(R.string.invite_user, selectedUser),
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Intent intent = new Intent(Intent.ACTION_VIEW, Uri
+									.parse("sms:" + selectedUser.phone));
+							intent.putExtra(
+									"sms_body",
+									getString(
+											R.string.hello_s_would_you_like_to_install_,
+											selectedUser.name,
+											Const.MARKET_URL));
+							startActivity(intent);
+
+						}
+					}, null);
+
 			return;
 		}
 		if (requestedCommandId != -1)
@@ -335,7 +342,8 @@ class MyUserAdapter extends ArrayAdapter<User> implements Filterable {
 				Users originalUsers = MyApplication.getInstance().getUsers();
 				for (int i = 0; i < originalUsers.size(); i++) {
 					User user = originalUsers.get(i);
-					if (user.name.toLowerCase().startsWith(constraint.toString())) {
+					if (user.name.toLowerCase().startsWith(
+							constraint.toString())) {
 						filteredArray.add(user);
 					}
 				}

@@ -1,6 +1,7 @@
 package smartpointer.hereiam;
 
 public class Const {
+	static final String MARKET_URL = "https://play.google.com/store/apps/details?id=smartpointer.hereiam";
 	
 	static final int MSG_REQUEST_CONTACT = 0;
 	static final int MSG_ACCEPT_CONTACT = 1; 

@@ -95,5 +95,6 @@
     <string name="hello_s_would_you_like_to_install_">Ciao %1$s, vuoi installare questa app:\r\n%2$s\r\ncosì possiamo conoscere la nostra reciproca posizione quando necessario?</string>
     <string name="always_from_this_user">Accetta sempre le richieste di questo utente</string>
     <string name="search_user">Cerca utente</string>
+    <string name="invite_user">%s non ha ancora installato questa app, vuoi invitarlo/a con un SMS?</string>
 
 </resources>
