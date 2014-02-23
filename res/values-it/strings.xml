@@ -96,5 +96,6 @@
     <string name="always_from_this_user">Accetta sempre le richieste di questo utente</string>
     <string name="search_user">Cerca utente</string>
     <string name="invite_user">%s non ha ancora installato questa app, vuoi invitarlo/a con un SMS?</string>
+    <string name="login_label">Se sei già registrato inserisci il tuo numero di telefono e password e premi OK, altrimenti per favore premi il pulsante di registrazione.</string>
 
 </resources>

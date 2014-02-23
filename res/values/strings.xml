@@ -93,4 +93,5 @@
     <string name="always_from_this_user">Always accept requests from this user</string>
     <string name="search_user">Search user</string>
     <string name="invite_user">%s has not yet installed this app, would you like ti invite her/him with a SMS?</string>
+    <string name="login_label">If you are already registered insert your phone number and password and tap OK, otherwise please tap the register button.</string>
 </resources>
