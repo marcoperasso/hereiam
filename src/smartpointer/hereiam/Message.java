@@ -14,33 +14,32 @@ public class Message implements Serializable {
 	private String phoneFrom;
 	private String phoneTo;
 	private String message;
-	
+
 	private String name;
 	private boolean received;
 
 	public Message(long time, String phoneFrom, String phoneTo, String message) {
 		this.time = time;
 		this.phoneFrom = phoneFrom;
-		this.phoneTo  = phoneTo;
+		this.phoneTo = phoneTo;
 		this.message = message;
-		
+
 		calculateAuxData();
 	}
-	void calculateAuxData()
-	{
+
+	void calculateAuxData() {
 		Credentials c = MySettings.readCredentials();
 		received = (c.getPhone().equals(phoneTo));
-		if (received)
-		{
-		User u = MyApplication.getInstance().getUsers().fromPhone(phoneFrom);
-		name = (u == null) ? MyApplication.getInstance().getString(R.string.unknown) :  u.name;
-		}
-		else
-		{
-			name =  MyApplication.getInstance().getString(R.string.me);
+		if (received) {
+			User u = MyApplication.getInstance().getUsers()
+					.fromPhone(phoneFrom, true);
+			name = (u == null) ? MyApplication.getInstance().getString(
+					R.string.unknown) : u.name;
+		} else {
+			name = MyApplication.getInstance().getString(R.string.me);
 		}
 	}
-	
+
 	public void saveToDB(Context context) {
 		MessageDbAdapter db = new MessageDbAdapter(context);
 		try {
@@ -72,27 +71,29 @@ public class Message implements Serializable {
 		}
 
 	}
+
 	public long getTime() {
 		return time;
 	}
-	
+
 	public String getPhoneFrom() {
 		return phoneFrom;
 	}
-	
+
 	public String getPhoneTo() {
 		return phoneTo;
 	}
-	
+
 	public String getMessage() {
 		return message;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public boolean isReceived() {
 		return received;
 	}
-	
 
 }

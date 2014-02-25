@@ -30,7 +30,7 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 		try {
 			dbUser = new UserDbAdapter(MyApplication.getInstance());
 			dbUser.open();
-
+			dbUser.fillUsersFromDB(this);
 			while (phones.moveToNext()) {
 				String name = phones
 						.getString(phones
@@ -44,9 +44,8 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 				if (t != ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
 					continue;
 				phoneNumber = Helper.adjustPhoneNumber(phoneNumber);
-				User u = new User(phoneNumber, name);
-				dbUser.setAuxData(u);
-				add(u);
+				User u = fromPhone(phoneNumber, false);
+				u.name = name;
 			}
 		} finally {
 			dbUser.close();
@@ -75,13 +74,14 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 					dbUser = new UserDbAdapter(MyApplication.getInstance());
 					dbUser.open();
 					for (int i = 0; i < size(); i++) {
-						User user = Users.this.get(i);
-						boolean b = result[i];
-						if (user.registered != b) {
-							user.registered = b;
-							dbUser.persist(user);
+						if (i < result.length) {
+							User user = Users.this.get(i);
+							boolean b = result[i];
+							if (user.registered != b) {
+								user.registered = b;
+								dbUser.persist(user);
+							}
 						}
-
 					}
 
 				} finally {
@@ -93,11 +93,16 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 		}.execute(null, null, null);
 	}
 
-	public User fromPhone(String phone) {
+	public User fromPhone(String phone, boolean setRegistered) {
 		for (User user : this)
 			if (user.phone.equals(phone))
 				return user;
-		return new User(phone, context.getString(R.string.unknown));
+		User u = new User(phone, context.getString(R.string.unknown));
+		if (setRegistered)
+			u.registered = true;
+		add(u);
+		u.saveToDb();
+		return u;
 	}
 
 	@Override

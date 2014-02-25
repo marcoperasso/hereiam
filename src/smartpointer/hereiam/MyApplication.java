@@ -29,12 +29,13 @@ public class MyApplication extends Application {
 	private Event positionsPurgeNeeded = new Event();
 
 	private User pinnedUser;
-	
+	private UserMessagesActivity userMessagesActivity;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		sInstance = this;
-		
+
 	}
 
 	@Override
@@ -155,15 +156,14 @@ public class MyApplication extends Application {
 			return users;
 		}
 	}
+
 	public void invalidateUsers() {
 		synchronized (userTicket) {
 			users = null;
 		}
-		
+
 	}
-	
-	
-	
+
 	public void unregisterForPositions(
 			PositionsDownloadedEventHandler downloadHandler,
 			PositionReceivedEventHandler receiveHandler,
@@ -210,6 +210,16 @@ public class MyApplication extends Application {
 		this.pinnedUser = pinnedUser;
 	}
 
+	public void setMessagesActivity(UserMessagesActivity userMessagesActivity) {
+		this.userMessagesActivity = userMessagesActivity;
+	}
+
+	public UserMessagesActivity getMessagesActivity(User fromUser) {
+		if (userMessagesActivity != null
+				&& fromUser.equals(userMessagesActivity.getUser()))
+			return userMessagesActivity;
+		return null;
+	}
 }
 
 class GeoAddress {

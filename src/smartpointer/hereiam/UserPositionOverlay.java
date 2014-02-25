@@ -126,7 +126,7 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> imp
 		}
 		if (v.getId() == R.id.balloon_message)
 		{
-			MessageActivity.sendMessageToUser(mContext, MyApplication.getInstance().getPinnedUser());
+			UserMessagesActivity.openMessages(mContext, MyApplication.getInstance().getPinnedUser());
 		}
 		
 		

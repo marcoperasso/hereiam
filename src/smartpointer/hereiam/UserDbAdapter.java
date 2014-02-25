@@ -55,17 +55,20 @@ public class UserDbAdapter {
 	}
 
 	// fetch all users
-	public void setAuxData(User user) {
+	public void fillUsersFromDB(Users users) {
 		Cursor cursor = null;
 		try {
 			cursor = database.query(DATABASE_TABLE, new String[] { KEY_ID,
-					KEY_TRUSTED, KEY_REGISTERED }, KEY_ID + "='" + user.phone + "'", null,
+					KEY_TRUSTED, KEY_REGISTERED }, null, null,
 					null, null, null);
 			if (cursor.moveToNext()) {
-				user.trusted = cursor
+				User u = new User(cursor
+						.getString(cursor.getColumnIndex(KEY_ID)), context.getString(R.string.unknown));
+				u.trusted = cursor
 						.getInt(cursor.getColumnIndex(KEY_TRUSTED)) == 1;
-				user.registered = cursor.getInt(cursor
+				u.registered = cursor.getInt(cursor
 						.getColumnIndex(KEY_REGISTERED)) == 1;
+				users.add(u);
 			}
 		} finally {
 			cursor.close();

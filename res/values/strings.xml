@@ -75,7 +75,6 @@
     <string name="no_valid_google_play_services_apk_found">No valid Google Play Services APK found. You won\'t be able to receive notifications from other users.</string>
     <string name="_s_has_already_been_connected">%s is already connected</string>
     <string name="delete_this_message_">Delete this message?</string>
-    <string name="messages">Message list</string>
     <string name="close">Close</string>
     <string name="unknown">Unknown</string>
     <string name="me">Me</string>

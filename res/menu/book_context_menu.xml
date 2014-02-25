@@ -10,11 +10,6 @@
         android:title="@string/send_message">
     </item>
     <item
-        android:id="@+id/itemMessages"
-        android:title="@string/messages"
-        android:titleCondensed="@string/messages">
-    </item>
-    <item
         android:id="@+id/itemAutoAllow"
         android:checkable="true"
         android:title="@string/accept_automatically_position_requests_from_this_user">

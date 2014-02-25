@@ -134,17 +134,9 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 		case R.id.itemForceGetUserPosition:
 			askPasswordAndContactUser();
-
 			break;
-
 		case R.id.itemSendMessage:
-			MessageActivity.sendMessageToUser(this, selectedUser);
-			finish();
-			break;
-		case R.id.itemMessages:
-			Intent intent = new Intent(this, UserMessagesActivity.class);
-			intent.putExtra(Const.USER, selectedUser);
-			startActivity(intent);
+			UserMessagesActivity.openMessages(this, selectedUser);
 			break;
 
 		}

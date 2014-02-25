@@ -72,8 +72,8 @@
             android:windowSoftInputMode="stateVisible|adjustResize" >
         </activity>
         <activity
-            android:name="smartpointer.hereiam.UserMessagesActivity"
-            android:label="@string/messages"
+            android:name=".UserMessagesActivity"
+            android:label="@string/send_message"
             android:launchMode="singleTop" >
         </activity>
         <activity
@@ -106,10 +106,7 @@
             android:label="@string/title_activity_book"
             android:launchMode="singleTop" >
         </activity>
-        <activity
-            android:name="smartpointer.hereiam.MessageActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" >
-        </activity>
+    
     </application>
 
 </manifest>

@@ -3,17 +3,22 @@ package smartpointer.hereiam;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.app.Activity;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,6 +29,7 @@ public class UserMessagesActivity extends ListActivity implements
 	private ArrayList<Message> messages;
 	private ArrayAdapter<Message> adapter;
 	private User user;
+	private ListView list;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -36,25 +42,42 @@ public class UserMessagesActivity extends ListActivity implements
 			finish();
 			return;
 		}
-		if (savedInstanceState == null)
-			messages = Message.getMessages(this, user);
-		else
-			messages = (ArrayList<Message>) savedInstanceState
-					.getSerializable(MESSAGES);
-
-		refreshLabelVisibility();
 		setTitle(user.toString());
-		adapter = new MyMessageAdapter(this, R.layout.mymessagerow, messages);
-		setListAdapter(adapter);
-
-		findViewById(R.id.buttonCancel).setOnClickListener(this);
-		findViewById(R.id.buttonRemoveAll).setOnClickListener(this);
+		list =  (ListView) findViewById(android.R.id.list);
+		
+		// findViewById(R.id.buttonCancel).setOnClickListener(this);
+		// findViewById(R.id.buttonRemoveAll).setOnClickListener(this);
 		findViewById(R.id.buttonSend).setOnClickListener(this);
+		MyApplication.getInstance().setMessagesActivity(this);
 	}
 
+	@Override
+	protected void onDestroy() {
+		MyApplication.getInstance().setMessagesActivity(null);
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onResume() {
+		messages = Message.getMessages(this, user);
+
+		adapter = new MyMessageAdapter(this, R.layout.mymessagerow, messages);
+		setListAdapter(adapter);
+		refreshLabelVisibility();
+		super.onResume();
+	}
+
+	
 	private void refreshLabelVisibility() {
 		findViewById(R.id.textViewNoMessages).setVisibility(
 				(messages.size() > 0) ? View.GONE : View.VISIBLE);
+		list.post(new Runnable() {
+	        @Override
+	        public void run() {
+	            // Select the last row so it will scroll into view...
+	        	list.setSelection(adapter.getCount() - 1);
+	        }
+	    });
 	}
 
 	@Override
@@ -83,21 +106,16 @@ public class UserMessagesActivity extends ListActivity implements
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == Const.SEND_MESSAGE_RESULT & resultCode == RESULT_OK) {
-			messages.add((Message) data.getSerializableExtra(Const.MESSAGE));
-			adapter.notifyDataSetChanged();
-			refreshLabelVisibility();
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	@Override
 	public void onClick(View view) {
 		if (view.getId() == R.id.buttonCancel)
 			finish();
 		else if (view.getId() == R.id.buttonSend) {
-			MessageActivity.sendMessageToUser(this, user);
+			EditText txt = (EditText) findViewById(R.id.editTextMessage);
+			Editable message = txt.getText();
+			if (message.length() > 0) {
+				sendMessage(message.toString());
+
+			}
 		} else if (view.getId() == R.id.buttonRemoveAll)
 
 			Helper.dialogMessage(this, R.string.remove_all_messages_,
@@ -114,6 +132,86 @@ public class UserMessagesActivity extends ListActivity implements
 					}, null);
 
 	}
+
+	void sendMessage(final String message) {
+		final ProgressDialog progressBar = new ProgressDialog(this);
+		progressBar.setCancelable(true);
+		progressBar.setMessage(getString(R.string.sending_message_));
+		progressBar.setIndeterminate(true);
+		progressBar.show();
+		new AsyncTask<Void, Void, Void>() {
+			protected void onPostExecute(Void result) {
+				progressBar.dismiss();
+			};
+
+			@Override
+			protected Void doInBackground(Void... params) {
+
+				Credentials.testCredentials(UserMessagesActivity.this,
+						new OnAsyncResponse() {
+
+							@Override
+							public void response(boolean success,
+									String loginMessage) {
+								if (success) {
+									Credentials c = MySettings
+											.readCredentials();
+									Message msg = new Message(Helper
+											.getUnixTime(), c.getPhone(),
+											user.phone, message);
+									WebRequestResult result = HttpManager
+											.messageToUser(msg);
+
+									if (result.result) {
+										Helper.showMessage(
+												UserMessagesActivity.this,
+												getString(R.string.message_successfully_delivered));
+
+										msg.saveToDB(UserMessagesActivity.this);
+										addMessage(msg);
+
+									} else
+										Helper.showMessage(
+												UserMessagesActivity.this,
+												getString(
+														R.string.message_not_delivered_s,
+														result.message));
+								} else {
+									Helper.showMessage(
+											UserMessagesActivity.this,
+											getString(
+													R.string.message_not_delivered_s,
+													loginMessage));
+								}
+
+							}
+						});
+
+				return null;
+			}
+
+		}.execute(null, null, null);
+
+	}
+
+	public static void openMessages(Activity context, User selectedUser) {
+		Intent intent = new Intent(context, UserMessagesActivity.class);
+		intent.putExtra(Const.USER, selectedUser);
+		context.startActivity(intent);
+
+	}
+
+	public void addMessage(Message msg) {
+		messages.add(msg);
+		adapter.notifyDataSetChanged();
+		refreshLabelVisibility();
+		
+	}
+
+	public User getUser() {
+		return user;
+	}
+
 }
 
 class MyMessageAdapter extends ArrayAdapter<Message> {

@@ -36,11 +36,11 @@ public class AcceptConnectionActivity extends Activity implements
 			// prendo l'equivalente utente nella lista, così non devo
 			// rinfrescarla
 			User fromPhone = MyApplication.getInstance().getUsers()
-					.fromPhone(user.phone);
-			if (fromPhone != null) {
-				fromPhone.trusted = true;
-				fromPhone.saveToDb();
-			}
+					.fromPhone(user.phone, true);
+
+			fromPhone.trusted = true;
+			fromPhone.saveToDb();
+
 			acceptUser();
 			break;
 		case R.id.buttonNo:

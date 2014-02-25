@@ -372,7 +372,7 @@ public class Helper {
 	public static String adjustPhoneNumber(String number) {
 		StringBuilder sb = new StringBuilder();
 		String prefix = getPrefix();
-		if (!number.startsWith(prefix, 0)) {
+		if (!number.startsWith("+", 0)) {
 			sb.append(prefix);
 		}
 		for (int i = 0; i < number.length(); i++) {

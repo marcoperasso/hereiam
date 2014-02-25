@@ -26,7 +26,7 @@ Serializable {
 	}
 	
 	public static UserPosition parseJSON(JSONObject jsonObject) throws JSONException {
-		return new UserPosition(MyApplication.getInstance().getUsers().fromPhone(jsonObject.getString("userphone")), GpsPoint.parseJSON(jsonObject));
+		return new UserPosition(MyApplication.getInstance().getUsers().fromPhone(jsonObject.getString("userphone"), true), GpsPoint.parseJSON(jsonObject));
 	}
 	public boolean isGps() {
 		return position.gps;

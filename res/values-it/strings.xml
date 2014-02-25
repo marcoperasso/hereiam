@@ -78,7 +78,6 @@
     <string name="no_valid_google_play_services_apk_found">APK di Google Play Servicesnon trovato. Non potrai ricevere notifiche da parte di altri utenti.</string>
     <string name="_s_has_already_been_connected">%s è già connesso</string>
     <string name="delete_this_message_">Cancello questo messaggio?</string>
-    <string name="messages">Lista messaggi</string>
     <string name="close">Chiudi</string>
     <string name="unknown">Sconosciuto</string>
     <string name="me">Io</string>

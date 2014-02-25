@@ -58,8 +58,9 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					if (c == null || !touserphone.equals(c.getPhone()))
 						return;
 					String fromUserPhone = extras.getString("fromuserphone");
-					User fromUser = MyApplication.getInstance().getUsers().fromPhone(fromUserPhone);
-					
+					User fromUser = MyApplication.getInstance().getUsers()
+							.fromPhone(fromUserPhone, true);
+
 					switch (msgtype) {
 					case Const.MSG_REQUEST_CONTACT: {
 						String secureToken = extras.getString("securetoken");
@@ -72,10 +73,12 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 														// the phpne has been
 														// stolen
 								MyApplication.getInstance().respondToUser(
-										fromUser.phone, Const.MSG_ACCEPT_CONTACT);
+										fromUser.phone,
+										Const.MSG_ACCEPT_CONTACT);
 							} else {
 								MyApplication.getInstance().respondToUser(
-										fromUser.phone, Const.MSG_WRONG_PASSWORD);
+										fromUser.phone,
+										Const.MSG_WRONG_PASSWORD);
 							}
 
 						} else if (fromUser.trusted) {
@@ -92,7 +95,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 							String time = extras.getString("time");
 							sendNotification(context, context.getString(
 									R.string.s_wants_to_know_your_position,
-									Helper.formatTimestamp(time), fromUser), intent2, fromUser.phone);
+									Helper.formatTimestamp(time), fromUser),
+									intent2, fromUser.phone);
 						}
 						break;
 					}
@@ -102,7 +106,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 								context,
 								context.getString(
 										R.string.s_has_accepted_to_let_you_know_her_its_position,
-										Helper.formatTimestamp(time), fromUser), null, fromUser.phone);
+										Helper.formatTimestamp(time), fromUser),
+								null, fromUser.phone);
 						ConnectorService.activate(context, fromUser, true,
 								false);
 						MyApplication.getInstance().setPinnedUser(fromUser);
@@ -114,7 +119,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 								context,
 								context.getString(
 										R.string.s_has_refused_to_let_you_know_her_its_position,
-										Helper.formatTimestamp(time), fromUser), null, fromUser.phone);
+										Helper.formatTimestamp(time), fromUser),
+								null, fromUser.phone);
 						ConnectorService.activate(context, fromUser, false,
 								false);
 						break;
@@ -123,7 +129,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 						String time = extras.getString("time");
 						sendNotification(context, context.getString(
 								R.string.s_stopped_sending_her_its_position,
-								Helper.formatTimestamp(time), fromUser), null, fromUser.phone);
+								Helper.formatTimestamp(time), fromUser), null,
+								fromUser.phone);
 						ConnectorService.activate(context, fromUser, false,
 								false);
 
@@ -141,14 +148,19 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 						Message message = new Message(time, fromUser.phone,
 								c.getPhone(), msg);
 						message.saveToDB(MyApplication.getInstance());
-						Intent intent2 = new Intent(context,
-								UserMessagesActivity.class);
-						intent2.putExtra(Const.USER, fromUser);
+						UserMessagesActivity activity = MyApplication
+								.getInstance().getMessagesActivity(fromUser);
+						if (activity == null) {
+							Intent intent2 = new Intent(context,
+									UserMessagesActivity.class);
+							intent2.putExtra(Const.USER, fromUser);
 
-						sendNotification(context, context.getString(
-								R.string._s_says, fromUser, msg), intent2,
-								fromUser.phone);
-
+							sendNotification(context, context.getString(
+									R.string._s_says, fromUser, msg), intent2,
+									fromUser.phone);
+						} else {
+							activity.addMessage(message);
+						}
 						break;
 					}
 					case Const.MSG_POSITION: {
@@ -172,10 +184,11 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 	// a GCM message.
 	private void sendNotification(Context context, String msg, Intent intent,
 			String fromUserPhone) {
+		int code = Math.abs(fromUserPhone.hashCode());
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+		PendingIntent contentIntent = PendingIntent.getActivity(context, code,
 				intent == null ? new Intent() : intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -188,7 +201,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 		notification.defaults |= Notification.DEFAULT_ALL;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		mNotificationManager.notify(Const.TRACE_REQUEST_NOTIFICATION_ID
-				+ fromUserPhone.hashCode(), notification);
+				+ code , notification);
 
 	}
 }
