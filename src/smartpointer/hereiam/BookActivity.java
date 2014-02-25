@@ -1,6 +1,7 @@
 package smartpointer.hereiam;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -73,9 +74,11 @@ public class BookActivity extends ListActivity implements OnClickListener {
 
 	@SuppressWarnings("unchecked")
 	private void populate() {
+		ArrayList<User> originalUsers = (ArrayList<User>) MyApplication.getInstance().getUsers()
+				.clone();
+		Collections.sort(originalUsers, new UserComparator());
 		adapter = new MyUserAdapter(this, R.layout.mymultichoicelistrow,
-				(ArrayList<User>) MyApplication.getInstance().getUsers()
-						.clone());
+				originalUsers);
 		setListAdapter(adapter);
 		refreshLabel();
 	}
@@ -331,7 +334,8 @@ class MyUserAdapter extends ArrayAdapter<User> implements Filterable {
 				// perform your search here using the searchConstraint String.
 
 				constraint = constraint.toString().toLowerCase();
-				Users originalUsers = MyApplication.getInstance().getUsers();
+				Users originalUsers = (Users) MyApplication.getInstance().getUsers();
+				
 				for (int i = 0; i < originalUsers.size(); i++) {
 					User user = originalUsers.get(i);
 					if (user.name.toLowerCase().startsWith(
@@ -339,7 +343,7 @@ class MyUserAdapter extends ArrayAdapter<User> implements Filterable {
 						filteredArray.add(user);
 					}
 				}
-
+				Collections.sort(filteredArray, new UserComparator());
 				results.count = filteredArray.size();
 				results.values = filteredArray;
 

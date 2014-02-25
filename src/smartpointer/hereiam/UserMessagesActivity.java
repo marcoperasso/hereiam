@@ -3,6 +3,7 @@ package smartpointer.hereiam;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.R.anim;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -13,12 +14,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -156,19 +160,26 @@ public class UserMessagesActivity extends ListActivity implements
 								if (success) {
 									Credentials c = MySettings
 											.readCredentials();
-									Message msg = new Message(Helper
+									final Message msg = new Message(Helper
 											.getUnixTime(), c.getPhone(),
 											user.phone, message);
 									WebRequestResult result = HttpManager
 											.messageToUser(msg);
 
 									if (result.result) {
-										Helper.showMessage(
-												UserMessagesActivity.this,
-												getString(R.string.message_successfully_delivered));
+										runOnUiThread(new Runnable(){
 
-										msg.saveToDB(UserMessagesActivity.this);
-										addMessage(msg);
+											@Override
+											public void run() {
+												Helper.showMessage(
+														UserMessagesActivity.this,
+														getString(R.string.message_successfully_delivered));
+
+												msg.saveToDB(UserMessagesActivity.this);
+												addMessage(msg);
+												
+											}});
+										
 
 									} else
 										Helper.showMessage(
@@ -247,8 +258,13 @@ class MyMessageAdapter extends ArrayAdapter<Message> {
 				.getDateFormat(MyApplication.getInstance());
 		tvDate.setText("(" + dateFormat.format(d) + ", " + timeFormat.format(d)
 				+ ")");
-		view.setBackgroundColor(((position % 2) == 0) ? Color.LTGRAY
-				: Color.GRAY);
+		
+		LinearLayout messageContainer = (LinearLayout) view.findViewById(R.id.messageRow);
+		messageContainer.setBackgroundResource(message.isReceived() ? R.drawable.speech_bubble_green : R.drawable.speech_bubble_orange);
+		LayoutParams lp = (LayoutParams) messageContainer.getLayoutParams();
+		lp.gravity = message.isReceived() ? Gravity.RIGHT : Gravity.LEFT;
+		messageContainer.setLayoutParams(lp);
+		//messageContainer.setTextColor(android.R.color.white);	
 		return view;
 	}
 

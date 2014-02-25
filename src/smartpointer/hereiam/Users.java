@@ -52,7 +52,6 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 			phones.close();
 		}
 
-		Collections.sort(Users.this, new UserComparator());
 		verifyRegistration();
 
 	}
@@ -87,8 +86,6 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 				} finally {
 					dbUser.close();
 				}
-
-				Collections.sort(Users.this, new UserComparator());
 			};
 		}.execute(null, null, null);
 	}
