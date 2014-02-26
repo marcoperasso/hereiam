@@ -177,6 +177,8 @@ public class UserMessagesActivity extends ListActivity implements
 
 												msg.saveToDB(UserMessagesActivity.this);
 												addMessage(msg);
+												EditText txt = (EditText) findViewById(R.id.editTextMessage);
+												txt.setText("");
 												
 											}});
 										
