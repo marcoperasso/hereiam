@@ -44,6 +44,11 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 					continue;
 				phoneNumber = Helper.adjustPhoneNumber(phoneNumber);
 				User u = fromPhone(phoneNumber, false);
+				if (u == null)
+				{
+					u = new User(phoneNumber, name);
+					add(u);
+				}
 				u.name = name;
 			}
 		} finally {
@@ -89,13 +94,15 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 		}.execute(null, null, null);
 	}
 
-	public User fromPhone(String phone, boolean setRegistered) {
+	public User fromPhone(String phone, boolean create) {
 		for (User user : this)
 			if (user.phone.equals(phone))
 				return user;
+		if (!create)
+			return null;
+		
 		User u = new User(phone, context.getString(R.string.unknown));
-		if (setRegistered)
-			u.registered = true;
+		u.registered = true;
 		add(u);
 		u.saveToDb();
 		return u;

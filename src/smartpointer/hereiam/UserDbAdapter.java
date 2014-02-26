@@ -61,7 +61,7 @@ public class UserDbAdapter {
 			cursor = database.query(DATABASE_TABLE, new String[] { KEY_ID,
 					KEY_TRUSTED, KEY_REGISTERED }, null, null,
 					null, null, null);
-			if (cursor.moveToNext()) {
+			while (cursor.moveToNext()) {
 				User u = new User(cursor
 						.getString(cursor.getColumnIndex(KEY_ID)), context.getString(R.string.unknown));
 				u.trusted = cursor
