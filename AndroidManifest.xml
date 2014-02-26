@@ -69,7 +69,7 @@
         <activity
             android:name="smartpointer.hereiam.LoginActivity"
             android:label="@string/title_activity_credentials"
-            android:windowSoftInputMode="stateVisible|adjustResize" >
+            android:windowSoftInputMode="stateVisible" >
         </activity>
         <activity
             android:name=".UserMessagesActivity"

@@ -1,7 +1,6 @@
 package smartpointer.hereiam;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.json.JSONArray;
 import org.json.JSONException;

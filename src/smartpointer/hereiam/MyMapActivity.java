@@ -65,6 +65,15 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		}
 	};
 
+	private GenericEventHandler mPinnedUserChangedHandler = new GenericEventHandler() {
+
+		@Override
+		public void onEvent(Object sender, EventArgs args) {
+			if (MyApplication.getInstance().getPinnedUser() == null)
+				mUsersOverlay.hideBalloon();
+		}
+	};
+
 	PositionsDownloadedEventHandler mPositionAvailableHandler = new PositionsDownloadedEventHandler() {
 
 		@Override
@@ -295,7 +304,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		mController.setZoom(zoomLevel);
 		MyApplication.getInstance().ConnectorServiceChanged
 				.addHandler(mConnectorServiceChangedHandler);
-
+		MyApplication.getInstance().PinnedUserChanged
+				.addHandler(mPinnedUserChangedHandler);
 		mAnimation = new AlphaAnimation(1, 0.5f);
 		// from
 		// fully
@@ -343,6 +353,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	protected void onDestroy() {
 		MyApplication.getInstance().ConnectorServiceChanged
 				.removeHandler(mConnectorServiceChangedHandler);
+		MyApplication.getInstance().PinnedUserChanged
+				.removeHandler(mPinnedUserChangedHandler);
 		super.onDestroy();
 	}
 
@@ -425,8 +437,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 												getString(
 														R.string.your_request_to_s_has_been_sent,
 														user));
-										MyApplication.getInstance()
-												.setPinnedUser(user);
+										
 										// se non posso ricevere messaggi, mi
 										// connetto subito,
 										// altrimenti mi connetter?ando ricevo

@@ -20,6 +20,7 @@ public class MyApplication extends Application {
 	private LinkedList<GeoAddress> points = new LinkedList<GeoAddress>();
 	private ConnectorService connectorService;
 	Event ConnectorServiceChanged = new Event();
+	Event PinnedUserChanged = new Event();
 	private Users users;
 	private Object userTicket = new Object();
 	private PositionsDownloader mPositionsDownloader = new PositionsDownloader(
@@ -207,7 +208,10 @@ public class MyApplication extends Application {
 	}
 
 	public void setPinnedUser(User pinnedUser) {
+		boolean changed = this.pinnedUser != pinnedUser;
 		this.pinnedUser = pinnedUser;
+		if (changed)
+			PinnedUserChanged.fire(this, EventArgs.Empty);
 	}
 
 	public void setMessagesActivity(UserMessagesActivity userMessagesActivity) {

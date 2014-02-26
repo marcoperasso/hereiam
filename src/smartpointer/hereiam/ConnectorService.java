@@ -34,7 +34,7 @@ public class ConnectorService extends Service implements LocationListener {
 
 	// procedura di invio della posizione corrente
 	private long sendLatestPositionInterval = 30000;// 30 secondi
-	private long getLatestPositionInterval = 600000; //il server fa pulizia ogni 15 minuti, io invio ogni 10
+	private long getLatestPositionInterval = 60000; //il server fa pulizia ogni 15 minuti, io invio ogni 1 minuto
 	private Runnable sendLatestPositionProcedureRunnable = new Runnable() {
 		public void run() {
 			sendLatestPositionProcedure();
@@ -86,19 +86,23 @@ public class ConnectorService extends Service implements LocationListener {
 					mHandler = new Handler();
 					mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 					if (mLocation == null)
+					{
 						mLocation = mlocManager
 								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+					}
 					execute(command);
 					mHandler.post(sendLatestPositionProcedureRunnable);
 					
 					Looper.loop();
 
 					mlocManager.removeUpdates(ConnectorService.this);
+					mHandler.removeCallbacks(getLatestPositionRunnable);
+					mHandler.removeCallbacks(sendLatestPositionProcedureRunnable);
 					mNotificationManager.cancel(Const.TRACKING_NOTIFICATION_ID);
 					for (User user : users)
 						MyApplication.getInstance().notifyUserDisconnection(
 								user);
-
+					MyApplication.getInstance().setPinnedUser(null);
 					if (MyApplication.LogEnabled)
 						Log.i(Const.LOG_TAG,
 								"Finished connector service worker thread");
@@ -134,11 +138,16 @@ public class ConnectorService extends Service implements LocationListener {
 					LocationManager.NETWORK_PROVIDER, 6000, 5,
 					ConnectorService.this);
 		}
-		for (int i = 0; i < users.size(); i++)
-			if (users.get(i).phone.equals(user.phone)) {
+		for (int i = 0; i < users.size(); i++) {
+			User user2 = users.get(i);
+			if (user2.equals(user)) {
+				MyApplication.getInstance().setPinnedUser(user2);
 				return;
 			}
+		}
 		users.add(user);
+		MyApplication.getInstance().setPinnedUser(user);
+		
 		setGPSOnNotification(silent);
 
 	}
@@ -153,14 +162,16 @@ public class ConnectorService extends Service implements LocationListener {
 	}
 	private void removeUser(final User user) {
 		for (int i = 0; i < users.size(); i++)
-			if (users.get(i).phone.equals(user.phone)) {
+			if (users.get(i).equals(user)) {
 				users.remove(i);
 				break;
 			}
 		if (users.isEmpty()) {
 			stopSelf();
+			MyApplication.getInstance().setPinnedUser(null);
 		} else {
 			setGPSOnNotification(false);
+			MyApplication.getInstance().setPinnedUser(users.get(users.size() - 1));
 		}
 
 	}
@@ -177,7 +188,6 @@ public class ConnectorService extends Service implements LocationListener {
 	public void onLocationChanged(Location location) {
 
 		mLocation = location;
-		resetTimeoutForGettingPosition();
 	}
 
 	public void onProviderEnabled(String provider) {
@@ -323,9 +333,6 @@ public class ConnectorService extends Service implements LocationListener {
 		intent1.putExtra(Const.COMMAND, new ConnectorServiceCommand(user,
 				activate, silent));
 		context.startService(intent1);
-		User pinnedUser = MyApplication.getInstance().getPinnedUser();
-		if (!activate && pinnedUser != null && pinnedUser.phone.equals(user.phone))
-			MyApplication.getInstance().setPinnedUser(null);
 
 	}
 }

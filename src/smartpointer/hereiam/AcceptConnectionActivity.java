@@ -55,7 +55,6 @@ public class AcceptConnectionActivity extends Activity implements
 				Const.MSG_ACCEPT_CONTACT);
 		ConnectorService.activate(AcceptConnectionActivity.this, user, true,
 				false);
-		MyApplication.getInstance().setPinnedUser(user);
 		finish();
 
 	}
