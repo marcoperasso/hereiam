@@ -4,7 +4,7 @@
     <string name="app_name">People Dowser Lite</string>
     <string name="app_description">Find the position of people you are interested in.</string>
     <string name="gps_enabled">GPS enabled</string>
-    <string name="need_gps">This app needs GPS, but it\'s disabled; do you want to activate it?</string>
+    <string name="need_gps">This uses GPS, but it\'s disabled; do you want to activate it? It is not mandatory, if you do not turn it on your position will be calculated anyway, even if in a less precise way, using network information.</string>
     <string name="your_position">Your position</string>
     <string name="wrong_version">Your app is not up to date, please download the new version.</string>
     <string name="credential_userphone">Your phone number*</string>

@@ -4,7 +4,7 @@
     <string name="app_name">People Dowser Lite</string>
     <string name="app_description">Trova la posizione delle persone a cui sei interessato.</string>
     <string name="gps_enabled">GPS abilitato</string>
-    <string name="need_gps">Questa app ha bisogno del gps, ma è disabilitato; vuoi attivarlo?</string>
+    <string name="need_gps">Questa app usa il gps, ma è disabilitato; vuoi attivarlo? Non è obbligatorio, se non lo attivi la tua posizione verrà calcolata comunque, anche se in modo meno preciso, usando i servizi di rete.</string>
     <string name="your_position">La tua posizione</string>
     <string name="wrong_version">La tua app non è aggiornata, per favore scarica la nuova versione.</string>
     <string name="credential_userphone">Il tuo numero di telefono*</string>

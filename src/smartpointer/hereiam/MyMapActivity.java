@@ -365,8 +365,10 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == Const.ACTIVATE_GPS_RESULT) {
-			Toast.makeText(this, R.string.gps_enabled, Toast.LENGTH_SHORT)
-					.show();
+			if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+				Toast.makeText(this, R.string.gps_enabled, Toast.LENGTH_SHORT)
+						.show();
+			}
 		} else if (requestCode == Const.LOGIN_RESULT) {
 			if (resultCode == RESULT_OK) {
 
