@@ -34,7 +34,7 @@
     <string name="name">Nome</string>
     <string name="credential_mail">Mail</string>
     <string name="credential_register">Registrati&#8230;</string>
-    <string name="credentials_descri">Per favore inserisci i tuoi dati; i campi contrassegnati con * sono obbligatori; ti suggeriemo di inserire anche la tua mail, sarà utile nel caso dimentichi la password.</string>
+    <string name="credentials_descri">Per favore inserisci i tuoi dati; i campi contrassegnati con * sono obbligatori; ti suggeriamo di inserire anche la tua mail, sarà utile nel caso dimentichi la password.</string>
     <string name="the_field_s_is_obligatory_">Il campo \'%s\' è obbligatorio.</string>
     <string name="passwords_do_not_match_">Le password non coincidono.</string>
     <string name="title_activity_accept_connection">Accetta connessione</string>
