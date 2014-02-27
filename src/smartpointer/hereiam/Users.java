@@ -61,7 +61,7 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 	}
 
 	public void verifyRegistration() {
-		AsyncTask<Void, Void, boolean[]> task = new AsyncTask<Void, Void, boolean[]>() {
+		new AsyncTask<Void, Void, boolean[]>() {
 
 			@Override
 			protected boolean[] doInBackground(Void... params) {

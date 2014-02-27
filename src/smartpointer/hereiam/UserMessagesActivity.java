@@ -33,7 +33,6 @@ public class UserMessagesActivity extends ListActivity implements
 	private User user;
 	private ListView list;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
