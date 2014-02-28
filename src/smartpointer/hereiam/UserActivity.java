@@ -19,6 +19,7 @@ public class UserActivity extends Activity implements OnClickListener {
 	private EditText mMail;
 	private boolean newUser;
 	private EditText mPassword1;
+	private CountrySpinner mSpinner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +30,28 @@ public class UserActivity extends Activity implements OnClickListener {
 		mPassword = (EditText) findViewById(R.id.editTextPassword);
 		mPassword1 = (EditText) findViewById(R.id.editTextRepeatPassword);
 		mMail = (EditText) findViewById(R.id.editTextMail);
-		newUser = getIntent().getBooleanExtra(REGISTER_USER, true);
-		if (!newUser) {
-			Credentials c = MySettings.readCredentials();
-			mUserPhone.setText(c.getPhone());
-			mUserPhone.setEnabled(false);
+		mSpinner = (CountrySpinner) findViewById(R.id.spinnerPrefixes);
 
+		newUser = getIntent().getBooleanExtra(REGISTER_USER, true);
+
+		if (newUser) {
+			mSpinner.setPrefix(Helper.getPrefix());
+		} else {
+			Credentials c = MySettings.readCredentials();
+
+			StringBuilder prefix = new StringBuilder();
+			StringBuilder number = new StringBuilder();
+			Helper.splitPhone(c.getPhone(), prefix, number);
+			String sPrefix = prefix.length() == 0 ? Helper.getPrefix() : prefix
+					.toString();
+			mUserPhone.setText(number);
+			mUserPhone.setEnabled(false);
+			mSpinner.setPrefix(sPrefix);
+			mSpinner.setEnabled(false);
 			mPassword.setText(c.getPassword());
 			mPassword1.setText(c.getPassword());
 			mMail.setText(c.getEmail());
+
 		}
 		Button btnOk = (Button) findViewById(R.id.ButtonOK);
 		btnOk.setOnClickListener(this);
@@ -88,7 +102,7 @@ public class UserActivity extends Activity implements OnClickListener {
 		}
 		String mail = mMail.getText().toString();
 
-		String phone = mUserPhone.getText().toString();
+		String phone = mSpinner.getPrefix() + mUserPhone.getText().toString();
 		phone = Helper.adjustPhoneNumber(phone);
 		final Credentials credentials = new Credentials(phone, pwd);
 		credentials.setEmail(mail);

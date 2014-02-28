@@ -153,7 +153,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 								.getInstance(MyMapActivity.this);
 					}
 					regid = gcm.register(Const.SENDER_ID);
-
+					if (Helper.isNullOrEmpty(regid))
+						throw new Exception("Invalid GCM registration ID");
 					sendRegistrationIdToBackend(new OnAsyncResponse() {
 
 						@Override
@@ -168,7 +169,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 						}
 					});
 
-				} catch (IOException ex) {
+				} catch (Exception ex) {
 
 					Helper.showMessage(
 							MyMapActivity.this,
@@ -437,7 +438,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 												getString(
 														R.string.your_request_to_s_has_been_sent,
 														user));
-										
+
 										// se non posso ricevere messaggi, mi
 										// connetto subito,
 										// altrimenti mi connetter?ando ricevo

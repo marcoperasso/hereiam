@@ -387,12 +387,12 @@ public class Helper {
 
 	public static String getPrefix() {
 		Locale l = Locale.getDefault();
-		String prefix = country2phone.get(l.getCountry());
+		String prefix = country2phone.get(l.getCountry().toUpperCase());
 		return prefix == null ? "" : prefix;
 
 	}
 
-	private static Map<String, String> country2phone = new HashMap<String, String>();
+	static Map<String, String> country2phone = new HashMap<String, String>();
 	static {
 		country2phone.put("AF", "+93");
 		country2phone.put("AL", "+355");
@@ -443,7 +443,7 @@ public class Helper {
 		country2phone.put("DK", "+45");
 		country2phone.put("DJ", "+253");
 		country2phone.put("DM", "+1-767");
-		country2phone.put("DO", "+1-809and1-829");
+		country2phone.put("DO", "+1-809");
 		country2phone.put("EC", "+593");
 		country2phone.put("EG", "+20");
 		country2phone.put("SV", "+503");
@@ -594,11 +594,8 @@ public class Helper {
 		country2phone.put("MD", "+373-533");
 		country2phone.put("SO", "+252");
 		country2phone.put("GE", "+995");
-		country2phone.put("AU", "");
 		country2phone.put("CX", "+61");
 		country2phone.put("CC", "+61");
-		country2phone.put("AU", "");
-		country2phone.put("HM", "");
 		country2phone.put("NF", "+672");
 		country2phone.put("NC", "+687");
 		country2phone.put("PF", "+689");
@@ -607,9 +604,6 @@ public class Helper {
 		country2phone.put("GP", "+590");
 		country2phone.put("PM", "+508");
 		country2phone.put("WF", "+681");
-		country2phone.put("TF", "");
-		country2phone.put("PF", "");
-		country2phone.put("BV", "");
 		country2phone.put("CK", "+682");
 		country2phone.put("NU", "+683");
 		country2phone.put("TK", "+690");
@@ -619,30 +613,18 @@ public class Helper {
 		country2phone.put("AI", "+1-264");
 		country2phone.put("BM", "+1-441");
 		country2phone.put("IO", "+246");
-		country2phone.put("", "+357");
 		country2phone.put("VG", "+1-284");
 		country2phone.put("KY", "+1-345");
 		country2phone.put("FK", "+500");
 		country2phone.put("GI", "+350");
 		country2phone.put("MS", "+1-664");
-		country2phone.put("PN", "");
 		country2phone.put("SH", "+290");
-		country2phone.put("GS", "");
 		country2phone.put("TC", "+1-649");
 		country2phone.put("MP", "+1-670");
-		country2phone.put("PR", "+1-787and1-939");
+		country2phone.put("PR", "+1-787");
 		country2phone.put("AS", "+1-684");
-		country2phone.put("UM", "");
 		country2phone.put("GU", "+1-671");
-		country2phone.put("UM", "");
-		country2phone.put("UM", "");
-		country2phone.put("UM", "");
-		country2phone.put("UM", "");
-		country2phone.put("UM", "");
-		country2phone.put("UM", "");
-		country2phone.put("UM", "");
 		country2phone.put("VI", "+1-340");
-		country2phone.put("UM", "");
 		country2phone.put("HK", "+852");
 		country2phone.put("MO", "+853");
 		country2phone.put("FO", "+298");
@@ -657,22 +639,32 @@ public class Helper {
 		country2phone.put("SJ", "+47");
 		country2phone.put("AC", "+247");
 		country2phone.put("TA", "+290");
-		country2phone.put("AQ", "");
 		country2phone.put("CS", "+381");
 		country2phone.put("PS", "+970");
 		country2phone.put("EH", "+212");
-		country2phone.put("AQ", "");
-		country2phone.put("AQ", "");
-		country2phone.put("AQ", "");
-		country2phone.put("AQ", "");
-		country2phone.put("AQ", "");
 	}
+
 	public static String formatTimestamp(String unixTime) {
 		try {
-			Date d = new Date(Long.parseLong(unixTime)*1000);
-			return DateFormat.getDateFormat(MyApplication.getInstance()).format(d) +" " + DateFormat.getTimeFormat(MyApplication.getInstance()).format(d);
+			Date d = new Date(Long.parseLong(unixTime) * 1000);
+			return DateFormat.getDateFormat(MyApplication.getInstance())
+					.format(d)
+					+ " "
+					+ DateFormat.getTimeFormat(MyApplication.getInstance())
+							.format(d);
 		} catch (NumberFormatException e) {
 			return "";
+		}
+	}
+
+	public static void splitPhone(String phone, StringBuilder prefix,
+			StringBuilder number) {
+		for (String p : country2phone.values()) {
+			if (phone.startsWith(p)) {
+				prefix.append(p);
+				number.append(phone.substring(p.length()));
+				return;
+			}
 		}
 	}
 

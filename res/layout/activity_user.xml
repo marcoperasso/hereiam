@@ -19,14 +19,26 @@
             android:layout_height="wrap_content"
             android:text="@string/credentials_descri" />
 
-        <EditText
-            android:id="@+id/editTextUserPhone"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/credential_userphone"
-            android:inputType="phone"
-         android:maxLength="20" />
+            android:orientation="horizontal" >
+
+            <smartpointer.hereiam.CountrySpinner
+                android:id="@+id/spinnerPrefixes"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:spinnerMode="dropdown" />
+
+            <EditText
+                android:id="@+id/editTextUserPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/credential_userphone"
+                android:inputType="phone"
+                android:maxLength="20" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editTextPassword"

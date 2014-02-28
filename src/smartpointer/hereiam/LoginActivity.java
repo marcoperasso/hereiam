@@ -1,5 +1,7 @@
 package smartpointer.hereiam;
 
+import java.util.Map;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -8,7 +10,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -16,6 +20,7 @@ public class LoginActivity extends Activity implements OnEditorActionListener,
 		OnClickListener {
 	private EditText mPhone;
 	private EditText mPassword;
+	private CountrySpinner mSpinner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +34,19 @@ public class LoginActivity extends Activity implements OnEditorActionListener,
 		mPassword.setText(c.getPassword());
 		mPassword.setOnEditorActionListener(this);
 		mPassword.setImeOptions(EditorInfo.IME_ACTION_DONE);
-		mPhone.setText(c.getPhone());
-		
+
+		StringBuilder prefix = new StringBuilder();
+		StringBuilder number = new StringBuilder();
+		Helper.splitPhone(c.getPhone(), prefix, number);
+		mPhone.setText(number);
+		String sPrefix = prefix.length() == 0 ? Helper.getPrefix() : prefix
+				.toString();
+		mSpinner = (CountrySpinner) findViewById(R.id.spinnerPrefixes);
+		mSpinner.setPrefix(sPrefix);
 		findViewById(R.id.ButtonOK).setOnClickListener(this);
 		findViewById(R.id.buttonCancel).setOnClickListener(this);
 		findViewById(R.id.ButtonRegister).setOnClickListener(this);
+
 	}
 
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -77,7 +90,7 @@ public class LoginActivity extends Activity implements OnEditorActionListener,
 
 	private void doLogin() {
 		String pwd = mPassword.getText().toString();
-		String phone = mPhone.getText().toString();
+		String phone = mSpinner.getPrefix() + mPhone.getText().toString();
 		phone = Helper.adjustPhoneNumber(phone);
 		if (Helper.isNullOrEmpty(pwd) || Helper.isNullOrEmpty(phone)) {
 			return;
