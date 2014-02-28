@@ -104,7 +104,7 @@ public class UserActivity extends Activity implements OnClickListener {
 
 		String phone = mSpinner.getPrefix() + mUserPhone.getText().toString();
 		phone = Helper.adjustPhoneNumber(phone);
-		final Credentials credentials = new Credentials(phone, pwd);
+		final Credentials credentials = newUser ? new Credentials(phone, pwd) : MySettings.readCredentials();
 		credentials.setEmail(mail);
 
 		final ProgressDialog progressBar = new ProgressDialog(this);

@@ -108,8 +108,6 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 										R.string.s_has_accepted_to_let_you_know_her_its_position,
 										Helper.formatTimestamp(time), fromUser),
 								null, fromUser.phone);
-						ConnectorService.activate(context, fromUser, true,
-								false);
 						break;
 					}
 					case Const.MSG_REJECT_CONTACT: {

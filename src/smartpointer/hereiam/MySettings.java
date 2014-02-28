@@ -4,7 +4,6 @@ import java.util.Hashtable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class MySettings {
 	public static final String PREFS_NAME = "i";
@@ -45,6 +44,9 @@ public class MySettings {
 			credentials = new Credentials(settings.getString(PHONE, ""),
 					Helper.isNullOrEmpty(pwd) ? "" : Helper.decrypt(pwd));
 			credentials.setEmail(settings.getString(EMAIL, ""));
+			int version = settings.getInt(PROPERTY_APP_VERSION, 0);
+			if (version == Helper.getAppVersion())
+				credentials.setRegid(settings.getString(PROPERTY_REG_ID, ""));
 		}
 		return credentials;
 	}
@@ -56,6 +58,8 @@ public class MySettings {
 		editor.putString(PHONE, c.getPhone());
 		editor.putString(EMAIL, c.getEmail());
 		editor.putString(PASSWORD, Helper.encrypt(c.getPassword()));
+		editor.putString(PROPERTY_REG_ID, c.getRegid());
+		editor.putInt(PROPERTY_APP_VERSION, Helper.getAppVersion());
 		editor.commit();
 		credentials = c;
 	}
@@ -91,57 +95,5 @@ public class MySettings {
 		editor.putInt(HIDDEN_QUESTION + messageId, set);
 		editor.commit();
 
-	}
-	/**
-	 * Stores the registration ID and app versionCode in the application's
-	 * {@code SharedPreferences}.
-	 * 
-	 * @param context
-	 *            application's context.
-	 * @param regId
-	 *            registration ID
-	 */
-	static void storeRegistrationId(String regId) {
-
-		Context context = MyApplication.getInstance();
-		SharedPreferences settings = context
-				.getSharedPreferences(PREFS_NAME, 0);
-		int appVersion = Helper.getAppVersion();
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putString(PROPERTY_REG_ID, regId);
-		editor.putInt(PROPERTY_APP_VERSION, appVersion);
-		editor.commit();
-	}
-
-	/**
-	 * Gets the current registration ID for application on GCM service.
-	 * <p>
-	 * If result is empty, the app needs to register.
-	 * 
-	 * @return registration ID, or empty string if there is no existing
-	 *         registration ID.
-	 */
-	static String getRegistrationId() {
-		Context context = MyApplication.getInstance();
-		SharedPreferences settings = context
-				.getSharedPreferences(PREFS_NAME, 0);
-		String registrationId = settings.getString(PROPERTY_REG_ID, "");
-		if (Helper.isNullOrEmpty(registrationId)) {
-			Log.i(Const.LOG_TAG, "Registration not found.");
-			return "";
-		}
-		// Check if app was updated; if so, it must clear the registration ID
-		// since the existing regID is not guaranteed to work with the new
-		// app version.
-		int registeredVersion = settings.getInt(PROPERTY_APP_VERSION,
-				Integer.MIN_VALUE);
-		int currentVersion = Helper.getAppVersion();
-		if (registeredVersion != currentVersion) {
-			Log.i(Const.LOG_TAG, "App version changed.");
-			return "";
-		}
-
-		
-		return registrationId;
 	}
 }

@@ -1,6 +1,5 @@
 package smartpointer.hereiam;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,6 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	private UserPositionOverlay mUsersOverlay;
 	private HIALocationOverlay myLocationOverlay;
 	private boolean mTrackGPSPosition;
-	private boolean invalidGCMStauts;
 
 	MenuItem mMenuItemTrackGpsPosition;
 
@@ -160,10 +158,13 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 						@Override
 						public void response(boolean success, String message) {
 							if (success)
-								MySettings.storeRegistrationId(regid);
+							{
+								Credentials c = MySettings.readCredentials();
+								c.setRegid(regid);
+								MySettings.setCredentials(c);
+							}
 							else {
 								Helper.showMessage(MyMapActivity.this, message);
-								invalidGCMStauts = true;
 							}
 
 						}
@@ -176,7 +177,6 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 							getString(
 									R.string.error_registering_to_google_play_services_s,
 									ex.getMessage()));
-					invalidGCMStauts = true;
 				}
 				return null;
 			}
@@ -339,7 +339,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	private void registerForGCM() {
 		if (checkPlayServices()) {
 			gcm = GoogleCloudMessaging.getInstance(this);
-			regid = MySettings.getRegistrationId();
+			regid = MySettings.readCredentials().getRegid();
 
 			if (Helper.isNullOrEmpty(regid)) {
 				registerInBackground();
@@ -438,17 +438,9 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 												getString(
 														R.string.your_request_to_s_has_been_sent,
 														user));
-
-										// se non posso ricevere messaggi, mi
-										// connetto subito,
-										// altrimenti mi connetter?ando ricevo
-										// conferma
-										if (invalidGCMStauts) {
 											ConnectorService.activate(
 													MyMapActivity.this, user,
 													true, false);
-										}
-
 									} else {
 										Helper.showMessage(MyMapActivity.this,
 												contactUser.message);

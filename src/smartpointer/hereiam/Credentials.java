@@ -19,7 +19,7 @@ public class Credentials {
 	}
 
 	public boolean isEmpty() {
-		return Helper.isNullOrEmpty(phone) || Helper.isNullOrEmpty(password) ;
+		return Helper.isNullOrEmpty(phone) || Helper.isNullOrEmpty(password);
 	}
 
 	String getPassword() {
@@ -46,16 +46,15 @@ public class Credentials {
 		this.phone = phone;
 	}
 
-
 	public static void testCredentials(final Context context,
 			final OnAsyncResponse testResponse) {
-		TestIfLoggedAsyncTask testIfLoggedAsyncTask = new TestIfLoggedAsyncTask(context, testResponse);
+		TestIfLoggedAsyncTask testIfLoggedAsyncTask = new TestIfLoggedAsyncTask(
+				context, testResponse);
 		if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
 			testIfLoggedAsyncTask.execute();
-		}
-		else
-		{
-			testIfLoggedAsyncTask.onPostExecute(testIfLoggedAsyncTask.doInBackground());
+		} else {
+			testIfLoggedAsyncTask.onPostExecute(testIfLoggedAsyncTask
+					.doInBackground());
 		}
 
 	}
@@ -69,15 +68,11 @@ public class Credentials {
 		LoginAsyncTask loginAsyncTask = new LoginAsyncTask(context, onResponse);
 		if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
 			loginAsyncTask.execute(this);
-		}
-		else
-		{
+		} else {
 			loginAsyncTask.onPostExecute(loginAsyncTask.doInBackground(this));
 		}
-			
 
 	}
-
 
 	public String getRegid() {
 		return regid;
@@ -89,8 +84,7 @@ public class Credentials {
 
 }
 
-class TestIfLoggedAsyncTask extends
-		AsyncTask<Void, Void, Boolean> {
+class TestIfLoggedAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private final Context context;
 	private final OnAsyncResponse testResponse;
 
@@ -121,8 +115,7 @@ class TestIfLoggedAsyncTask extends
 	}
 }
 
-class LoginAsyncTask extends
-		AsyncTask<Credentials, Void, LoginResult> {
+class LoginAsyncTask extends AsyncTask<Credentials, Void, LoginResult> {
 	private final OnAsyncResponse onResponse;
 	private Context context;
 
@@ -136,11 +129,10 @@ class LoginAsyncTask extends
 		Credentials c = params[0];
 		String mail = c.getEmail();
 		LoginResult res = HttpManager.login(c);
-		if (res.result && !mail.equals(c.getEmail()))
-		{
+		if (res.result && !mail.equals(c.getEmail())) {
 			MySettings.setCredentials(c);
 		}
-		
+
 		return res;
 	}
 
@@ -151,15 +143,20 @@ class LoginAsyncTask extends
 			launchActivityForPlay();
 		super.onPostExecute(result);
 	}
-	
+
 	public void launchActivityForPlay() {
-		final String appPackageName = context.getPackageName(); // getPackageName() from Context or Activity object
+		final String appPackageName = context.getPackageName(); // getPackageName()
+																// from Context
+																// or Activity
+																// object
 		try {
-			context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+			context.startActivity(new Intent(Intent.ACTION_VIEW, Uri
+					.parse("market://details?id=" + appPackageName)));
 		} catch (android.content.ActivityNotFoundException anfe) {
-			context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+			context.startActivity(new Intent(Intent.ACTION_VIEW, Uri
+					.parse("http://play.google.com/store/apps/details?id="
+							+ appPackageName)));
 		}
-		
+
 	}
 }
-
