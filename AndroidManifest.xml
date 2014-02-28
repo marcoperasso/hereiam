@@ -106,7 +106,9 @@
             android:label="@string/title_activity_book"
             android:launchMode="singleTop" >
         </activity>
-    
+        <activity
+            android:name="com.google.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|smallestScreenSize|screenSize" />
     </application>
 
 </manifest>

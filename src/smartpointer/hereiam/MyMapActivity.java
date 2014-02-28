@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +26,8 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -325,6 +328,15 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 														// fade back in
 
 		showTrackingButton(isLiveTracking());
+		
+		// Look up the AdView as a resource and load a request.
+	    AdView adView = (AdView)this.findViewById(R.id.ad);
+	    AdRequest adRequest = new AdRequest();
+		adRequest.addTestDevice("867101E88DC7B800CE0B950145A98812");
+		adView.loadAd(adRequest);
+	    
+	    
+	    super.onCreate(savedInstanceState);
 	}
 
 	private void login() {
