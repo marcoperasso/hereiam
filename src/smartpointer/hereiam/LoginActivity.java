@@ -107,7 +107,11 @@ public class LoginActivity extends Activity implements OnEditorActionListener,
 				} else {
 					Helper.showMessage(LoginActivity.this, message);
 				}
-				progressBar.dismiss();
+				try {
+					progressBar.dismiss();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 
 		});

@@ -13,7 +13,7 @@ public class MyApplication extends Application {
 
 	private static final int MAX_POINTS = 1000;
 	private static final int REMOVE_POINTS = (int) (MAX_POINTS * .2);
-	public static final boolean LogEnabled = false;
+	public static final boolean LogEnabled = BuildConfig.DEBUG;
 
 	private static MyApplication sInstance;
 

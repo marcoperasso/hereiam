@@ -126,7 +126,11 @@ public class UserActivity extends Activity implements OnClickListener {
 			}
 
 			protected void onPostExecute(WebRequestResult result) {
-				progressBar.dismiss();
+				try {
+					progressBar.dismiss();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				if (result.result) {
 					Intent returnIntent = new Intent();
 					setResult(RESULT_OK, returnIntent);

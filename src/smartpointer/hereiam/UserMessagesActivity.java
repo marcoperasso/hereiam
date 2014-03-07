@@ -142,7 +142,11 @@ public class UserMessagesActivity extends ListActivity implements
 		progressBar.show();
 		new AsyncTask<Void, Void, Void>() {
 			protected void onPostExecute(Void result) {
-				progressBar.dismiss();
+				try {
+					progressBar.dismiss();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			};
 
 			@Override
