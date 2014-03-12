@@ -37,11 +37,7 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 				String phoneNumber = phones
 						.getString(phones
 								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-				int t = Integer
-						.parseInt(phones.getString(phones
-								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
-				if (t != ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
-					continue;
+				
 				phoneNumber = Helper.adjustPhoneNumber(phoneNumber);
 				User u = fromPhone(phoneNumber, false);
 				if (u == null)
