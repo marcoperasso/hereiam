@@ -13,7 +13,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-8836579110679228/1443246257" />
+        app:adUnitId="a153207fcf015db" />
 
     <com.google.android.maps.MapView
         android:id="@+id/mapview1"
