@@ -251,6 +251,10 @@ public class ConnectorService extends Service implements LocationListener {
 		if (mLocation == null)
 			mLocation = mlocManager
 					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		
+		if (mLocation == null)
+			return;
+		
 		String[] phones = new String[users.size()];
 		for (int i = 0; i < users.size(); i++) {
 			User user = users.get(i);
@@ -263,6 +267,7 @@ public class ConnectorService extends Service implements LocationListener {
 				(int) (mLocation.getLatitude() * 1E6),
 				(int) (mLocation.getLongitude() * 1E6), Helper.getUnixTime(),
 				LocationManager.GPS_PROVIDER.equals(mLocation.getProvider()));
+		mLocation = null;
 		new Thread() {
 			@Override
 			public void run() {
@@ -271,7 +276,6 @@ public class ConnectorService extends Service implements LocationListener {
 						if (MyApplication.LogEnabled)
 							Log.d(Const.LOG_TAG,
 									"Position data succesfully sent.");
-						mLocation = null;
 					}
 				} catch (Exception e) {
 					Log.e(Const.LOG_TAG, e.toString());
