@@ -57,7 +57,8 @@ public class HttpManager {
 	public static final String respond_to_user_request = controllerUrl + "respond_to_user/";
 	public static final String message_to_user_request = controllerUrl + "message_to_user/";
 	public static final String verify_registratoin_request = controllerUrl + "verify_registration/";
-
+	private static final String pingbackRequest = controllerUrl + "pingback/";
+	
 	static JSONArray postRequestForArray(String reqString)
 			throws ClientProtocolException, IOException, JSONException {
 		return postRequestForArray(reqString, new ArrayList<NameValuePair>());
@@ -350,6 +351,19 @@ public class HttpManager {
 			result.result = false;
 		}
 		return result;
+	}
+
+	public static WebRequestResult pingBack(String phone) {
+		List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+		postParameters.add(new BasicNameValuePair("phone", phone));
+		WebRequestResult res = new WebRequestResult();
+		try {
+			postRequest(pingbackRequest, postParameters);
+			res.result = true;
+		} catch (Exception e) {
+			res.message = e.getMessage();
+		}
+		return res;
 	}
 
 }

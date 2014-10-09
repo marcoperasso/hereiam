@@ -57,8 +57,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					// even if it's not for me!
 					if (c == null || !touserphone.equals(c.getPhone()))
 						return;
-					String fromUserPhone = extras.getString("fromuserphone");
-					User fromUser = MyApplication.getInstance().getUsers()
+					String fromUserPhone = extras.containsKey("fromuserphone") ? extras.getString("fromuserphone") : null;
+					User fromUser = Helper.isNullOrEmpty(fromUserPhone) ? null :  MyApplication.getInstance().getUsers()
 							.fromPhone(fromUserPhone, true);
 
 					switch (msgtype) {
@@ -168,6 +168,10 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 						MyApplication.getInstance().receivedPosition(pos);
 						break;
 					}
+					case Const.MSG_PING: {
+						MyApplication.getInstance().pingBack(c.getPhone());
+						break;
+					}
 					}
 				}
 			}
@@ -197,8 +201,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 		Notification notification = mBuilder.build();
 		notification.defaults |= Notification.DEFAULT_ALL;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		mNotificationManager.notify(Const.TRACE_REQUEST_NOTIFICATION_ID
-				+ code , notification);
+		mNotificationManager.notify(Const.TRACE_REQUEST_NOTIFICATION_ID + code,
+				notification);
 
 	}
 }

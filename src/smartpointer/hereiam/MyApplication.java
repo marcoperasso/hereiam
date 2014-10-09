@@ -103,6 +103,16 @@ public class MyApplication extends Application {
 
 	}
 
+	void pingBack(final String phone) {
+		new AsyncTask<Void, Void, WebRequestResult>() {
+
+			@Override
+			protected WebRequestResult doInBackground(Void... params) {
+									return HttpManager.pingBack(phone);
+			}
+		}.execute(null, null, null);
+
+	}
 	public String reverseGeocode(double lat, double lon) {
 		synchronized (points) {
 			for (int i = points.size() - 1; i >= 0; i--) {
