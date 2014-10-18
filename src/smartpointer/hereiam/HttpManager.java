@@ -54,6 +54,7 @@ public class HttpManager {
 	public static final String save_user_request = controllerUrl + "save_user/";
 	public static final String contact_user_request = controllerUrl + "contact_user";
 	public static final String disconnect_user_request = controllerUrl + "disconnect_user/";
+	public static final String request_user_disconnection_request = controllerUrl + "request_user_disconection/";
 	public static final String respond_to_user_request = controllerUrl + "respond_to_user/";
 	public static final String message_to_user_request = controllerUrl + "message_to_user/";
 	public static final String verify_registratoin_request = controllerUrl + "verify_registration/";
@@ -302,7 +303,24 @@ public class HttpManager {
 		}
 		return result;
 	}
+	public static void requestUserDisconnection(String userPhone) {
+		WebRequestResult result = new WebRequestResult();
+		try {
+			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("userphone", userPhone));
+			params.add(new BasicNameValuePair("time", Long.toString(Helper.getUnixTime())));
+			JSONObject obj = postRequestForObject(request_user_disconnection_request,
+					params);
 
+			int res = obj.getInt("result");
+			result.message = decodeMessage(res);
+
+			result.result = res == RES_SUCCESS;
+		} catch (Exception e) {
+			result.message = e.toString();
+			result.result = false;
+		}
+	}
 	public static WebRequestResult messageToUser(Message msg) {
 		WebRequestResult result = new WebRequestResult();
 		try {
@@ -365,6 +383,8 @@ public class HttpManager {
 		}
 		return res;
 	}
+
+	
 
 }
 

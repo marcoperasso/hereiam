@@ -19,7 +19,7 @@ public class MyApplication extends Application {
 
 	private LinkedList<GeoAddress> points = new LinkedList<GeoAddress>();
 	private ConnectorService connectorService;
-	Event ConnectorServiceChanged = new Event();
+	Event WatchedUsersChanged = new Event();
 	Event PinnedUserChanged = new Event();
 	private Users users;
 	private Object userTicket = new Object();
@@ -51,13 +51,15 @@ public class MyApplication extends Application {
 
 	public void setConnectorService(ConnectorService connectorService) {
 		this.connectorService = connectorService;
-		ConnectorServiceChanged.fire(this, EventArgs.Empty);
-
 	}
 
 	public ConnectorService getConnectorService() {
 		return this.connectorService;
 
+	}
+	public void FireWatchedUsersChanged()
+	{
+		WatchedUsersChanged.fire(this, EventArgs.Empty);
 	}
 
 	public void notifyUserDisconnection(final User user) {
@@ -71,6 +73,28 @@ public class MyApplication extends Application {
 							public void response(boolean success, String message) {
 								if (success) {
 									HttpManager.disconnectUser(user.phone);
+
+								}
+							}
+						});
+
+				return null;
+			}
+		}.execute(null, null, null);
+
+	}
+	
+	public void requestUserDisconnection(final User user) {
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				Credentials.testCredentials(MyApplication.this,
+						new OnAsyncResponse() {
+							@Override
+							public void response(boolean success, String message) {
+								if (success) {
+									HttpManager.requestUserDisconnection(user.phone);
 
 								}
 							}

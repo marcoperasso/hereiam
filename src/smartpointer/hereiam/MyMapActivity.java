@@ -62,7 +62,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 		@Override
 		public void onEvent(Object sender, EventArgs args) {
-			showTrackingButton(isLiveTracking());
+			showTrackingButton(!getWatchedUsers().isEmpty());
 		}
 	};
 
@@ -306,7 +306,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		}
 
 		mController.setZoom(zoomLevel);
-		MyApplication.getInstance().ConnectorServiceChanged
+		MyApplication.getInstance().WatchedUsersChanged
 				.addHandler(mConnectorServiceChangedHandler);
 		MyApplication.getInstance().PinnedUserChanged
 				.addHandler(mPinnedUserChangedHandler);
@@ -327,7 +327,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 														// will
 														// fade back in
 
-		showTrackingButton(isLiveTracking());
+		showTrackingButton(!getWatchedUsers().isEmpty());
 		
 		// Look up the AdView as a resource and load a request.
 	    AdView adView = (AdView)this.findViewById(R.id.ad);
@@ -364,7 +364,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	@Override
 	protected void onDestroy() {
-		MyApplication.getInstance().ConnectorServiceChanged
+		MyApplication.getInstance().WatchedUsersChanged
 				.removeHandler(mConnectorServiceChangedHandler);
 		MyApplication.getInstance().PinnedUserChanged
 				.removeHandler(mPinnedUserChangedHandler);
@@ -420,7 +420,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	private void contactUser(final User user, final String pwd) {
 		ConnectorService connectorService = MyApplication.getInstance()
 				.getConnectorService();
-		if (connectorService != null && connectorService.existUser(user)) {
+		if (connectorService != null && connectorService.existWatchedUser(user)) {
 			Helper.showMessage(this,
 					getString(R.string._s_has_already_been_connected, user));
 			return;
@@ -450,9 +450,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 												getString(
 														R.string.your_request_to_s_has_been_sent,
 														user));
-											ConnectorService.activate(
-													MyMapActivity.this, user,
-													true, false);
+											
 									} else {
 										Helper.showMessage(MyMapActivity.this,
 												contactUser.message);
@@ -584,10 +582,10 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	}
 
-	public boolean isLiveTracking() {
+	public ArrayList<User> getWatchedUsers() {
 		ConnectorService connectorService = MyApplication.getInstance()
 				.getConnectorService();
-		return connectorService != null;
+		return connectorService == null ? new ArrayList<User>() : connectorService.getWatchedUsers();
 	}
 
 	@Override
@@ -603,16 +601,16 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			startBookContactUser();
 
 		} else if (v.getId() == R.id.buttonLiveTrackingOff) {
-			if (isLiveTracking())
+			final ArrayList<User> watchingUsers = getWatchedUsers();
+			if (!watchingUsers.isEmpty())
 				Helper.dialogMessage(this,
 						R.string.do_you_want_to_stop_tracking_all_users,
 						new DialogInterface.OnClickListener() {
-
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								startService(new Intent(MyMapActivity.this,
-										ConnectorService.class));
+								for (User u : watchingUsers)
+									MyApplication.getInstance().requestUserDisconnection(u);
 							}
 						}, null);
 		} else if (v.getId() == R.id.buttonMessage) {

@@ -118,8 +118,7 @@ public class UserPositionOverlay extends BalloonItemizedOverlay<OverlayItem> imp
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							TrackedUsersActivity.disconnectUser(MyApplication.getInstance().getPinnedUser());
-							hideBalloon();
+							MyApplication.getInstance().requestUserDisconnection(MyApplication.getInstance().getPinnedUser());
 						}					
 					}, null);
 

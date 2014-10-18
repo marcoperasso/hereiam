@@ -98,7 +98,7 @@
             android:label="@string/title_activity_accept_connection" >
         </activity>
         <activity
-            android:name="smartpointer.hereiam.TrackedUsersActivity"
+            android:name="smartpointer.hereiam.WatchingUsersActivity"
             android:label="@string/title_activity_tracked_users" >
         </activity>
         <activity

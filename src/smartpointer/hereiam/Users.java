@@ -92,7 +92,7 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 
 	public User fromPhone(String phone, boolean create) {
 		for (User user : this)
-			if (user.phone.equals(phone))
+			if (!Helper.isNullOrEmpty(user.phone) && user.phone.equals(phone))
 				return user;
 		if (!create)
 			return null;

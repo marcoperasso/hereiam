@@ -30,7 +30,7 @@ public class AcceptConnectionActivity extends Activity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.buttonYes:
-			acceptUser();
+			acceptToSendMyPosition();
 			break;
 		case R.id.buttonAlways:
 			// prendo l'equivalente utente nella lista, così non devo
@@ -41,7 +41,7 @@ public class AcceptConnectionActivity extends Activity implements
 			fromPhone.trusted = true;
 			fromPhone.saveToDb();
 
-			acceptUser();
+			acceptToSendMyPosition();
 			break;
 		case R.id.buttonNo:
 			rejectUser();
@@ -50,11 +50,10 @@ public class AcceptConnectionActivity extends Activity implements
 
 	}
 
-	private void acceptUser() {
+	private void acceptToSendMyPosition() {
 		MyApplication.getInstance().respondToUser(user.phone,
 				Const.MSG_ACCEPT_CONTACT);
-		ConnectorService.activate(AcceptConnectionActivity.this, user, true,
-				false);
+		ConnectorService.activate(AcceptConnectionActivity.this, user, true, CommandType.START_SENDING_MY_POSITION);
 		finish();
 
 	}

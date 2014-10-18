@@ -11,6 +11,7 @@ public class Const {
 	static final int MSG_MESSAGE = 5; 
 	static final int MSG_POSITION = 6; 
 	static final int MSG_PING = 7; 
+	static final int MSG_REQUEST_TO_REMOVE_CONTACT = 8;
 	
 	static final String LOG_TAG = "MAY_I_TRACE_U";
 	static final Integer PROTOCOL_VERSION = 1;

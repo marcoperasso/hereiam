@@ -69,7 +69,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 							if (c.getPassword().equals(
 									Helper.decrypt(secureToken))) {
 								ConnectorService.activate(context, fromUser,
-										true, true); // do not notify in case
+										true, CommandType.START_SENDING_MY_POSITION); // do not notify in case
 														// the phpne has been
 														// stolen
 								MyApplication.getInstance().respondToUser(
@@ -83,7 +83,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 
 						} else if (fromUser.trusted) {
 							ConnectorService.activate(context, fromUser, true,
-									false);
+									CommandType.START_SENDING_MY_POSITION);
 							MyApplication.getInstance().respondToUser(
 									fromUser.phone, Const.MSG_ACCEPT_CONTACT);
 						} else {
@@ -108,6 +108,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 										R.string.s_has_accepted_to_let_you_know_her_its_position,
 										Helper.formatTimestamp(time), fromUser),
 								null, fromUser.phone);
+						ConnectorService.activate(MyApplication.getInstance(), fromUser, true, CommandType.START_RECEIVING_USER_POSITION);
 						break;
 					}
 					case Const.MSG_REJECT_CONTACT: {
@@ -118,8 +119,6 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 										R.string.s_has_refused_to_let_you_know_her_its_position,
 										Helper.formatTimestamp(time), fromUser),
 								null, fromUser.phone);
-						ConnectorService.activate(context, fromUser, false,
-								false);
 						break;
 					}
 					case Const.MSG_REMOVE_CONTACT: {
@@ -128,8 +127,17 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 								R.string.s_stopped_sending_her_its_position,
 								Helper.formatTimestamp(time), fromUser), null,
 								fromUser.phone);
-						ConnectorService.activate(context, fromUser, false,
-								false);
+						ConnectorService.activate(context, fromUser, false, CommandType.STOP_RECEIVING_USER_POSITION);
+
+						break;
+					}
+					case Const.MSG_REQUEST_TO_REMOVE_CONTACT: {
+						String time = extras.getString("time");
+						sendNotification(context, context.getString(
+								R.string.s_requested_stop_sending_your_position,
+								Helper.formatTimestamp(time), fromUser), null,
+								fromUser.phone);
+						WatchingUsersActivity.stopSendingMyPositionToUser(fromUser);
 
 						break;
 					}

@@ -30,7 +30,20 @@ public class ConnectorService extends Service implements LocationListener {
 	private LocationManager mlocManager;
 	private Thread mWorkerThread;
 	private Handler mHandler;
-	private ArrayList<User> users = new ArrayList<User>();
+	private ArrayList<User> watchedUsers = new ArrayList<User>();// questa
+	// lista va
+	// sincronizzata
+	// perché
+	// acceduta
+	// da più
+	// thread
+	private ArrayList<User> watchingUsers = new ArrayList<User>();// questa
+																	// lista va
+																	// sincronizzata
+																	// perché
+																	// acceduta
+																	// da più
+																	// thread
 
 	// procedura di invio della posizione corrente
 	private long sendLatestPositionInterval = 30000;// 30 secondi
@@ -39,7 +52,7 @@ public class ConnectorService extends Service implements LocationListener {
 			sendLatestPositionProcedure();
 		}
 	};
-	
+
 	private Location mLocation;
 	private NotificationManager mNotificationManager;
 
@@ -85,9 +98,12 @@ public class ConnectorService extends Service implements LocationListener {
 					mlocManager.removeUpdates(ConnectorService.this);
 					mHandler.removeCallbacks(sendLatestPositionProcedureRunnable);
 					mNotificationManager.cancel(Const.TRACKING_NOTIFICATION_ID);
-					for (User user : users)
-						MyApplication.getInstance().notifyUserDisconnection(
-								user);
+					synchronized (this) {
+						for (User user : watchingUsers)
+							MyApplication.getInstance()
+									.notifyUserDisconnection(user);
+					}
+
 					MyApplication.getInstance().setPinnedUser(null);
 					if (MyApplication.LogEnabled)
 						Log.i(Const.LOG_TAG,
@@ -107,61 +123,113 @@ public class ConnectorService extends Service implements LocationListener {
 	private void execute(final ConnectorServiceCommand command) {
 		mHandler.post(new Runnable() {
 			public void run() {
-				if (command.connect)
-					addUser(command.user, command.silent);
-				else
-					removeUser(command.user);
+				switch (command.type) {
+				case START_RECEIVING_USER_POSITION:
+					addWatchedUser(command.user, command.silent);
+					break;
+				case START_SENDING_MY_POSITION:
+					addWatchingUser(command.user, command.silent);
+					break;
+				case STOP_RECEIVING_USER_POSITION:
+					removeWatchedUser(command.user);
+					break;
+				case STOP_SENDING_MY_POSITION:
+					removeWatchingUser(command.user);
+					break;
+				default:
+					break;
+				}
+
 			}
 		});
 	}
 
-	private void addUser(final User user, boolean silent) {
-		if (users.isEmpty()) {
-
-			mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-					6000, 5, ConnectorService.this);
-			mlocManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 6000, 5,
-					ConnectorService.this);
-		}
-		for (int i = 0; i < users.size(); i++) {
-			User user2 = users.get(i);
-			if (user2.equals(user)) {
+	private void addWatchedUser(final User user, boolean silent) {
+		synchronized(this)
+		{
+		for (int i = 0; i < watchedUsers.size(); i++) {
+			User user2 = watchedUsers.get(i);
+			if (watchedUsers.equals(user)) {
 				MyApplication.getInstance().setPinnedUser(user2);
 				return;
 			}
 		}
-		users.add(user);
+		watchedUsers.add(user);
+		}
 		MyApplication.getInstance().setPinnedUser(user);
+		MyApplication.getInstance().FireWatchedUsersChanged();
+	}
 
-		setGPSOnNotification(silent);
+	private void addWatchingUser(final User user, boolean silent) {
+		synchronized (this) {
+			if (watchingUsers.isEmpty()) {
+				mlocManager.requestLocationUpdates(
+						LocationManager.GPS_PROVIDER, 6000, 5,
+						ConnectorService.this);
+				mlocManager.requestLocationUpdates(
+						LocationManager.NETWORK_PROVIDER, 6000, 5,
+						ConnectorService.this);
+			}
+
+			watchingUsers.add(user);
+		}
+		setSendingPositionNotification(silent);
 
 	}
 
-	boolean existUser(final User user) {
-		for (int i = 0; i < users.size(); i++)
-			if (users.get(i).phone.equals(user.phone)) {
+	boolean existWatchedUser(final User user) {
+		synchronized (this) {
+		for (int i = 0; i < watchedUsers.size(); i++)
+			if (watchedUsers.get(i).phone.equals(user.phone)) {
 				return true;
 			}
 		return false;
-
+		}
 	}
 
-	private void removeUser(final User user) {
-		for (int i = 0; i < users.size(); i++)
-			if (users.get(i).equals(user)) {
-				users.remove(i);
+	private void removeWatchedUser(final User user) {
+		synchronized (this) {
+			
+		for (int i = 0; i < watchedUsers.size(); i++)
+			if (watchedUsers.get(i).equals(user)) {
+				watchedUsers.remove(i);
 				break;
 			}
-		if (users.isEmpty()) {
-			stopSelf();
+		if (watchedUsers.isEmpty()) {
 			MyApplication.getInstance().setPinnedUser(null);
+			if (watchingUsers.isEmpty())// se anche l'altra lista di utenti è
+										// vuota, posso spegnere il servizio
+				stopSelf();
 		} else {
-			setGPSOnNotification(false);
 			MyApplication.getInstance().setPinnedUser(
-					users.get(users.size() - 1));
+					watchedUsers.get(watchedUsers.size() - 1));
 		}
+		}
+		MyApplication.getInstance().FireWatchedUsersChanged();
+	}
 
+	private void removeWatchingUser(final User user) {
+		synchronized (this) {
+			for (int i = 0; i < watchingUsers.size(); i++)
+				if (watchingUsers.get(i).equals(user)) {
+					watchingUsers.remove(i);
+					break;
+				}
+			if (!watchingUsers.isEmpty())
+			{
+				//ho ancora utenti a cui mando la posizione:
+				//aggiorno il messaggio di notifica
+				setSendingPositionNotification(false);
+			} else if (watchedUsers.isEmpty()) {// se non ho
+												// più
+												// utenti,
+												// posso
+												// spegnere
+												// il
+												// servizio
+				stopSelf();
+			}
+		}
 	}
 
 	public void onCreate() {
@@ -210,11 +278,11 @@ public class ConnectorService extends Service implements LocationListener {
 
 	}
 
-
-	private void setGPSOnNotification(boolean silent) {
-		String message = getString(R.string.sending_position, getUsersList());
-		Intent intent = new Intent(this, TrackedUsersActivity.class);
-		intent.putExtra(Const.USERS, users);
+	private void setSendingPositionNotification(boolean silent) {
+		String message = getString(R.string.sending_position,
+				getWatchingUsersList());
+		Intent intent = new Intent(this, WatchingUsersActivity.class);
+		intent.putExtra(Const.USERS, getWatchingUsers());
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				intent, // add
 						// this
@@ -234,33 +302,39 @@ public class ConnectorService extends Service implements LocationListener {
 				notification);
 	}
 
-	private String getUsersList() {
-		StringBuilder s = new StringBuilder();
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			if (s.length() > 0)
-				s.append(", ");
-			s.append(user.toString());
+	private String getWatchingUsersList() {
+		synchronized (this) {
+			StringBuilder s = new StringBuilder();
+			for (int i = 0; i < watchingUsers.size(); i++) {
+				User user = watchingUsers.get(i);
+				if (s.length() > 0)
+					s.append(", ");
+				s.append(user.toString());
+			}
+			return s.toString();
 		}
-		return s.toString();
 	}
 
 	private void sendLatestPosition() {
-		if (users.size() == 0 || !Helper.isOnline(ConnectorService.this))
-			return;
-		if (mLocation == null)
-			mLocation = mlocManager
-					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		
-		if (mLocation == null)
-			return;
-		
-		String[] phones = new String[users.size()];
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			phones[i] = user.phone;
-		}
+		String[] phones = null;
+		synchronized (this) {
 
+			if (watchingUsers.size() == 0
+					|| !Helper.isOnline(ConnectorService.this))
+				return;
+			if (mLocation == null)
+				mLocation = mlocManager
+						.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+			if (mLocation == null)
+				return;
+
+			phones = new String[watchingUsers.size()];
+			for (int i = 0; i < watchingUsers.size(); i++) {
+				User user = watchingUsers.get(i);
+				phones[i] = user.phone;
+			}
+		}
 		Credentials currentCredentials = MySettings.readCredentials();
 		final MyPosition loc = new MyPosition(currentCredentials == null ? ""
 				: currentCredentials.getPhone(), phones,
@@ -312,12 +386,32 @@ public class ConnectorService extends Service implements LocationListener {
 		return null;
 	}
 
-	public static void activate(Context context, User user, boolean activate,
-			boolean silent) {
+	public static void activate(Context context, User user, boolean silent,
+			CommandType commandType) {
 		Intent intent1 = new Intent(context, ConnectorService.class);
 		intent1.putExtra(Const.COMMAND, new ConnectorServiceCommand(user,
-				activate, silent));
+				silent, commandType));
 		context.startService(intent1);
 
+	}
+
+	public ArrayList<User> getWatchingUsers() {
+		ArrayList<User> users = new ArrayList<User>();
+		synchronized (this) {
+			users.addAll(watchingUsers);
+		}
+
+		return users;
+	}
+
+	public ArrayList<User> getWatchedUsers() {
+			
+		ArrayList<User> users = new ArrayList<User>();
+		synchronized (this) {
+			users.addAll(watchedUsers);
+		}
+
+		return users;
+		
 	}
 }

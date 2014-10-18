@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.text.Html;
 import android.text.Spanned;
@@ -37,6 +38,8 @@ import android.text.format.DateFormat;
 import android.text.method.LinkMovementMethod;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -178,46 +181,48 @@ public class Helper {
 			return;
 		}
 		Spanned msg = Html.fromHtml(context.getString(messageId, formatArgs));
-		final CheckBox input = new CheckBox(context);
-		input.setText(R.string.no_show_again);
-		AlertDialog dialog = new AlertDialog.Builder(context)
-				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setTitle(R.string.app_name)
-				.setMessage(msg)
-				.setView(input)
-				.setPositiveButton(R.string.yes,
-						new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								if (input.isChecked())
-									MySettings.setHiddenQuestion(messageId,
-											MySettings.QUESTION_RESULT_YES);
-								if (yesCallback != null)
-									yesCallback.finished();
-
-							}
-						})
-				.setNegativeButton(R.string.no,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								if (input.isChecked())
-									MySettings.setHiddenQuestion(messageId,
-											MySettings.QUESTION_RESULT_NO);
-								if (noCallback != null)
-									noCallback.finished();
-
-							}
-						}).show();
-		TextView messageView = (TextView) dialog
-				.findViewById(android.R.id.message);
+		LayoutInflater inflater = LayoutInflater.from(context);
+		View view = inflater.inflate(R.layout.hidable_question, null);
+		TextView messageView = (TextView) view.findViewById(R.id.tvMessage);
+		messageView.setText(msg);
 		messageView.setLinksClickable(true);
 		messageView.setMovementMethod(LinkMovementMethod.getInstance());
-		input.setTextColor(messageView.getTextColors());
+
+		final CheckBox input = (CheckBox) view.findViewById(R.id.cbNoMore);
+		//input.setTextColor(messageView.getTextColors());
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+		alertDialog.setTitle(R.string.app_name);
+		alertDialog.setIcon(android.R.drawable.ic_dialog_alert);
+		// alertDialog.setMessage("Here is a really long message.");
+		alertDialog.setView(view);
+		alertDialog.setPositiveButton(R.string.yes,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (input.isChecked())
+							MySettings.setHiddenQuestion(messageId,
+									MySettings.QUESTION_RESULT_YES);
+						if (yesCallback != null)
+							yesCallback.finished();
+
+					}
+				});
+		alertDialog.setNegativeButton(R.string.no,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (input.isChecked())
+							MySettings.setHiddenQuestion(messageId,
+									MySettings.QUESTION_RESULT_NO);
+						if (noCallback != null)
+							noCallback.finished();
+
+					}
+				});
+		alertDialog.show();
 
 	}
 
