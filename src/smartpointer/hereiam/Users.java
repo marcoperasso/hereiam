@@ -39,6 +39,8 @@ public class Users extends ArrayList<User> implements IJsonSerializable {
 								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 				
 				phoneNumber = Helper.adjustPhoneNumber(phoneNumber);
+				if (Helper.isNullOrEmpty(phoneNumber))
+					continue;
 				User u = fromPhone(phoneNumber, false);
 				if (u == null)
 				{

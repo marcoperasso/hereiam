@@ -62,8 +62,11 @@ public class UserDbAdapter {
 					KEY_TRUSTED, KEY_REGISTERED }, null, null,
 					null, null, null);
 			while (cursor.moveToNext()) {
-				User u = new User(cursor
-						.getString(cursor.getColumnIndex(KEY_ID)), context.getString(R.string.unknown));
+				String phone = cursor
+						.getString(cursor.getColumnIndex(KEY_ID));
+				if (Helper.isNullOrEmpty(phone))
+					continue;
+				User u = new User(phone, context.getString(R.string.unknown));
 				u.trusted = cursor
 						.getInt(cursor.getColumnIndex(KEY_TRUSTED)) == 1;
 				u.registered = cursor.getInt(cursor

@@ -47,8 +47,8 @@
     <string name="s_stopped_sending_her_its_position">%1$s - %2$s ha interrotto l\'invio della sua posizione.</string>
     <string name="title_activity_tracked_users">Utenti tracciati</string>
     <string name="you_are_sending_your_position_to_the_following_users">Stai inviando la tua posizione agli utenti elencati; tocca un utente per disconnetterlo</string>
-    <string name="do_you_want_to_stop_tracking_this_user">Vuoi interrompere la connessione con %s?</string>
-    <string name="do_you_want_to_stop_tracking_all_users">Vuoi interrompere la connessione con tutti gli utenti attualmente connessi?</string>
+    <string name="do_you_want_to_stop_tracking_this_user">Non vuoi più conoscere la posizione di %s?</string>
+    <string name="do_you_want_to_stop_tracking_all_users">Vuoi interrompere la connessione con tutti gli utenti?</string>
     <string name="send_error">Errore di invio: "%s"</string>
     <string name="deleted_messages_on_server_s">Messaggi cancellati sul server %s</string>
     <string name="cannot_get_address">Impossibile ottenere l\'indirizzo</string>

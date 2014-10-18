@@ -82,7 +82,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 							}
 
 						} else if (fromUser.trusted) {
-							ConnectorService.activate(context, fromUser, true,
+							ConnectorService.activate(context, fromUser, false,
 									CommandType.START_SENDING_MY_POSITION);
 							MyApplication.getInstance().respondToUser(
 									fromUser.phone, Const.MSG_ACCEPT_CONTACT);

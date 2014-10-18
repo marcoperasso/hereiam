@@ -19,7 +19,7 @@ public class MyApplication extends Application {
 
 	private LinkedList<GeoAddress> points = new LinkedList<GeoAddress>();
 	private ConnectorService connectorService;
-	Event WatchedUsersChanged = new Event();
+	Event ConnectorServiceChanged = new Event();
 	Event PinnedUserChanged = new Event();
 	private Users users;
 	private Object userTicket = new Object();
@@ -50,18 +50,17 @@ public class MyApplication extends Application {
 	}
 
 	public void setConnectorService(ConnectorService connectorService) {
+		boolean changed = connectorService != this.connectorService;
 		this.connectorService = connectorService;
+		if (changed)
+			ConnectorServiceChanged.fire(this, EventArgs.Empty);
 	}
 
 	public ConnectorService getConnectorService() {
 		return this.connectorService;
 
 	}
-	public void FireWatchedUsersChanged()
-	{
-		WatchedUsersChanged.fire(this, EventArgs.Empty);
-	}
-
+	
 	public void notifyUserDisconnection(final User user) {
 		new AsyncTask<Void, Void, Void>() {
 

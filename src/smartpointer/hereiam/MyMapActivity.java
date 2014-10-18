@@ -62,7 +62,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 		@Override
 		public void onEvent(Object sender, EventArgs args) {
-			showTrackingButton(!getWatchedUsers().isEmpty());
+			showTrackingButton();
 		}
 	};
 
@@ -213,7 +213,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		});
 	}
 
-	private void showTrackingButton(Boolean show) {
+	private void showTrackingButton() {
+		Boolean show = MyApplication.getInstance().getConnectorService() != null;
 		Button btn = (Button) findViewById(R.id.buttonLiveTrackingOff);
 		if (show) {
 			btn.setVisibility(View.VISIBLE);
@@ -306,7 +307,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		}
 
 		mController.setZoom(zoomLevel);
-		MyApplication.getInstance().WatchedUsersChanged
+		MyApplication.getInstance().ConnectorServiceChanged
 				.addHandler(mConnectorServiceChangedHandler);
 		MyApplication.getInstance().PinnedUserChanged
 				.addHandler(mPinnedUserChangedHandler);
@@ -327,7 +328,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 														// will
 														// fade back in
 
-		showTrackingButton(!getWatchedUsers().isEmpty());
+		showTrackingButton();
 		
 		// Look up the AdView as a resource and load a request.
 	    AdView adView = (AdView)this.findViewById(R.id.ad);
@@ -364,7 +365,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 	@Override
 	protected void onDestroy() {
-		MyApplication.getInstance().WatchedUsersChanged
+		MyApplication.getInstance().ConnectorServiceChanged
 				.removeHandler(mConnectorServiceChangedHandler);
 		MyApplication.getInstance().PinnedUserChanged
 				.removeHandler(mPinnedUserChangedHandler);
@@ -609,8 +610,9 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								for (User u : watchingUsers)
-									MyApplication.getInstance().requestUserDisconnection(u);
+								//senza argomenti, stoppa il servizio
+								startService(new Intent(MyMapActivity.this,
+										ConnectorService.class));
 							}
 						}, null);
 		} else if (v.getId() == R.id.buttonMessage) {

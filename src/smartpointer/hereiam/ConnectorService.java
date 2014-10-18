@@ -102,8 +102,10 @@ public class ConnectorService extends Service implements LocationListener {
 						for (User user : watchingUsers)
 							MyApplication.getInstance()
 									.notifyUserDisconnection(user);
+						for (User user : watchedUsers)
+							MyApplication.getInstance()
+									.requestUserDisconnection(user);
 					}
-
 					MyApplication.getInstance().setPinnedUser(null);
 					if (MyApplication.LogEnabled)
 						Log.i(Const.LOG_TAG,
@@ -157,7 +159,7 @@ public class ConnectorService extends Service implements LocationListener {
 		watchedUsers.add(user);
 		}
 		MyApplication.getInstance().setPinnedUser(user);
-		MyApplication.getInstance().FireWatchedUsersChanged();
+		
 	}
 
 	private void addWatchingUser(final User user, boolean silent) {
@@ -205,7 +207,6 @@ public class ConnectorService extends Service implements LocationListener {
 					watchedUsers.get(watchedUsers.size() - 1));
 		}
 		}
-		MyApplication.getInstance().FireWatchedUsersChanged();
 	}
 
 	private void removeWatchingUser(final User user) {

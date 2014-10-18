@@ -47,8 +47,8 @@
     <string name="s_stopped_sending_her_its_position">%1$s - %2$s has stopped sending you her/its position.</string>
     <string name="title_activity_tracked_users">Tracked users</string>
     <string name="you_are_sending_your_position_to_the_following_users">You are sending your position to the listed users; tap an user to disconnect her/him</string>
-    <string name="do_you_want_to_stop_tracking_this_user">Disconnect %s?</string>
-    <string name="do_you_want_to_stop_tracking_all_users">Disconnect all connected users?</string>
+    <string name="do_you_want_to_stop_tracking_this_user">You don\'t want to know the position of %s any more?</string>
+    <string name="do_you_want_to_stop_tracking_all_users">Disconnect all the users?</string>
     <string name="send_error">Send error: "%s"</string>
     <string name="deleted_messages_on_server_s">Deleted messages on server: %s</string>
     <string name="cannot_get_address">Cannot get address</string>
