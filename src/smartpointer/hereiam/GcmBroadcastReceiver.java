@@ -103,7 +103,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 							sendNotification(context, context.getString(
 									R.string.s_wants_to_know_your_position,
 									Helper.formatTimestamp(time), fromUser),
-									intent2, fromUser.phone);
+									intent2, fromUser.phone, false);
 						}
 						break;
 					}
@@ -201,18 +201,24 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 		}
 	}
 
-	// Put the message into a notification and post it.
-	// This is just one simple example of what you might choose to do with
-	// a GCM message.
 	private void sendNotification(Context context, String msg, Intent intent,
 			String fromUserPhone) {
+		sendNotification(context, msg, intent, fromUserPhone, true);
+	}
+
+	private void sendNotification(Context context, String msg, Intent intent,
+			String fromUserPhone, boolean autocancel) {
 		int code = Math.abs(fromUserPhone.hashCode());
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
+		int notificationCode = Const.TRACE_REQUEST_NOTIFICATION_ID + code;
+		
 		if (intent == null) {
 			intent = new Intent(context, NotificationDetailActivity.class);
 			intent.putExtra(NotificationDetailActivity.MESSAGE, msg);
 		}
+		
+		intent.putExtra(Const.NOTIFICATION_CODE, notificationCode);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, code,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -223,8 +229,9 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 				.setContentText(msg).setContentIntent(contentIntent);
 		Notification notification = mBuilder.build();
 		notification.defaults |= Notification.DEFAULT_ALL;
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		mNotificationManager.notify(Const.TRACE_REQUEST_NOTIFICATION_ID + code,
+		if (autocancel)
+			notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		mNotificationManager.notify(notificationCode,
 				notification);
 
 	}

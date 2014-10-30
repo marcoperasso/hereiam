@@ -43,6 +43,8 @@ public class Const {
 	static final String NULL_TOKEN = "null";
 	static final String COMMAND_ID = "CMDID";
 	static final String MESSAGE = "MSG";
+
+	static final String NOTIFICATION_CODE = "N_C";
 	
 
 }

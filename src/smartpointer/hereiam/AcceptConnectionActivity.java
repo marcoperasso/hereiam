@@ -1,6 +1,7 @@
 package smartpointer.hereiam;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
@@ -15,6 +16,12 @@ public class AcceptConnectionActivity extends Activity implements
 
 	private static final int ACTIVATE_GPS_RESULT = 1;
 	private User user;
+
+	enum Response {
+		NONE, ACCEPT, REFUSE
+	};
+
+	Response response = Response.NONE;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +39,44 @@ public class AcceptConnectionActivity extends Activity implements
 	}
 
 	@Override
+	protected void onDestroy() {
+		switch (response) {
+		case ACCEPT:
+			MyApplication.getInstance().respondToUser(user.phone,
+					Const.MSG_ACCEPT_CONTACT);
+			ConnectorService.activate(AcceptConnectionActivity.this, user,
+					true, CommandType.START_SENDING_MY_POSITION);
+			cancelNotification();
+
+			break;
+		case NONE:
+			break;
+		case REFUSE:
+			MyApplication.getInstance().respondToUser(user.phone,
+					Const.MSG_REJECT_CONTACT);
+			cancelNotification();
+			break;
+		default:
+			break;
+		}
+		super.onDestroy();
+	}
+
+	private void cancelNotification() {
+		Intent intent = getIntent();
+		if (intent.hasExtra(Const.NOTIFICATION_CODE)) {
+			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.cancel(intent.getIntExtra(
+					Const.NOTIFICATION_CODE, 0));
+		}
+
+	}
+
+	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.buttonYes:
-			if (hasGPSOrDontWantToUseIt())
-				acceptToSendMyPosition();
+			hasGPSOrDontWantToUseIt();
 			break;
 		case R.id.buttonAlways:
 			// prendo l'equivalente utente nella lista, così non devo
@@ -47,11 +87,11 @@ public class AcceptConnectionActivity extends Activity implements
 			fromPhone.trusted = true;
 			fromPhone.saveToDb();
 
-			if (hasGPSOrDontWantToUseIt())
-				acceptToSendMyPosition();
+			hasGPSOrDontWantToUseIt();
 			break;
 		case R.id.buttonNo:
-			rejectUser();
+			response = Response.REFUSE;
+			finish();
 			break;
 		}
 
@@ -60,16 +100,18 @@ public class AcceptConnectionActivity extends Activity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ACTIVATE_GPS_RESULT) {
-			acceptToSendMyPosition();
+			response = Response.ACCEPT;
+			finish();
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private boolean hasGPSOrDontWantToUseIt() {
+	private void hasGPSOrDontWantToUseIt() {
 		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			return true;
+			response = Response.ACCEPT;
+			finish();
 		}
 		Helper.hideableQuestion(this, new IFinishCallback() {
 			@Override
@@ -79,23 +121,14 @@ public class AcceptConnectionActivity extends Activity implements
 				startActivityForResult(myIntent, ACTIVATE_GPS_RESULT);
 
 			}
-		}, null, R.string.want_gps);
-		return false;
-	}
+		}, new IFinishCallback() {
 
-	private void acceptToSendMyPosition() {
-		MyApplication.getInstance().respondToUser(user.phone,
-				Const.MSG_ACCEPT_CONTACT);
-		ConnectorService.activate(AcceptConnectionActivity.this, user, true,
-				CommandType.START_SENDING_MY_POSITION);
-		finish();
-
-	}
-
-	private void rejectUser() {
-		MyApplication.getInstance().respondToUser(user.phone,
-				Const.MSG_REJECT_CONTACT);
-		finish();
+			@Override
+			public void finished() {
+				response = Response.ACCEPT;
+				finish();
+			}
+		}, R.string.want_gps);
 	}
 
 }

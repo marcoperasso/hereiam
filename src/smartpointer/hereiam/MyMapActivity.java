@@ -609,8 +609,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			startBookContactUser();
 
 		} else if (v.getId() == R.id.buttonLiveTrackingOff) {
-			final ArrayList<User> watchingUsers = getWatchedUsers();
-			if (!watchingUsers.isEmpty())
+			if (MyApplication.getInstance().getConnectorService() != null)
 				Helper.dialogMessage(this,
 						R.string.do_you_want_to_stop_tracking_all_users,
 						new DialogInterface.OnClickListener() {
