@@ -9,7 +9,6 @@ import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class AcceptConnectionActivity extends Activity implements
 		OnClickListener {

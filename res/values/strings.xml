@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources >
+<resources>
 
     <string name="app_name">People Finder</string>
     <string name="app_description">Find the position of people you are interested in.</string>
@@ -29,11 +29,11 @@
     <string name="login">Login</string>
     <string name="warning_to_user">This app can track your position and send it to other people; each time this happens you\'ll be notified; you\'ll be able to disable this behaviour al all times.</string>
     <string name="no_show_again">Do not show again</string>
-   <string name="no_user_in_book">Your user book is empty.</string>
+    <string name="no_user_in_book">Your user book is empty.</string>
     <string name="balloon_text">Recording time: %1$s\nAddress: %2$s\nUsing GPS: %3$s</string>
     <string name="title_activity_user">User</string>
     <string name="name">Name</string>
-   <string name="credential_mail">Mail</string>
+    <string name="credential_mail">Mail</string>
     <string name="credential_register">Register&#8230;</string>
     <string name="credentials_descri">Please insert your data; fields marked with * are mandatory; we suggest to insert also your email, we will use it if you forget your password.</string>
     <string name="the_field_s_is_obligatory_">The field \'%s\' is mandatory.</string>
@@ -41,14 +41,14 @@
     <string name="title_activity_accept_connection">Accept connection</string>
     <string name="wants_to_know_your_position_do_you_agree">%s wants to know your position; do you agree?</string>
     <string name="your_request_to_s_has_been_sent">Your request to %s has been sent, you will be notified when it is accepted or refused</string>
-    <string name="s_wants_to_know_your_position">%1$s - %2$s wants to know your position.</string>
-    <string name="s_has_accepted_to_let_you_know_her_its_position">%1$s - %2$s has accepted to send you her/its position. You are now sending yours to her/him, too</string>
-    <string name="s_has_refused_to_let_you_know_her_its_position">%1$s - %2$s has refused to send you her/its position.</string>
-    <string name="s_requested_stop_sending_your_position">%1$s - %2$s does not want to know your position any more.</string>
-    <string name="s_stopped_sending_her_its_position">%1$s - %2$s has stopped sending you her/its position.</string>
+    <string name="s_wants_to_know_your_position">%2$s wants to know your position\n%1$s.</string>
+    <string name="s_has_accepted_to_let_you_know_her_his_position">%2$s has accepted to send you her/his position\n%1$s.</string>
+    <string name="s_has_refused_to_let_you_know_her_his_position">%2$s has refused to send you her/his position\n%1$s.</string>
+    <string name="s_requested_stop_sending_your_position">%2$s does not want to know your position any more\n%1$s.</string>
+    <string name="s_stopped_sending_her_his_position">%2$s has stopped sending you her/his position\n%1$s.</string>
     <string name="title_activity_tracked_users">Tracked users</string>
     <string name="you_are_sending_your_position_to_the_following_users">You are sending your position to the listed users; tap an user to disconnect her/him</string>
-    <string name="do_you_want_to_stop_tracking_this_user">You don\'t want to know the position of %s any more?</string>
+    <string name="do_you_want_to_stop_tracking_this_user">Do you want %s to stop sending her/his position to you?</string>
     <string name="do_you_want_to_stop_tracking_all_users">Disconnect all the users?</string>
     <string name="send_error">Send error: "%s"</string>
     <string name="deleted_messages_on_server_s">Deleted messages on server: %s</string>
@@ -61,8 +61,8 @@
     <string name="users_book">Users book</string>
     <string name="sending_request_">Sending request&#8230;</string>
     <string name="sending_message_">Sending message&#8230;</string>
-   <string name="tap_an_user_for_message">Tap the user you want to send the message.</string>
-     <string name="tap_an_user_for_locate">Tap the user you want to locate.</string>
+    <string name="tap_an_user_for_message">Tap the user you want to send the message.</string>
+    <string name="tap_an_user_for_locate">Tap the user you want to locate.</string>
     <string name="tap_an_user_for_options">Tap an user in the list to see available actions.</string>
     <string name="accept_automatically_position_requests_from_this_user">Always accept requests</string>
     <string name="warning_auto_accept">%s can now know your position without the need for you to accept.</string>
@@ -97,4 +97,6 @@
     <string name="login_label">If you are already registered insert your phone number and password and tap OK, otherwise please tap the register button.</string>
     <string name="show_my_position">Show my position</string>
     <string name="hide_my_position">Hide my position</string>
+    <string name="ok">OK</string>
+
 </resources>

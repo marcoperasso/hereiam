@@ -2,7 +2,6 @@ package smartpointer.hereiam;
 
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
