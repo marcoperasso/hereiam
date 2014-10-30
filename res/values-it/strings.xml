@@ -97,5 +97,6 @@
     <string name="search_user">Cerca utente</string>
     <string name="invite_user">%s non ha ancora installato questa app, vuoi invitarlo/a con un SMS?</string>
     <string name="login_label">Se sei già registrato inserisci il tuo numero di telefono e password e premi OK, altrimenti per favore premi il pulsante di registrazione.</string>
-
+    <string name="show_my_position">Visualizza la mia posizione</string>
+    <string name="hide_my_position">Nascondi la mia posizione</string>
 </resources>

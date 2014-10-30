@@ -8,12 +8,12 @@
     <!-- debugapiKey="0dEYPHJIAGuC3ZMx4EK5IjFp5SnxwDv7iOxKjEQ" -->
     <!-- releaseapiKey="0HToEclXMbw-m5HMb9GSGaaf_2wKfdffQ0R6Wig" -->
 
-    <com.google.ads.AdView
-        android:id="@+id/ad"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        app:adSize="BANNER"
-        app:adUnitId="a153207fcf015db" />
+<!--     <com.google.ads.AdView -->
+<!--         android:id="@+id/ad" -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         app:adSize="BANNER" -->
+<!--         app:adUnitId="a153207fcf015db" /> -->
 
     <com.google.android.maps.MapView
         android:id="@+id/mapview1"

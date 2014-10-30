@@ -2,6 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/itemBook"
+        android:title="@string/users_book"
+        android:titleCondensed="@string/users_book">
+    </item>
+    <item
+        android:id="@+id/itemRequestUserPosition"
+        android:title="@string/request_user_position"
+        android:titleCondensed="@string/request_user_position">
+    </item>
+    <item
+        android:id="@+id/itemSendMessage"
+        android:title="@string/send_message"
+        android:titleCondensed="@string/send_message">
+    </item>
+    <item
+        android:id="@+id/itemShowMyPosition"
+        android:title="@string/show_my_position"
+        android:titleCondensed="Show my position">
+    </item>
+    <item
         android:id="@+id/itemAccount"
         android:title="@string/user_credentials"
         android:titleCondensed="@string/user_credentials">
@@ -15,22 +35,6 @@
         android:id="@+id/itemLogin"
         android:title="@string/login"
         android:titleCondensed="@string/login">
-    </item>
-   
-    <item
-        android:id="@+id/itemBook"
-        android:title="@string/users_book"
-        android:titleCondensed="@string/users_book">
-    </item>
-     <item
-        android:id="@+id/itemRequestUserPosition"
-        android:title="@string/request_user_position"
-        android:titleCondensed="@string/request_user_position">
-    </item>
-     <item
-        android:id="@+id/itemSendMessage"
-        android:title="@string/send_message"
-        android:titleCondensed="@string/send_message">
     </item>
 
 </menu>

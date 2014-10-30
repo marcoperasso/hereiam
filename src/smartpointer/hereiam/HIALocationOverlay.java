@@ -24,7 +24,7 @@ public class HIALocationOverlay extends MyLocationOverlay {
 	@Override
 	public synchronized void onLocationChanged(Location loc) {
 		// se ho il balloon aperto, seguo il balloon e non la mia posizione
-		if (mUsersOverlay.getFocus() == null && loc.getProvider().equals(LocationManager.GPS_PROVIDER)) {
+		if (mUsersOverlay.getFocus() == null) {
 			mController.animateTo(new GeoPoint((int) (loc.getLatitude() * 1e6),
 					(int) (loc.getLongitude() * 1e6)));
 		}

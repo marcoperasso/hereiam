@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,8 +25,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.ads.AdRequest;
-import com.google.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -160,13 +157,11 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 
 						@Override
 						public void response(boolean success, String message) {
-							if (success)
-							{
+							if (success) {
 								Credentials c = MySettings.readCredentials();
 								c.setRegid(regid);
 								MySettings.setCredentials(c);
-							}
-							else {
+							} else {
 								Helper.showMessage(MyMapActivity.this, message);
 							}
 
@@ -329,15 +324,16 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 														// fade back in
 
 		showTrackingButton();
-		
+
 		// Look up the AdView as a resource and load a request.
-	    AdView adView = (AdView)this.findViewById(R.id.ad);
-	    AdRequest adRequest = new AdRequest();
-		adRequest.addTestDevice("867101E88DC7B800CE0B950145A98812");
-		adView.loadAd(adRequest);
-	    
-	    
-	    super.onCreate(savedInstanceState);
+		/*
+		 * AdView adView = (AdView)this.findViewById(R.id.ad); AdRequest
+		 * adRequest = new AdRequest();
+		 * adRequest.addTestDevice("867101E88DC7B800CE0B950145A98812");
+		 * adView.loadAd(adRequest);
+		 */
+
+		super.onCreate(savedInstanceState);
 	}
 
 	private void login() {
@@ -451,7 +447,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 												getString(
 														R.string.your_request_to_s_has_been_sent,
 														user));
-											
+
 									} else {
 										Helper.showMessage(MyMapActivity.this,
 												contactUser.message);
@@ -479,13 +475,17 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.mymap_menu, menu);
-		// mMenuItemTrackGpsPosition = menu.findItem(R.id.itemTrackGpsPosition);
-		// mMenuItemTrackGpsPosition
-		// .setTitleCondensed(getString(mTrackGPSPosition ?
-		// R.string.hide_position_menu
-		// : R.string.show_position_menu));
+		mMenuItemTrackGpsPosition = menu.findItem(R.id.itemShowMyPosition);
+		updateMenuTitle();
 
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	private void updateMenuTitle() {
+		String string = getString(mTrackGPSPosition ? R.string.hide_my_position
+				: R.string.show_my_position);
+		mMenuItemTrackGpsPosition.setTitleCondensed(string);
+		mMenuItemTrackGpsPosition.setTitle(string);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -518,8 +518,18 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 			startBookMessage();
 			return true;
 		}
+		case R.id.itemShowMyPosition: {
+			toggleMyPositionVisibility();
+			return true;
+		}
+
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void toggleMyPositionVisibility() {
+		setTrackGPSPosition(!MySettings.getTrackGPSPosition(this));
+
 	}
 
 	private void startBook() {
@@ -527,15 +537,11 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		startActivityForResult(intent, Const.BOOK_RESULT);
 	}
 
-	@SuppressWarnings("unused")
 	private void setTrackGPSPosition(boolean b) {
 		mTrackGPSPosition = b;
 
 		MySettings.setTrackGPSPosition(this, mTrackGPSPosition);
-		// mMenuItemTrackGpsPosition
-		// .setTitleCondensed(getString(mTrackGPSPosition ?
-		// R.string.hide_position_menu
-		// : R.string.show_position_menu));
+		updateMenuTitle();
 
 		if (mTrackGPSPosition)
 			myLocationOverlay.enableMyLocation();
@@ -586,7 +592,8 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	public ArrayList<User> getWatchedUsers() {
 		ConnectorService connectorService = MyApplication.getInstance()
 				.getConnectorService();
-		return connectorService == null ? new ArrayList<User>() : connectorService.getWatchedUsers();
+		return connectorService == null ? new ArrayList<User>()
+				: connectorService.getWatchedUsers();
 	}
 
 	@Override
@@ -610,7 +617,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								//senza argomenti, stoppa il servizio
+								// senza argomenti, stoppa il servizio
 								startService(new Intent(MyMapActivity.this,
 										ConnectorService.class));
 							}

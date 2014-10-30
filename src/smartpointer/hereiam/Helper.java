@@ -30,7 +30,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.text.Html;
 import android.text.Spanned;
