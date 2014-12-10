@@ -72,11 +72,12 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 									Helper.decrypt(secureToken))) {
 								ConnectorService.activate(context, fromUser,
 										true,
-										CommandType.START_SENDING_MY_POSITION, -1); // do
-																				// not
-																				// notify
-																				// in
-																				// case
+										CommandType.START_SENDING_MY_POSITION,
+										-1); // do
+								// not
+								// notify
+								// in
+								// case
 								// the phpne has been
 								// stolen
 								MyApplication.getInstance().respondToUser(
@@ -108,47 +109,52 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 						break;
 					}
 					case Const.MSG_ACCEPT_CONTACT: {
-						String time = extras.getString("time");
-						sendNotification(
+						long time = Long.parseLong(extras.getString("time"));
+						saveMessageFromUser(
 								context,
-								context.getString(
-										R.string.s_has_accepted_to_let_you_know_her_his_position,
-										Helper.formatTimestamp(time), fromUser),
-								null, fromUser.phone);
+								c,
+								fromUser,
+								context.getString(R.string.has_accepted_to_let_you_know_her_his_position),
+								time);
+
 						ConnectorService.activate(MyApplication.getInstance(),
 								fromUser, true,
 								CommandType.START_RECEIVING_USER_POSITION, -1);
 						break;
 					}
 					case Const.MSG_REJECT_CONTACT: {
-						String time = extras.getString("time");
-						sendNotification(
+						long time = Long.parseLong(extras.getString("time"));
+						saveMessageFromUser(
 								context,
-								context.getString(
-										R.string.s_has_refused_to_let_you_know_her_his_position,
-										Helper.formatTimestamp(time), fromUser),
-								null, fromUser.phone);
+								c,
+								fromUser,
+								context.getString(R.string.has_refused_to_let_you_know_her_his_position),
+								time);
+		
 						break;
 					}
 					case Const.MSG_REMOVE_CONTACT: {
-						String time = extras.getString("time");
-						sendNotification(context, context.getString(
-								R.string.s_stopped_sending_her_his_position,
-								Helper.formatTimestamp(time), fromUser), null,
-								fromUser.phone);
+						long time = Long.parseLong(extras.getString("time"));
+						saveMessageFromUser(
+								context,
+								c,
+								fromUser,
+								context.getString(R.string.stopped_sending_her_his_position),
+								time);
 						ConnectorService.activate(context, fromUser, false,
 								CommandType.STOP_RECEIVING_USER_POSITION, -1);
 
 						break;
 					}
 					case Const.MSG_REQUEST_TO_REMOVE_CONTACT: {
-						String time = extras.getString("time");
-						sendNotification(
+						long time = Long.parseLong(extras.getString("time"));
+						saveMessageFromUser(
 								context,
-								context.getString(
-										R.string.s_requested_stop_sending_your_position,
-										Helper.formatTimestamp(time), fromUser),
-								null, fromUser.phone);
+								c,
+								fromUser,
+								context.getString(R.string.requested_stop_sending_your_position),
+								time);
+						
 						ConnectorService.stopSendingMyPositionToUser(fromUser);
 
 						break;
@@ -162,22 +168,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 					case Const.MSG_MESSAGE: {
 						String msg = extras.getString("message");
 						long time = Long.parseLong(extras.getString("time"));
-						Message message = new Message(time, fromUser.phone,
-								c.getPhone(), msg);
-						message.saveToDB(MyApplication.getInstance());
-						UserMessagesActivity activity = MyApplication
-								.getInstance().getMessagesActivity(fromUser);
-						if (activity == null) {
-							Intent intent2 = new Intent(context,
-									UserMessagesActivity.class);
-							intent2.putExtra(Const.USER, fromUser);
-
-							sendNotification(context, context.getString(
-									R.string._s_says, fromUser, msg), intent2,
-									fromUser.phone);
-						} else {
-							activity.addMessage(message);
-						}
+						saveMessageFromUser(context, c, fromUser, msg, time);
 						break;
 					}
 					case Const.MSG_POSITION: {
@@ -200,6 +191,24 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 		}
 	}
 
+	private void saveMessageFromUser(Context context, Credentials c,
+			User fromUser, String msg, long time) {
+		Message message = new Message(time, fromUser.phone, c.getPhone(), msg);
+		message.saveToDB(MyApplication.getInstance());
+		UserMessagesActivity activity = MyApplication.getInstance()
+				.getMessagesActivity(fromUser);
+		if (activity == null) {
+			Intent intent2 = new Intent(context, UserMessagesActivity.class);
+			intent2.putExtra(Const.USER, fromUser);
+
+			sendNotification(context,
+					context.getString(R.string._s_says, fromUser, msg),
+					intent2, fromUser.phone);
+		} else {
+			activity.addMessage(message);
+		}
+	}
+
 	private void sendNotification(Context context, String msg, Intent intent,
 			String fromUserPhone) {
 		sendNotification(context, msg, intent, fromUserPhone, true);
@@ -211,12 +220,12 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		int notificationCode = Const.TRACE_REQUEST_NOTIFICATION_ID + code;
-		
+
 		if (intent == null) {
 			intent = new Intent(context, NotificationDetailActivity.class);
 			intent.putExtra(NotificationDetailActivity.MESSAGE, msg);
 		}
-		
+
 		intent.putExtra(Const.NOTIFICATION_CODE, notificationCode);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, code,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -230,8 +239,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 		notification.defaults |= Notification.DEFAULT_ALL;
 		if (autocancel)
 			notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		mNotificationManager.notify(notificationCode,
-				notification);
+		mNotificationManager.notify(notificationCode, notification);
 
 	}
 }

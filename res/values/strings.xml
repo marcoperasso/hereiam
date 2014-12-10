@@ -42,10 +42,10 @@
     <string name="wants_to_know_your_position_do_you_agree">%s wants to know your position; do you agree?</string>
     <string name="your_request_to_s_has_been_sent">Your request to %s has been sent, you will be notified when it is accepted or refused</string>
     <string name="s_wants_to_know_your_position">%2$s wants to know your position\n%1$s.</string>
-    <string name="s_has_accepted_to_let_you_know_her_his_position">%2$s has accepted to send you her/his position\n%1$s.</string>
-    <string name="s_has_refused_to_let_you_know_her_his_position">%2$s has refused to send you her/his position\n%1$s.</string>
-    <string name="s_requested_stop_sending_your_position">%2$s does not want to know your position any more\n%1$s.</string>
-    <string name="s_stopped_sending_her_his_position">%2$s has stopped sending you her/his position\n%1$s.</string>
+    <string name="has_accepted_to_let_you_know_her_his_position">I accepted to send my position to you.</string>
+    <string name="has_refused_to_let_you_know_her_his_position">I refused to send my position to you.</string>
+    <string name="requested_stop_sending_your_position">I don\'t want to know your position any more, thank you.</string>
+    <string name="stopped_sending_her_his_position">I stopped sending my position to you.</string>
     <string name="title_activity_tracked_users">Tracked users</string>
     <string name="you_are_sending_your_position_to_the_following_users">You are sending your position to the listed users; tap an user to disconnect her/him</string>
     <string name="do_you_want_to_stop_tracking_this_user">Do you want %s to stop sending her/his position to you?</string>
