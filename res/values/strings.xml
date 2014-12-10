@@ -98,5 +98,7 @@
     <string name="show_my_position">Show my position</string>
     <string name="hide_my_position">Hide my position</string>
     <string name="ok">OK</string>
+    <string name="accept_only_for_a_limited_period_of_time">Accept only for: </string>
+    <string name="minutes">minutes</string>
 
 </resources>

@@ -6,11 +6,13 @@ public class ConnectorServiceCommand implements Serializable {
 	User user;
 	boolean silent;
 	CommandType type;
+	int timeout;
 
-	public ConnectorServiceCommand(User user, boolean silent,CommandType type) {
+	public ConnectorServiceCommand(User user, boolean silent,CommandType type, int timeout) {
 		this.user = user;
 		this.silent = silent;
 		this.type = type;
+		this.timeout = timeout;
 	}
 
 	/**

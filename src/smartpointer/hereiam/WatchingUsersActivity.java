@@ -41,7 +41,7 @@ public class WatchingUsersActivity extends ListActivity implements OnClickListen
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						stopSendingMyPositionToUser(user);
+						ConnectorService.stopSendingMyPositionToUser(user);
 						finish();
 					}					
 				}, null);
@@ -50,10 +50,7 @@ public class WatchingUsersActivity extends ListActivity implements OnClickListen
 	}
 	
 	
-	static void stopSendingMyPositionToUser(final User user) {
-		ConnectorService.activate(MyApplication.getInstance(), user, false, CommandType.STOP_SENDING_MY_POSITION);
-		MyApplication.getInstance().notifyUserDisconnection(user);
-	}
+	
 
 	@Override
 	public void onClick(View view) {
@@ -66,7 +63,7 @@ public class WatchingUsersActivity extends ListActivity implements OnClickListen
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							for (User u : users)
-								stopSendingMyPositionToUser(u);
+								ConnectorService.stopSendingMyPositionToUser(u);
 							finish();
 						}					
 					}, null);

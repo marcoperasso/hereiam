@@ -25,6 +25,22 @@ import android.util.Log;
  */
 public class ConnectorService extends Service implements LocationListener {
 
+	class RemoveWatchingUser implements Runnable {
+
+		private User user;
+
+		public RemoveWatchingUser(User user) {
+			this.user = user;
+		}
+
+		@Override
+		public void run() {
+			if (existWatchingUser(user))
+				stopSendingMyPositionToUser(user);
+		}
+
+	}
+
 	public static final int DISTANCE_METERS = 40;
 
 	private LocationManager mlocManager;
@@ -59,6 +75,10 @@ public class ConnectorService extends Service implements LocationListener {
 	public ConnectorService() {
 	}
 
+	static void stopSendingMyPositionToUser(final User user) {
+		ConnectorService.activate(MyApplication.getInstance(), user, false, CommandType.STOP_SENDING_MY_POSITION, -1);
+		MyApplication.getInstance().notifyUserDisconnection(user);
+	}
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent == null || intent.getExtras() == null) {
@@ -130,7 +150,8 @@ public class ConnectorService extends Service implements LocationListener {
 					addWatchedUser(command.user, command.silent);
 					break;
 				case START_SENDING_MY_POSITION:
-					addWatchingUser(command.user, command.silent);
+					addWatchingUser(command.user, command.silent,
+							command.timeout);
 					break;
 				case STOP_RECEIVING_USER_POSITION:
 					removeWatchedUser(command.user);
@@ -147,22 +168,28 @@ public class ConnectorService extends Service implements LocationListener {
 	}
 
 	private void addWatchedUser(final User user, boolean silent) {
-		synchronized(this)
-		{
-		for (int i = 0; i < watchedUsers.size(); i++) {
-			User user2 = watchedUsers.get(i);
-			if (watchedUsers.equals(user)) {
-				MyApplication.getInstance().setPinnedUser(user2);
-				return;
+		synchronized (this) {
+			for (int i = 0; i < watchedUsers.size(); i++) {
+				User user2 = watchedUsers.get(i);
+				if (watchedUsers.equals(user)) {
+					MyApplication.getInstance().setPinnedUser(user2);
+					return;
+				}
 			}
-		}
-		watchedUsers.add(user);
+			boolean found = false;
+			for (int i = 0; i < watchedUsers.size(); i++)
+				if (watchedUsers.get(i).phone.equals(user.phone)) {
+					found = true;
+					break;
+				}
+			if (!found)
+				watchedUsers.add(user);
 		}
 		MyApplication.getInstance().setPinnedUser(user);
-		
+
 	}
 
-	private void addWatchingUser(final User user, boolean silent) {
+	private void addWatchingUser(final User user, boolean silent, int timeout) {
 		synchronized (this) {
 			if (watchingUsers.isEmpty()) {
 				mlocManager.requestLocationUpdates(
@@ -173,7 +200,16 @@ public class ConnectorService extends Service implements LocationListener {
 						ConnectorService.this);
 			}
 
+			// check if user is already in list, if so exits
+			for (int i = 0; i < watchingUsers.size(); i++)
+				if (watchingUsers.get(i).phone.equals(user.phone)) {
+					return;
+				}
 			watchingUsers.add(user);
+			if (timeout > 0) {
+				mHandler.postDelayed(new RemoveWatchingUser(user),
+						timeout * 60000);
+			}
 		}
 		setSendingPositionNotification(silent);
 
@@ -181,31 +217,41 @@ public class ConnectorService extends Service implements LocationListener {
 
 	boolean existWatchedUser(final User user) {
 		synchronized (this) {
-		for (int i = 0; i < watchedUsers.size(); i++)
-			if (watchedUsers.get(i).phone.equals(user.phone)) {
-				return true;
-			}
-		return false;
+			for (int i = 0; i < watchedUsers.size(); i++)
+				if (watchedUsers.get(i).phone.equals(user.phone)) {
+					return true;
+				}
+			return false;
+		}
+	}
+	boolean existWatchingUser(final User user) {
+		synchronized (this) {
+			for (int i = 0; i < watchingUsers.size(); i++)
+				if (watchingUsers.get(i).phone.equals(user.phone)) {
+					return true;
+				}
+			return false;
 		}
 	}
 
 	private void removeWatchedUser(final User user) {
 		synchronized (this) {
-			
-		for (int i = 0; i < watchedUsers.size(); i++)
-			if (watchedUsers.get(i).equals(user)) {
-				watchedUsers.remove(i);
-				break;
+
+			for (int i = 0; i < watchedUsers.size(); i++)
+				if (watchedUsers.get(i).equals(user)) {
+					watchedUsers.remove(i);
+					break;
+				}
+			if (watchedUsers.isEmpty()) {
+				MyApplication.getInstance().setPinnedUser(null);
+				if (watchingUsers.isEmpty())// se anche l'altra lista di utenti
+											// è
+											// vuota, posso spegnere il servizio
+					stopSelf();
+			} else {
+				MyApplication.getInstance().setPinnedUser(
+						watchedUsers.get(watchedUsers.size() - 1));
 			}
-		if (watchedUsers.isEmpty()) {
-			MyApplication.getInstance().setPinnedUser(null);
-			if (watchingUsers.isEmpty())// se anche l'altra lista di utenti è
-										// vuota, posso spegnere il servizio
-				stopSelf();
-		} else {
-			MyApplication.getInstance().setPinnedUser(
-					watchedUsers.get(watchedUsers.size() - 1));
-		}
 		}
 	}
 
@@ -216,10 +262,9 @@ public class ConnectorService extends Service implements LocationListener {
 					watchingUsers.remove(i);
 					break;
 				}
-			if (!watchingUsers.isEmpty())
-			{
-				//ho ancora utenti a cui mando la posizione:
-				//aggiorno il messaggio di notifica
+			if (!watchingUsers.isEmpty()) {
+				// ho ancora utenti a cui mando la posizione:
+				// aggiorno il messaggio di notifica
 				setSendingPositionNotification(false);
 			} else if (watchedUsers.isEmpty()) {// se non ho
 												// più
@@ -388,10 +433,10 @@ public class ConnectorService extends Service implements LocationListener {
 	}
 
 	public static void activate(Context context, User user, boolean silent,
-			CommandType commandType) {
+			CommandType commandType, int timeout) {
 		Intent intent1 = new Intent(context, ConnectorService.class);
 		intent1.putExtra(Const.COMMAND, new ConnectorServiceCommand(user,
-				silent, commandType));
+				silent, commandType, timeout));
 		context.startService(intent1);
 
 	}
@@ -406,13 +451,14 @@ public class ConnectorService extends Service implements LocationListener {
 	}
 
 	public ArrayList<User> getWatchedUsers() {
-			
+
 		ArrayList<User> users = new ArrayList<User>();
 		synchronized (this) {
 			users.addAll(watchedUsers);
 		}
 
 		return users;
-		
+
 	}
+
 }

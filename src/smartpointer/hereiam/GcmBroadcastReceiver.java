@@ -72,7 +72,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 									Helper.decrypt(secureToken))) {
 								ConnectorService.activate(context, fromUser,
 										true,
-										CommandType.START_SENDING_MY_POSITION); // do
+										CommandType.START_SENDING_MY_POSITION, -1); // do
 																				// not
 																				// notify
 																				// in
@@ -90,7 +90,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 
 						} else if (fromUser.trusted) {
 							ConnectorService.activate(context, fromUser, false,
-									CommandType.START_SENDING_MY_POSITION);
+									CommandType.START_SENDING_MY_POSITION, -1);
 							MyApplication.getInstance().respondToUser(
 									fromUser.phone, Const.MSG_ACCEPT_CONTACT);
 						} else {
@@ -117,7 +117,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 								null, fromUser.phone);
 						ConnectorService.activate(MyApplication.getInstance(),
 								fromUser, true,
-								CommandType.START_RECEIVING_USER_POSITION);
+								CommandType.START_RECEIVING_USER_POSITION, -1);
 						break;
 					}
 					case Const.MSG_REJECT_CONTACT: {
@@ -137,7 +137,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 								Helper.formatTimestamp(time), fromUser), null,
 								fromUser.phone);
 						ConnectorService.activate(context, fromUser, false,
-								CommandType.STOP_RECEIVING_USER_POSITION);
+								CommandType.STOP_RECEIVING_USER_POSITION, -1);
 
 						break;
 					}
@@ -149,8 +149,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 										R.string.s_requested_stop_sending_your_position,
 										Helper.formatTimestamp(time), fromUser),
 								null, fromUser.phone);
-						WatchingUsersActivity
-								.stopSendingMyPositionToUser(fromUser);
+						ConnectorService.stopSendingMyPositionToUser(fromUser);
 
 						break;
 					}

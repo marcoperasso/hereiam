@@ -101,4 +101,6 @@
     <string name="show_my_position">Visualizza la mia posizione</string>
     <string name="hide_my_position">Nascondi la mia posizione</string>
     <string name="ok">OK</string>
+    <string name="accept_only_for_a_limited_period_of_time">Accetta solo per: </string>
+    <string name="minutes">minuti</string>
 </resources>
