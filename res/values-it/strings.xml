@@ -43,8 +43,8 @@
     <string name="your_request_to_s_has_been_sent">La tua richiesta a %s è stata inviata; quando sarà accettata (o rifiutata) verrai avvisato</string>
     <string name="s_wants_to_know_your_position">%2$s vuole conoscere la tua posizione\n%1$s.</string>
     <string name="requested_stop_sending_your_position">Non voglio più conoscere la tua posizione, grazie.</string>
-    <string name="has_accepted_to_let_you_know_her_his_position">Ho ha accettato di inviarti la mia posizione.</string>
-    <string name="has_refused_to_let_you_know_her_his_position">Ho rifiutato di inviarti la mia.</string>
+    <string name="has_accepted_to_let_you_know_her_his_position">Ho accettato di inviarti la mia posizione.</string>
+    <string name="has_refused_to_let_you_know_her_his_position">Ho rifiutato di inviarti la mia posizione.</string>
     <string name="stopped_sending_her_his_position">Ho interrotto l\'invio della mia posizione.</string>
     <string name="title_activity_tracked_users">Utenti tracciati</string>
     <string name="you_are_sending_your_position_to_the_following_users">Stai inviando la tua posizione agli utenti elencati; tocca un utente per disconnetterlo</string>
