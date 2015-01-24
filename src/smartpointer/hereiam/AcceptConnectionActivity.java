@@ -20,7 +20,7 @@ public class AcceptConnectionActivity extends Activity implements
 	private int timeout = 0;
 
 	enum Response {
-		NONE, ACCEPT, ACCEPT_TIMEOUT, REFUSE
+		NONE, ACCEPT, REFUSE
 	};
 
 	Response response = Response.NONE;
@@ -43,7 +43,7 @@ public class AcceptConnectionActivity extends Activity implements
 		findViewById(R.id.buttonYes).setOnClickListener(this);
 		findViewById(R.id.buttonNo).setOnClickListener(this);
 		findViewById(R.id.buttonAlways).setOnClickListener(this);
-		findViewById(R.id.buttonAcceptWithTimeout).setOnClickListener(this);
+
 	}
 
 	@Override
@@ -53,17 +53,10 @@ public class AcceptConnectionActivity extends Activity implements
 			MyApplication.getInstance().respondToUser(user.phone,
 					Const.MSG_ACCEPT_CONTACT);
 			ConnectorService.activate(AcceptConnectionActivity.this, user,
-					true, CommandType.START_SENDING_MY_POSITION, -1);
-			cancelNotification();
-
-			break;
-		case ACCEPT_TIMEOUT:
-			MyApplication.getInstance().respondToUser(user.phone,
-					Const.MSG_ACCEPT_CONTACT);
-			ConnectorService.activate(AcceptConnectionActivity.this, user,
 					true, CommandType.START_SENDING_MY_POSITION, timeout);
 			cancelNotification();
-			break;
+
+			break; 
 		case NONE:
 			break;
 		case REFUSE:
@@ -91,16 +84,21 @@ public class AcceptConnectionActivity extends Activity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.buttonYes:
+			if (!saveTimeout())
+				return;
+			response = Response.ACCEPT;
 			hasGPSOrDontWantToUseIt();
 			break;
 		case R.id.buttonAlways:
+			if (!saveTimeout())
+				return;
 			// prendo l'equivalente utente nella lista, così non devo
 			// rinfrescarla
-			User fromPhone = MyApplication.getInstance().getUsers()
+			User u = MyApplication.getInstance().getUsers()
 					.fromPhone(user.phone, true);
 
-			fromPhone.trusted = true;
-			fromPhone.saveToDb();
+			u.trusted = true;
+			u.saveToDb();
 
 			hasGPSOrDontWantToUseIt();
 			break;
@@ -108,22 +106,29 @@ public class AcceptConnectionActivity extends Activity implements
 			response = Response.REFUSE;
 			finish();
 			break;
-		case R.id.buttonAcceptWithTimeout:
-			timeout = -1;
-			String s = editTextTimeout.getText().toString();
-			try {
-				timeout = Integer.parseInt(s);
-			} catch (Exception ex) {
-				break;
-			}
-			if (timeout <= 0)
-				break;
-			MySettings.setAcceptTimeout(timeout);
-			response = Response.ACCEPT_TIMEOUT;
-			finish();
-			break;
+
 		}
 
+	}
+
+	boolean saveTimeout() {
+		timeout = -1;
+		String s = editTextTimeout.getText().toString();
+		try {
+			timeout = Integer.parseInt(s);
+		} catch (Exception ex) {
+			int minutes = MySettings.getAcceptTimeout();
+			editTextTimeout.setText(Integer.toString(minutes));
+			return false;
+		}
+		if (timeout <= 0) {
+			int minutes = MySettings.getAcceptTimeout();
+			editTextTimeout.setText(Integer.toString(minutes));
+
+			return false;
+		}
+		MySettings.setAcceptTimeout(timeout);
+		return true;
 	}
 
 	@Override

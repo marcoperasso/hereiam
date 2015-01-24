@@ -49,6 +49,7 @@
     <string name="title_activity_tracked_users">Tracked users</string>
     <string name="you_are_sending_your_position_to_the_following_users">You are sending your position to the listed users; tap an user to disconnect her/him</string>
     <string name="do_you_want_to_stop_tracking_this_user">Do you want %s to stop sending her/his position to you?</string>
+    <string name="stop_sending_your_position_to_user">Do you want to stop sending your position to %s?</string>
     <string name="do_you_want_to_stop_tracking_all_users">Disconnect all the users?</string>
     <string name="send_error">Send error: "%s"</string>
     <string name="deleted_messages_on_server_s">Deleted messages on server: %s</string>
@@ -99,6 +100,6 @@
     <string name="hide_my_position">Hide my position</string>
     <string name="ok">OK</string>
     <string name="accept_only_for_a_limited_period_of_time">Accept only for: </string>
-    <string name="minutes">minutes</string>
+    <string name="minutes">Timeout (minutes)</string>
 
 </resources>

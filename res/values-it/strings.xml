@@ -49,6 +49,7 @@
     <string name="title_activity_tracked_users">Utenti tracciati</string>
     <string name="you_are_sending_your_position_to_the_following_users">Stai inviando la tua posizione agli utenti elencati; tocca un utente per disconnetterlo</string>
     <string name="do_you_want_to_stop_tracking_this_user">Vuoi che %s smetta di inviarti la propria posizione?</string>
+    <string name="stop_sending_your_position_to_user">Vuoi smettere di inviare la tua posizione a %s?</string>
     <string name="do_you_want_to_stop_tracking_all_users">Vuoi interrompere la connessione con tutti gli utenti?</string>
     <string name="send_error">Errore di invio: "%s"</string>
     <string name="deleted_messages_on_server_s">Messaggi cancellati sul server %s</string>
@@ -102,5 +103,5 @@
     <string name="hide_my_position">Nascondi la mia posizione</string>
     <string name="ok">OK</string>
     <string name="accept_only_for_a_limited_period_of_time">Accetta solo per: </string>
-    <string name="minutes">minuti</string>
+    <string name="minutes">Durata (minuti):</string>
 </resources>

@@ -44,26 +44,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="10dip"
         android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/buttonAcceptWithTimeout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:text="@string/accept_only_for_a_limited_period_of_time" />
-
-        <EditText
-            android:id="@+id/editTextMinutes"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:inputType="number" />
-
+  
         <TextView
             android:id="@+id/textViewMinutes"
             android:layout_width="wrap_content"
@@ -71,7 +57,15 @@
             android:layout_gravity="center"
             android:text="@string/minutes"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+        <EditText
+            android:id="@+id/editTextMinutes"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:inputType="number"/>
+      
 
+        
     </LinearLayout>
 
 </LinearLayout>

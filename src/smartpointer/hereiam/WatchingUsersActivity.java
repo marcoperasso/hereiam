@@ -36,7 +36,7 @@ public class WatchingUsersActivity extends ListActivity implements OnClickListen
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		final int i = position;
 		final User user = (User) l.getItemAtPosition(i);
-		Helper.dialogMessage(this, WatchingUsersActivity.this.getString(R.string.do_you_want_to_stop_tracking_this_user, user),
+		Helper.dialogMessage(this, WatchingUsersActivity.this.getString(R.string.stop_sending_your_position_to_user, user),
 				new DialogInterface.OnClickListener() {
 
 					@Override

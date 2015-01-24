@@ -569,7 +569,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 	protected void onPause() {
 		super.onPause();
 		myLocationOverlay.disableMyLocation();
-		// myLocationOverlay.disableCompass();
+		myLocationOverlay.disableCompass();
 		MyApplication.getInstance().unregisterForPositions(
 				mPositionAvailableHandler, mPositionReceivedHandler,
 				mPositionPurgeNeededHandler);
@@ -582,7 +582,7 @@ public class MyMapActivity extends MapActivity implements OnClickListener {
 		checkPlayServices();
 		if (mTrackGPSPosition)
 			myLocationOverlay.enableMyLocation();
-		// myLocationOverlay.enableCompass();
+		myLocationOverlay.enableCompass();
 		MyApplication.getInstance().registerForPositions(
 				mPositionAvailableHandler, mPositionReceivedHandler,
 				mPositionPurgeNeededHandler);
